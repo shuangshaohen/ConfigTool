@@ -24,7 +24,7 @@ CSplashScreen *CSplashScreen::Instance()
 }
 
 
-CSplashScreen::CSplashScreen(): QSplashScreen( QPixmap(":/Icon/SplashSreenImage.png"), Qt::WindowStaysOnTopHint )//
+CSplashScreen::CSplashScreen(): QSplashScreen( QPixmap("://Icon/SplashSreenImage.png"), Qt::WindowStaysOnTopHint )//
 {
      m_pTimer = new QTimer(this);
      connect(m_pTimer, SIGNAL(timeout()), this, SLOT(update()));

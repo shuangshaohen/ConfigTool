@@ -1,45 +1,36 @@
 #include "CCfgCenterWnd.h"
 #include "CDefaultWnd.h"
-#include "CAnaWnd.h"
-#include "CBIWnd.h"
-#include "CGSBIWnd.h"
-#include "CGSBOWnd.h"
-#include "CTripMatrixWnd.h"
-#include "CAlmRecWnd.h"
-#include "CActRecWnd.h"
-#include "CSoftYBWnd.h"
-#include "CSettingWnd.h"
 
 CCfgCenterWnd::CCfgCenterWnd(QWidget *parent) : QStackedWidget(parent)
 {
     m_pDefaultWnd = new CDefaultWnd(this);
     addWidget(m_pDefaultWnd);
 
-    m_pCAnaWnd = new CAnaWnd(this);
+    m_pCAnaWnd = new CDefaultWnd(this);
     addWidget(m_pCAnaWnd);
 
-    m_pBIWnd = new CBIWnd(this);
+    m_pBIWnd = new CDefaultWnd(this);
     addWidget(m_pBIWnd);
 
-    m_pGSBIWnd = new CGSBIWnd(this);
+    m_pGSBIWnd = new CDefaultWnd(this);
     addWidget(m_pGSBIWnd);
 
-    m_pGSBOWnd = new CGSBOWnd(this);
+    m_pGSBOWnd = new CDefaultWnd(this);
     addWidget(m_pGSBOWnd);
 
-    m_pTripMatrixWnd = new CTripMatrixWnd(this);
+    m_pTripMatrixWnd = new CDefaultWnd(this);
     addWidget(m_pTripMatrixWnd);
 
-    m_pAlmRecWnd = new CAlmRecWnd(this);
+    m_pAlmRecWnd = new CDefaultWnd(this);
     addWidget(m_pAlmRecWnd);
 
-    m_pActRecWnd = new CActRecWnd(this);
+    m_pActRecWnd = new CDefaultWnd(this);
     addWidget(m_pActRecWnd);
 
-    m_pSoftYBWnd = new CSoftYBWnd(this);
+    m_pSoftYBWnd = new CDefaultWnd(this);
     addWidget(m_pSoftYBWnd);
 
-    m_pSettingWnd = new CSettingWnd(this);
+    m_pSettingWnd = new CDefaultWnd(this);
     addWidget(m_pSettingWnd);
 }
 
@@ -56,55 +47,55 @@ void CCfgCenterWnd::ShowDefaultInfo(CDataBase *pData)
 
 void CCfgCenterWnd::ShowAnaInfo(CDataBase *pData)
 {
-    m_pCAnaWnd->ShowAnaInfo(pData);
+    m_pCAnaWnd->showInfo(pData);
     this->setCurrentWidget(m_pCAnaWnd);
 }
 
 void CCfgCenterWnd::ShowBIInfo(CDataBase *pData)
 {
-    m_pBIWnd->ShowBIInfo(pData);
+    m_pBIWnd->showInfo(pData);
     this->setCurrentWidget(m_pBIWnd);
 }
 
 void CCfgCenterWnd::ShowGSBIInfo(CDataBase *pData)
 {
-    m_pGSBIWnd->ShowGSBIInfo(pData);
+    m_pGSBIWnd->showInfo(pData);
     this->setCurrentWidget(m_pGSBIWnd);
 }
 
 void CCfgCenterWnd::ShowGSBOInfo(CDataBase *pData)
 {
-    m_pGSBOWnd->ShowGSBOInfo(pData);
+    m_pGSBOWnd->showInfo(pData);
     this->setCurrentWidget(m_pGSBOWnd);
 }
 
 void CCfgCenterWnd::ShowTripMatrixInfo(CDataBase *pData)
 {
-    m_pTripMatrixWnd->ShowTripMatrixInfo(pData);
+    m_pTripMatrixWnd->showInfo(pData);
     this->setCurrentWidget(m_pTripMatrixWnd);
 }
 
 void CCfgCenterWnd::ShowAlmRecInfo(CDataBase *pData)
 {
-    m_pAlmRecWnd->ShowAlmInfo(pData);
+    m_pAlmRecWnd->showInfo(pData);
     this->setCurrentWidget(m_pAlmRecWnd);
 }
 
 void CCfgCenterWnd::ShowActRecInfo(CDataBase *pData)
 {
-    m_pActRecWnd->ShowActInfo(pData);
+    m_pActRecWnd->showInfo(pData);
     this->setCurrentWidget(m_pActRecWnd);
 }
 
 void CCfgCenterWnd::ShowSoftYBInfo(CDataBase *pData)
 {
-    m_pSoftYBWnd->ShowSoftYBInfo(pData);
+    m_pSoftYBWnd->showInfo(pData);
     this->setCurrentWidget(m_pSoftYBWnd);
 }
 
 void CCfgCenterWnd::ShowSettingInfo(CDataBase *pData)
 {
-    m_pSettingWnd->ShowSettingInfo(pData);
+    m_pSettingWnd->showInfo(pData);
     this->setCurrentWidget(m_pSettingWnd);
 }
 
@@ -315,13 +306,13 @@ void CCfgCenterWnd::DownInfo()
 
 void CCfgCenterWnd::ClearTableModel()
 {
-    m_pCAnaWnd->ClearTableModel();
-    m_pBIWnd->ClearTableModel();
-    m_pGSBIWnd->ClearTableModel();
-    m_pGSBOWnd->ClearTableModel();
-    m_pTripMatrixWnd->ClearTableModel();
-    m_pAlmRecWnd->ClearTableModel();
-    m_pActRecWnd->ClearTableModel();
-    m_pSoftYBWnd->ClearTableModel();
-    m_pSettingWnd->ClearTableModel();
+    m_pCAnaWnd->Clear();
+    m_pBIWnd->Clear();
+    m_pGSBIWnd->Clear();
+    m_pGSBOWnd->Clear();
+    m_pTripMatrixWnd->Clear();
+    m_pAlmRecWnd->Clear();
+    m_pActRecWnd->Clear();
+    m_pSoftYBWnd->Clear();
+    m_pSettingWnd->Clear();
 }

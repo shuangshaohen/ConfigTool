@@ -27,81 +27,27 @@ TARGET = CfgTool
 DESTDIR = ../bin
 
 SOURCES += \
-    CActRecWnd.cpp \
-    CAlmRecWnd.cpp \
-    CAnaAttrDialog.cpp \
-    CAnaPhaseDialog.cpp \
-    CAnaTypeDialog.cpp \
-    CAnaWnd.cpp \
-    CBIAttrDialog.cpp \
-    CBIIndexDPSDialog.cpp \
-    CBITypeDialog.cpp \
-    CBIWnd.cpp \
     CCfgActions.cpp \
     CCfgCenterWnd.cpp \
     CCfgMainWnd.cpp \
     CCfgToolBox.cpp \
     CDefaultWnd.cpp \
-    CGSBIAttrDialog.cpp \
-    CGSBIWnd.cpp \
-    CGSBOAttrDialog.cpp \
-    CGSBOSrcTabDialog.cpp \
-    CGSBOWnd.cpp \
     CResourceTreeWnd.cpp \
-    CSettingWnd.cpp \
-    CSoftYBWnd.cpp \
-    CTripMatrixWnd.cpp \
     main.cpp \
 
 HEADERS += \
-    CActRecWnd.h \
-    CAlmRecWnd.h \
-    CAnaAttrDialog.h \
-    CAnaPhaseDialog.h \
-    CAnaTypeDialog.h \
-    CAnaWnd.h \
-    CBIAttrDialog.h \
-    CBIIndexDPSDialog.h \
-    CBITypeDialog.h \
-    CBIWnd.h \
     CCfgActions.h \
     CCfgCenterWnd.h \
     CCfgToolBox.h \
     CDefaultWnd.h \
-    CGSBIAttrDialog.h \
-    CGSBIWnd.h \
-    CGSBOAttrDialog.h \
-    CGSBOSrcTabDialog.h \
-    CGSBOWnd.h \
     CMainWnd.h \
     CDataBase.h \
     CCfgMainWnd.h \ \
-    CResourceTreeWnd.h \
-    CSettingWnd.h \
-    CSoftYBWnd.h \
-    CTripMatrixWnd.h
+    CResourceTreeWnd.h
 
 FORMS += \
-    ActRecWnd.ui \
-    AlmRecWnd.ui \
-    AnaAttrDialog.ui \
-    AnaPhaseDialog.ui \
-    AnaTypeDialog.ui \
-    AnaWnd.ui \
-    BIAttrDialog.ui \
-    BIIndexDPSDialog.ui \
-    BITypeDialog.ui \
-    BIWnd.ui \
     DefaultWnd.ui \
-    GSBIAttrDialog.ui \
-    GSBIWnd.ui \
-    GSBOAttrDialog.ui \
-    GSBOSrcTabDialog.ui \
-    GSBOWnd.ui \
-    SettingWnd.ui \
-    SoftYBWnd.ui \
-    ToolBox.ui \
-    TripMatrixWnd.ui
+    ToolBox.ui
 
 TRANSLATIONDebugS += \
     ConfigTool_zh_CN.ts

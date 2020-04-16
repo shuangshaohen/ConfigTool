@@ -31,11 +31,9 @@ DESTDIR = ../bin
 
 SOURCES += \
     CDataBase.cpp \
-    CDataFun.cpp \
     CMsgInfo.cpp
 
 HEADERS += \
-    CDataFun.h \
     CMsgInfo.h \
     DataBase_global.h \
     CDataBase.h \

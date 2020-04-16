@@ -31,26 +31,18 @@ TARGET = CommGui
 DESTDIR = ../bin
 
 SOURCES += \
-    CAttrDialog.cpp \
     CBaseThread.cpp \
-    CComboBox.cpp \
     CCommActions.cpp \
     CDockWidget.cpp \
     CMainWnd.cpp \
-    CSplashScreen.cpp \
-    CTableWidgetDialog.cpp \
-    CTypeDialog.cpp
+    CSplashScreen.cpp
 
 HEADERS += \
-    CAttrDialog.h \
     CBaseThread.h \
-    CComboBox.h \
     CDockWidget.h \
     COutputWnd.h \
     CCommActions.h \
     CSplashScreen.h \
-    CTableWidgetDialog.h \
-    CTypeDialog.h \
     CommGui_global.h \
     CDataBase.h \
     CMainWnd.h
@@ -68,7 +60,7 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../bin/ -lDataBase -lOutpu
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../bin/ -lDataBase -lOutput
 else:unix: LIBS += -L$$PWD/../bin/ -lDataBase -lOutput
 
-FORMS += \
-    AttrDialog.ui \
-    TableWidgetDialog.ui \
-    TypeDialog.ui
+FORMS +=
+
+RESOURCES += \
+    src.qrc

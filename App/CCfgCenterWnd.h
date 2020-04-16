@@ -6,15 +6,6 @@
 #include "CDataBase.h"
 
 class CDefaultWnd;
-class CAnaWnd;
-class CBIWnd;
-class CGSBIWnd;
-class CGSBOWnd;
-class CTripMatrixWnd;
-class CAlmRecWnd;
-class CActRecWnd;
-class CSoftYBWnd;
-class CSettingWnd;
 
 class CCfgCenterWnd : public QStackedWidget
 {
@@ -53,15 +44,15 @@ public:
     void ClearTableModel();
 private:
     CDefaultWnd *   m_pDefaultWnd;
-    CAnaWnd     *   m_pCAnaWnd;
-    CBIWnd      *   m_pBIWnd;
-    CGSBIWnd    *   m_pGSBIWnd;
-    CGSBOWnd    *   m_pGSBOWnd;
-    CTripMatrixWnd  *   m_pTripMatrixWnd;
-    CAlmRecWnd  *   m_pAlmRecWnd;
-    CActRecWnd  *   m_pActRecWnd;
-    CSoftYBWnd  *   m_pSoftYBWnd;
-    CSettingWnd *   m_pSettingWnd;
+    CDefaultWnd *   m_pCAnaWnd;
+    CDefaultWnd *   m_pBIWnd;
+    CDefaultWnd *   m_pGSBIWnd;
+    CDefaultWnd *   m_pGSBOWnd;
+    CDefaultWnd *   m_pTripMatrixWnd;
+    CDefaultWnd *   m_pAlmRecWnd;
+    CDefaultWnd *   m_pActRecWnd;
+    CDefaultWnd *   m_pSoftYBWnd;
+    CDefaultWnd *   m_pSettingWnd;
 };
 
 #endif // CCFGCENTERWND_H
