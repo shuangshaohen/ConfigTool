@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ToolBox</class>
+ <widget class="QTabWidget" name="ToolBox">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>308</width>
+    <height>434</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>TabWidget</string>
+  </property>
+  <property name="tabPosition">
+   <enum>QTabWidget::South</enum>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
+  </property>
+  <property name="currentIndex">
+   <number>0</number>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>16</width>
+    <height>16</height>
+   </size>
+  </property>
+  <property name="documentMode">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="m_ResourceEditPage">
+   <attribute name="title">
+    <string>外特性编辑</string>
+   </attribute>
+  </widget>
+  <widget class="QWidget" name="m_LogicEditPage">
+   <attribute name="title">
+    <string>逻辑组件</string>
+   </attribute>
+  </widget>
+  <widget class="QWidget" name="m_FunctionPage">
+   <attribute name="title">
+    <string>逻辑组态</string>
+   </attribute>
+  </widget>
+  <widget class="QWidget" name="m_TextViewPage">
+   <attribute name="title">
+    <string>文本浏览</string>
+   </attribute>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
