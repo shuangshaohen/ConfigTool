@@ -115,4 +115,7 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../bin/ -lCommGui -lDataBa
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../bin/ -lCommGui -lDataBase
 else:unix: LIBS += -L$$PWD/../bin/ -lCommGui -lDataBase
 
+RESOURCES += \
+    src.qrc
+
 

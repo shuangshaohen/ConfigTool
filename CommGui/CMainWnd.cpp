@@ -59,7 +59,7 @@ CMainWnd::CMainWnd(QWidget *parent, Qt::WindowFlags flags)
     //this->setPalette(palette2);
 
     //设置控件样式
-    this->setStyleSheet(QString("QTextEdit{ackground:transparent;}"));
+    this->setStyleSheet(QString("QTextEdit{background:transparent;}"));
     //////////////////////////////////////////////////////////////////////////
 }
 

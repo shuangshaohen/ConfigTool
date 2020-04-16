@@ -22,9 +22,9 @@ void CCfgActions::CreateMenuAndToolBar()
 void CCfgActions::CreateFileMenu()
 {
     m_pFileMenu = m_pCfgMainWnd->menuBar()->addMenu("文件(&F)");
-    m_pFileMenu->addAction(QIcon("./Icon/FileNew.png"),"新建配置文件", m_pCfgMainWnd, SLOT(NewCfgProjectFileSlot()), QKeySequence(tr("Ctrl+N")));
-    m_pFileMenu->addAction(QIcon("./Icon/FileOpen.png"),"打开配置文件", m_pCfgMainWnd, SLOT(OpenProjectFileSlot()), QKeySequence(tr("Ctrl+O")));
-    m_pFileMenu->addAction(QIcon("./Icon/FileSave.png"),"保存配置文件", m_pCfgMainWnd, SLOT(SaveProjectFileSlot()), QKeySequence(tr("Ctrl+S")));
+    m_pFileMenu->addAction(QIcon(":/png/Icon/FileNew.png"),"新建配置文件", m_pCfgMainWnd, SLOT(NewCfgProjectFileSlot()), QKeySequence(tr("Ctrl+N")));
+    m_pFileMenu->addAction(QIcon(":/png/Icon/FileOpen.png"),"打开配置文件", m_pCfgMainWnd, SLOT(OpenProjectFileSlot()), QKeySequence(tr("Ctrl+O")));
+    m_pFileMenu->addAction(QIcon(":/png/Icon/FileSave.png"),"保存配置文件", m_pCfgMainWnd, SLOT(SaveProjectFileSlot()), QKeySequence(tr("Ctrl+S")));
 
     m_pFileMenu->addAction("配置另存为...", m_pCfgMainWnd, SLOT(SaveAsProjectFileSlot()) );
     m_pFileMenu->addSeparator();
@@ -37,17 +37,17 @@ void CCfgActions::CreateFileToolBar()
 {
     m_pFileToolBar = new QToolBar("文件工具条",m_pCfgMainWnd);
     //新建
-    QAction *pNewFileAction = m_pFileToolBar->addAction ( QIcon("./Icon/FileNew.png"), "新建" );
+    QAction *pNewFileAction = m_pFileToolBar->addAction ( QIcon(":/png/Icon/FileNew.png"), "新建" );
     pNewFileAction->setStatusTip(tr("新建配置文件"));
     connect(pNewFileAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(NewCfgProjectFileSlot()));
 
     //打开
-    QAction *pOpenFileAction = m_pFileToolBar->addAction ( QIcon("./Icon/FileOpen.png"), "打开" );
+    QAction *pOpenFileAction = m_pFileToolBar->addAction ( QIcon(":/png/Icon/FileOpen.png"), "打开" );
     pOpenFileAction->setStatusTip(tr("打开配置文件"));
     connect(pOpenFileAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(OpenProjectFileSlot()));
 
     //保存
-    QAction *pSaveFileAction = m_pFileToolBar->addAction ( QIcon("./Icon/FileSave.png"), "保存" );
+    QAction *pSaveFileAction = m_pFileToolBar->addAction ( QIcon(":/png/Icon/FileSave.png"), "保存" );
     pSaveFileAction->setStatusTip(tr("保存配置文件"));
     connect(pSaveFileAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(SaveProjectFileSlot()));
 
@@ -69,27 +69,27 @@ void CCfgActions::CreateEditFileToolBar()
 {
     m_pEditToolBar = new QToolBar("编辑工具条",m_pCfgMainWnd);
     //新增
-    QAction *pAddAction = m_pEditToolBar->addAction ( QIcon("./Icon/plus.png"), "新增" );
+    QAction *pAddAction = m_pEditToolBar->addAction ( QIcon(":/png/Icon/plus.png"), "新增" );
     pAddAction->setStatusTip(tr("新增"));
     connect(pAddAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(AddSlot()));
 
     //删除
-    QAction *pDeleteAction = m_pEditToolBar->addAction ( QIcon("./Icon/minus.png"), "删除" );
+    QAction *pDeleteAction = m_pEditToolBar->addAction ( QIcon(":/png/Icon/minus.png"), "删除" );
     pDeleteAction->setStatusTip(tr("删除"));
     connect(pDeleteAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(DeleteSlot()));
 
     //复制
-    QAction *pCopyAction = m_pEditToolBar->addAction ( QIcon("./Icon/copy.png"), "复制" );
+    QAction *pCopyAction = m_pEditToolBar->addAction ( QIcon(":/png/Icon/copy.png"), "复制" );
     pCopyAction->setStatusTip(tr("复制"));
     connect(pCopyAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(CopySlot()));
 
     //上移
-    QAction *pUpAction = m_pEditToolBar->addAction ( QIcon("./Icon/up.png"), "上移" );
+    QAction *pUpAction = m_pEditToolBar->addAction ( QIcon(":/png/Icon/up.png"), "上移" );
     pUpAction->setStatusTip(tr("上移"));
     connect(pUpAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(UpSlot()));
 
     //下移
-    QAction *pDownAction = m_pEditToolBar->addAction ( QIcon("./Icon/down.png"), "下移" );
+    QAction *pDownAction = m_pEditToolBar->addAction ( QIcon(":/png/Icon/down.png"), "下移" );
     pDownAction->setStatusTip(tr("下移"));
     connect(pDownAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(DownSlot()));
 

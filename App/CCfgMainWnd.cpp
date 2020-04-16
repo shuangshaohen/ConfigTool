@@ -24,7 +24,7 @@ CCfgMainWnd::CCfgMainWnd(QWidget *parent, Qt::WindowFlags flags):CMainWnd(parent
 void CCfgMainWnd::SetToolTile()
 {
     m_strToolName = "Config配置工具V1.00";
-    setWindowIcon( QIcon("./Icon/CfgTitleIcon.png" ));
+    setWindowIcon( QIcon(":/png/Icon/CfgTitleIcon.png" ));
     setWindowTitle(m_strToolName);
 }
 

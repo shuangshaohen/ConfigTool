@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/png">
+        <file>Icon/CfgTitleIcon.png</file>
+        <file>Icon/copy.png</file>
+        <file>Icon/down.png</file>
+        <file>Icon/FileNew.png</file>
+        <file>Icon/FileOpen.png</file>
+        <file>Icon/FileSave.png</file>
+        <file>Icon/minus.png</file>
+        <file>Icon/plus.png</file>
+        <file>Icon/up.png</file>
+    </qresource>
+</RCC>

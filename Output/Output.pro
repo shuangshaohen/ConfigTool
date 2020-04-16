@@ -52,5 +52,5 @@ else:unix: LIBS += -L$$PWD/../bin/ -lDataBase
 FORMS += \
     OutputWnd.ui
 
-RESOURCES += \
-    ../Icon/Icon.qrc
+#RESOURCES += \
+#    ../Icon/Icon.qrc
