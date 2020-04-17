@@ -1,5 +1,6 @@
-#include "CDelegate.h"
+﻿#include "CDelegate.h"
 #include <QSpinBox>
+#include <QComboBox>
 
 CSpinBoxDelegate::CSpinBoxDelegate(QObject *parent, int min, int max, int step)
     : QItemDelegate(parent),
@@ -52,6 +53,59 @@ void CSpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, 
     {
         QSpinBox *box = static_cast<QSpinBox *>(editor);
         model->setData(index, box->value());
+    }
+    else
+    {
+        QItemDelegate::setModelData(editor, model, index);
+    }
+}
+
+CComboBoxDelegate::CComboBoxDelegate(const QStringList &labels, QObject *parent): QItemDelegate(parent)
+{
+    m_labels = labels;
+}
+
+CComboBoxDelegate::~CComboBoxDelegate()
+{
+
+}
+
+QWidget *CComboBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if (index.isValid())
+    {
+        QComboBox *editor = new QComboBox(parent);
+        editor->installEventFilter(const_cast<CComboBoxDelegate *>(this));
+        return editor;
+    }
+    else
+    {
+        return QItemDelegate::createEditor(parent, option, index);
+    }
+}
+
+void CComboBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+{
+    if (index.isValid())
+    {
+        QString value = index.model()->data(index, Qt::EditRole).toString();
+        QComboBox *box = static_cast<QComboBox *>(editor);
+        box->addItems(m_labels);
+        box->setEditable(true);
+        box->setCurrentText(value);
+    }
+    else
+    {
+        QItemDelegate::setEditorData(editor, index);
+    }
+}
+
+void CComboBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+    if (index.isValid())
+    {
+        QComboBox *box = static_cast<QComboBox *>(editor);
+        model->setData(index, box->currentText());
     }
     else
     {

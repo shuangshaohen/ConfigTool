@@ -1,4 +1,4 @@
-#ifndef CANAITEMWND_H
+﻿#ifndef CANAITEMWND_H
 #define CANAITEMWND_H
 
 #include <CBaseItemWnd.h>
@@ -28,6 +28,8 @@ signals:
 
 protected slots:
     void itemChangedSlot(QTableWidgetItem *item);
+    void keyTextChangedSlot(const QString &text) override;
+    void descTextChangedSlot(const QString &text) override;
 private:
     CDataBase       *   m_data;
     int                 m_type;

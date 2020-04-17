@@ -1,4 +1,4 @@
-#include "CBaseItemWnd.h"
+﻿#include "CBaseItemWnd.h"
 #include "ui_BaseItemWnd.h"
 #include <QToolTip>
 #include <QDebug>
@@ -12,6 +12,8 @@ CBaseItemWnd::CBaseItemWnd(QWidget *parent) :
     m_table = ui->table;
     m_comboBox = ui->comboBox;
     m_lineEdit = ui->lineEdit;
+    m_lineEditDesc = ui->lineEditDesc;
+    m_lineEditKey = ui->lineEditKey;
 
     //m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_table->horizontalHeader()->setStretchLastSection(true);
@@ -19,6 +21,8 @@ CBaseItemWnd::CBaseItemWnd(QWidget *parent) :
     connect(m_comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(currentIndexChangedSlot(int)));
     connect(m_lineEdit,SIGNAL(textChanged(QString)),this,SLOT(textChangedSlot(QString)));
     connect(m_table,SIGNAL(itemClicked(QTableWidgetItem *)),this, SLOT(showToolTip(QTableWidgetItem *)));
+    connect(m_lineEditDesc,SIGNAL(textChanged(QString)),this,SLOT(descTextChangedSlot(QString)));
+    connect(m_lineEditKey,SIGNAL(textChanged(QString)),this,SLOT(keyTextChangedSlot(QString)));
 }
 
 CBaseItemWnd::~CBaseItemWnd()
@@ -30,7 +34,7 @@ void CBaseItemWnd::Clear()
 {
     m_table->clearContents();
     m_lineEdit->clear();
-    m_comboBox->clear();
+//    m_comboBox->clear();
 }
 
 void CBaseItemWnd::showToolTip(QTableWidgetItem * item)
@@ -53,6 +57,16 @@ void CBaseItemWnd::textChangedSlot(const QString &text)
 {
     Q_UNUSED(text);
     tableFilter(m_comboBox->currentIndex(),m_lineEdit->text());
+}
+
+void CBaseItemWnd::descTextChangedSlot(const QString &text)
+{
+    Q_UNUSED(text);
+}
+
+void CBaseItemWnd::keyTextChangedSlot(const QString &text)
+{
+    Q_UNUSED(text);
 }
 
 void CBaseItemWnd::tableExchange(int fromRow, int toRow)
@@ -103,9 +117,9 @@ void CBaseItemWnd::tableFilter(int column, QString key)
         else
         {
             if(m_table->item(row,column)->text().contains(key))
-                m_table->setRowHidden(row,true);
-            else
                 m_table->setRowHidden(row,false);
+            else
+                m_table->setRowHidden(row,true);
         }
     }
 

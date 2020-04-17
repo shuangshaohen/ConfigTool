@@ -1,4 +1,4 @@
-#include "CDeviceParasWnd.h"
+﻿#include "CDeviceParasWnd.h"
 #include "CDataBase.h"
 #include "CDelegate.h"
 #include <QHeaderView>
@@ -10,7 +10,7 @@ CDeviceParasWnd::CDeviceParasWnd(QWidget *parent) : CDefaultWnd(parent)
 
     m_table->setColumnCount(6);
     QStringList headerList;
-    headerList << "maxSvNum" << "maxBiNum" << "maxSvNum" << "maxGooseNum" << "maxBoNum" << "smpRate";
+    headerList << "模拟量数目" << "BI数目" << "SV数目" << "GS数目" << "BO数目" << "采样频率";
     m_table->setHorizontalHeaderLabels(headerList);
     //m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     m_table->horizontalHeader()->setStretchLastSection(true);

@@ -1,4 +1,4 @@
-#include "CDeviceInfoWnd.h"
+﻿#include "CDeviceInfoWnd.h"
 #include "CDataBase.h"
 #include <QHeaderView>
 #include <QVBoxLayout>
@@ -9,7 +9,7 @@ CDeviceInfoWnd::CDeviceInfoWnd(QWidget *parent) : CDefaultWnd(parent)
 
     m_table->setColumnCount(5);
     QStringList headerList;
-    headerList << "type" << "desc" << "version" << "date" << "crc";
+    headerList << "型号" << "描述" << "版本" << "日期" << "校验码";
     m_table->setHorizontalHeaderLabels(headerList);
     //m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     m_table->horizontalHeader()->setStretchLastSection(true);

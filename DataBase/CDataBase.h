@@ -1,4 +1,4 @@
-#ifndef CDATABASE_H
+﻿#ifndef CDATABASE_H
 #define CDATABASE_H
 
 #include "DataBase_global.h"
@@ -62,6 +62,8 @@ private:
     void            SaveAnaTable(QDomDocument &doc, QDomElement &parentNode, AnaConfig *ana, QString key);
 
     void            CheckConfig();
+
+    QString         bindString(QString str1, QString str2);
 };
 
 #endif // CDATABASE_H

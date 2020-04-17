@@ -1,4 +1,4 @@
-#include "CDataBase.h"
+﻿#include "CDataBase.h"
 #include <QFile>
 #include <QDebug>
 #include <QDateTime>
@@ -201,8 +201,8 @@ void CDataBase::SaveAnaItem(QDomDocument &doc, QDomElement &parentNode, AnaItem 
     item.setAttribute("ChanFlag",p->sChanFlag);
     item.setAttribute("VirtualDft",QString::number(p->iXuYCDft));
     item.setAttribute("Coe",p->wCoe);
-    item.setAttribute("RatedSetIndex",p->sRateSetP+"/"+p->sRateSetS);
-    item.setAttribute("RecYbIndex",p->sRecSYb+"/"+p->sRecHYb);
+    item.setAttribute("RatedSetIndex",bindString(p->sRateSetP,p->sRateSetS));
+    item.setAttribute("RecYbIndex",bindString(p->sRecSYb,p->sRecHYb));
     item.setAttribute("DataAttr",QString::number(p->byWidth)+"/"+QString::number(p->byDotBit));
     item.setAttribute("Unit",p->sKiloUnit+"/"+p->sUnit);
     item.setAttribute("Name",p->sName);
@@ -358,9 +358,8 @@ void CDataBase::ParseAnaItem(QDomElement element, AnaConfig *parent)
 
     if(item->byDotBit >= item->byWidth)
     {
-        item->byDotBit = item->byWidth - 1;
         CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
-                          QString("%1表第%2条精度大于或等于位宽，修正为位宽减1!")
+                          QString("%1表第%2条精度大于或等于位宽!")
                           .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("DataAttr").value()) );
         m_MsgInfoList.append(msgInfo);
     }
@@ -388,6 +387,7 @@ bool CDataBase::splitStr(QString &str1, QString &str2, QString src)
     else
     {
         str1 = src;
+        str2 = "";
         return false;
     }
 }
@@ -426,18 +426,21 @@ bool CDataBase::checkName(QString name)
 bool CDataBase::checkSPSetCnnInfo(QString info)
 {
     //检查不分组定值外部连接信息的格式是否正确，是否可以找到外部链接信息,需要输出检查记录
+    //格式错误、关键字错误、索引越限
     return true;
 }
 
 bool CDataBase::checkSoftYBCnnInfo(QString info)
 {
     //检查软压板外部连接信息的格式是否正确，是否可以找到外部链接信息,需要输出检查记录
+    //格式错误、关键字错误、索引越限
     return true;
 }
 
 bool CDataBase::checkBICnnInfo(QString info)
 {
     //检查BI外部连接信息的格式是否正确，是否可以找到外部链接信息,需要输出检查记录
+    //格式错误、关键字错误、索引越限
     return true;
 }
 
@@ -475,4 +478,20 @@ void CDataBase::CheckConfig()
 
     CMsgInfo msgInfoEnd( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_HINT_MSG, QString("表重名检测完成！"));
     m_MsgInfoList.append(msgInfoEnd);
+}
+
+QString CDataBase::bindString(QString str1, QString str2)
+{
+    QString str;
+    if(str1 == "")
+        str = "-1/";
+    else
+        str = str1 +"/";
+
+    if(str2 == "")
+        str += "-1";
+    else
+        str += str2;
+
+    return str;
 }

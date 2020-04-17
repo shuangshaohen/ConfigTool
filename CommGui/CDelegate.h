@@ -1,4 +1,4 @@
-#ifndef CDELEGATE_H
+﻿#ifndef CDELEGATE_H
 #define CDELEGATE_H
 
 #include <QStyledItemDelegate>
@@ -26,6 +26,24 @@ private:
     int m_min;
     int m_max;
     int m_step;
+};
+
+class COMMGUI_EXPORT CComboBoxDelegate : public QItemDelegate
+{
+    Q_OBJECT
+public:
+    explicit CComboBoxDelegate(const QStringList &labels,QObject *parent = nullptr);
+    ~CComboBoxDelegate();
+
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                                        const QModelIndex &index) const;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                                    const QModelIndex &index) const;
+signals:
+
+private:
+    QStringList m_labels;
 };
 
 #endif // CDELEGATE_H

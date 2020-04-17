@@ -1,4 +1,4 @@
-#ifndef CBASEITEMWND_H
+﻿#ifndef CBASEITEMWND_H
 #define CBASEITEMWND_H
 
 #include <CDefaultWnd.h>
@@ -37,10 +37,15 @@ public slots:
 private slots:
     void currentIndexChangedSlot(int index);
     void textChangedSlot(const QString &text);
+
+    virtual void descTextChangedSlot(const QString &text);
+    virtual void keyTextChangedSlot(const QString &text);
 protected:
     QTableWidget    *   m_table;
     QComboBox       *   m_comboBox;
     QLineEdit       *   m_lineEdit;
+    QLineEdit       *   m_lineEditDesc;
+    QLineEdit       *   m_lineEditKey;
 
     void tableExchange(int fromRow, int toRow);
     void tableFilter(int column, QString key);

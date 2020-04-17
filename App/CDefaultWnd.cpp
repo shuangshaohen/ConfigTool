@@ -1,6 +1,6 @@
-#include "CDefaultWnd.h"
-#include "ui_DefaultWnd.h"
+﻿#include "CDefaultWnd.h"
 #include <QTableWidget>
+#include "CCfgMainWnd.h"
 
 CDefaultWnd::CDefaultWnd(QWidget *parent) :
     QWidget(parent)
@@ -20,4 +20,9 @@ void CDefaultWnd::setAlignment(QTableWidget *pTable, Qt::Alignment flag)
             pTable->item(row,column)->setTextAlignment(flag);
         }
     }
+}
+
+void CDefaultWnd::outPutMsgInfo(const CMsgInfo &msgInfo)
+{
+    CCfgMainWnd::Instance()->OutputMsgInfo(msgInfo);
 }

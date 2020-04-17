@@ -1,7 +1,8 @@
-#ifndef CDEFAULTWND_H
+﻿#ifndef CDEFAULTWND_H
 #define CDEFAULTWND_H
 
 #include <QWidget>
+#include "CMsgInfo.h"
 
 class QTableWidget;
 
@@ -25,6 +26,8 @@ public:
 
 protected:
     void setAlignment(QTableWidget *pTable,Qt::Alignment flag);
+
+    void outPutMsgInfo(const CMsgInfo &msgInfo);
 private:
 };
 
