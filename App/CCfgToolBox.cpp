@@ -58,13 +58,18 @@ QSize CCfgToolBox::sizeHint() const
     return QSize(295,50);			//设置初始大小
 }
 
-void CCfgToolBox::CreateIEDTreeNodes(CDataBase *pXercesXML)
+void CCfgToolBox::CreateResourceTreeNodes(CDataBase *pXercesXML)
 {
     if(NULL == pXercesXML)
         return;
 
-    m_pResourceTreeWnd->CreateIEDTreeNodes();
+    m_pResourceTreeWnd->CreateTreeNodes(pXercesXML);
 
+}
+
+void CCfgToolBox::RefreshResourceTreeNodes()
+{
+    m_pResourceTreeWnd->RefreshTreeNodes();
 }
 
 void CCfgToolBox::setIEDPage()

@@ -27,6 +27,7 @@ public:
     void ShowActInfo();
     void ShowRemoteInfo();
 
+    void RefreshResourceInfo();
 protected:
     bool            IsModified();
     void            CreateActions();

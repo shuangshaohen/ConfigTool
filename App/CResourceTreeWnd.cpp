@@ -1,5 +1,6 @@
 #include "CResourceTreeWnd.h"
 #include "CCfgMainWnd.h"
+#include "CDataBase.h"
 #include <QHeaderView>
 
 CResourceTreeWnd::CResourceTreeWnd(QWidget *parent): QTreeWidget(parent)
@@ -50,8 +51,12 @@ CResourceTreeWnd::~CResourceTreeWnd()
     delete m_pCheckEvtTreeWidgetItem;
 }
 
-void CResourceTreeWnd::CreateIEDTreeNodes()
+void CResourceTreeWnd::CreateTreeNodes(CDataBase *pXercesXML)
 {
+    m_pXerceXML = pXercesXML;
+    if(NULL == m_pXerceXML)
+        return;
+
     m_pRootTreeWidgetItem  = new QTreeWidgetItem(this);
     m_pRootTreeWidgetItem->setText( 0, "装置配置" );
     SetNodeType(m_pRootTreeWidgetItem, Enum_Root_Node);
@@ -70,7 +75,7 @@ void CResourceTreeWnd::CreateIEDTreeNodes()
     SetNodeType(m_pSmpTreeWidgetItem, Enum_Ana_Node);
 
     m_pAnaTreeWidgetItem  = new QTreeWidgetItem(m_pSmpTreeWidgetItem);
-    m_pAnaTreeWidgetItem->setText( 0, "AD模拟量" );
+    m_pAnaTreeWidgetItem->setText( 0, "AD模拟量");
     SetNodeType(m_pAnaTreeWidgetItem, Enum_Ana_AD_Node);
 
     m_pDerivedTreeWidgetItem  = new QTreeWidgetItem(m_pSmpTreeWidgetItem);
@@ -158,6 +163,44 @@ void CResourceTreeWnd::CreateIEDTreeNodes()
     SetNodeType(m_pCheckEvtTreeWidgetItem, Enum_Check_Node);
 
     expandItem(m_pRootTreeWidgetItem);
+
+    RefreshTreeNodes();
+}
+
+void CResourceTreeWnd::RefreshTreeNodes()
+{
+    if(NULL == m_pXerceXML)
+    {
+        m_pAnaTreeWidgetItem->setText( 0, "AD模拟量");
+        m_pDerivedTreeWidgetItem->setText( 0, "衍生模拟量" );
+        m_pSvTreeWidgetItem->setText( 0, "SV模拟量" );
+        m_pGsAnaTreeWidgetItem->setText( 0, "GS模拟量" );
+        m_pOherAnaTreeWidgetItem->setText( 0, "其他模拟量" );
+        m_pGeneralBITreeWidgetItem->setText( 0, "硬开入" );
+        m_pSignalTreeWidgetItem->setText( 0, "软遥信" );
+        m_pGSBITreeWidgetItem->setText( 0, "GS开入" );
+        m_pSoftYBTreeWidgetItem->setText( 0, "软压板" );
+        m_pGSBOTreeWidgetItem->setText( 0, "GS开出" );
+        m_pTripMatrixTreeWidgetItem->setText( 0, "跳闸矩阵" );
+        m_pYKTreeWidgetItem->setText( 0, "遥控" );
+        m_pSPSetTreeWidgetItem->setText( 0, "不分组定值" );
+        m_pSGSetTreeWidgetItem->setText( 0, "分组定值" );
+        m_pAlmEvtTreeWidgetItem->setText( 0, "告警记录" );
+        m_pActEvtTreeWidgetItem->setText( 0, "动作记录" );
+        m_pRemoteTripTreeWidgetItem->setText( 0, "远方跳闸" );
+        m_pCheckEvtTreeWidgetItem->setText( 0, "自检记录" );
+        return;
+    }
+
+    GseConfig * config = m_pXerceXML->GetConfig();
+
+    m_pAnaTreeWidgetItem->setText( 0, "AD模拟量" + QString(":%1").arg(config->adAnaConfig.items.size()));
+    m_pDerivedTreeWidgetItem->setText( 0, "衍生模拟量" + QString(":%1").arg(config->derivedConfig.items.size()) );
+    m_pSvTreeWidgetItem->setText( 0, "SV模拟量" + QString(":%1").arg(config->svConfig.items.size()) );
+    m_pGsAnaTreeWidgetItem->setText( 0, "GS模拟量" + QString(":%1").arg(config->gsAnaConfig.items.size()) );
+    m_pOherAnaTreeWidgetItem->setText( 0, "其他模拟量" + QString(":%1").arg(config->otherAnaConfig.items.size()) );
+
+
 }
 
 void CResourceTreeWnd::ClearTreeNode()

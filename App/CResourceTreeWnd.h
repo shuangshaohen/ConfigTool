@@ -69,7 +69,8 @@ public:
     CResourceTreeWnd(QWidget *parent);
     ~CResourceTreeWnd();
 
-    void CreateIEDTreeNodes();
+    void CreateTreeNodes(CDataBase *pXercesXML);
+    void RefreshTreeNodes();
     void ClearTreeNode();
 
     void SetNodeType( QTreeWidgetItem *pTreeWidgetItem, Enum_Node_Type type );

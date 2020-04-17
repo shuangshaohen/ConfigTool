@@ -110,6 +110,11 @@ void CCfgMainWnd::ShowRemoteInfo()
 
 }
 
+void CCfgMainWnd::RefreshResourceInfo()
+{
+    m_pCfgToolBox->RefreshResourceTreeNodes();
+}
+
 bool CCfgMainWnd::IsModified()
 {
     if( NULL==m_pProjectXml )
@@ -225,6 +230,6 @@ void CCfgMainWnd::UpdateToolBoxNode()
 {
     CSplashScreen::Instance()->StartShow();
     CSplashScreen::Instance()->ShowMessage("创建浏览节点");
-    m_pCfgToolBox->CreateIEDTreeNodes(m_pProjectXml);
+    m_pCfgToolBox->CreateResourceTreeNodes(m_pProjectXml);
     CSplashScreen::Instance()->EndShow();
 }

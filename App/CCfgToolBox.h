@@ -19,7 +19,8 @@ public:
     CCfgToolBox(QWidget *parent);
     virtual ~CCfgToolBox(void);
     QSize sizeHint () const;
-    void CreateIEDTreeNodes(CDataBase* pXercesXML);
+    void CreateResourceTreeNodes(CDataBase* pXercesXML);
+    void RefreshResourceTreeNodes();
 
     void setIEDPage();
 

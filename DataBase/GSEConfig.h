@@ -47,6 +47,15 @@ struct DeviceInfo
     QString                 sVersion;
     QString                 sDate;
     QString                 sCRC;
+
+    void clear()
+    {
+        sType = "";
+        sDesc = "";
+        sVersion = "";
+        sDate = "";
+        sCRC = "";
+    }
 };
 
 struct DeviceParas
@@ -57,6 +66,16 @@ struct DeviceParas
     unsigned int            wMaxGooseNum;
     unsigned int            wMaxBoNum;
     unsigned int            wSmpRate;
+
+    void clear()
+    {
+        wMaxAnaNum = 0;
+        wMaxBiNum = 0;
+        wMaxSvNum = 0;
+        wMaxGooseNum = 0;
+        wMaxBoNum = 0;
+        wSmpRate = 0;
+    }
 };
 
 struct AnaItem
@@ -109,6 +128,9 @@ struct AnaConfig
 
     void clear()
     {
+        sDesc = "";
+        sKey = "";
+
         for(int i = 0 ; i < items.size(); i++)
         {
             delete items[i];
@@ -131,6 +153,9 @@ struct GseConfig
 
     void clear()
     {
+        deviceInfo.clear();
+        deviceParas.clear();
+
         adAnaConfig.clear();
         derivedConfig.clear();
         svConfig.clear();
