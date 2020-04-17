@@ -5,18 +5,15 @@
 
 class QTableWidget;
 
-namespace Ui {
-class CDefaultWnd;
-}
-
 class CDefaultWnd : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit CDefaultWnd(QWidget *parent = nullptr);
-    ~CDefaultWnd();
+    virtual ~CDefaultWnd();
 
+    virtual void setTableType(int type){Q_UNUSED(type)};
     virtual void showInfo(void * pData){Q_UNUSED(pData);};
     virtual void AddOper(){};
     virtual void DeleteOper(){};
@@ -27,9 +24,8 @@ public:
     virtual void Clear(){};
 
 protected:
-    void moveRow(QTableWidget *pTable, int fromRow, int toRow);
+    void setAlignment(QTableWidget *pTable,Qt::Alignment flag);
 private:
-    Ui::CDefaultWnd *ui;
 };
 
 #endif // CDEFAULTWND_H

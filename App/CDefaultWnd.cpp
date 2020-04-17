@@ -3,49 +3,21 @@
 #include <QTableWidget>
 
 CDefaultWnd::CDefaultWnd(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::CDefaultWnd)
+    QWidget(parent)
 {
-    ui->setupUi(this);
+
 }
 
 CDefaultWnd::~CDefaultWnd()
 {
-    delete ui;
+
 }
 
-void CDefaultWnd::moveRow(QTableWidget *pTable, int fromRow, int toRow)
+void CDefaultWnd::setAlignment(QTableWidget *pTable, Qt::Alignment flag)
 {
-    if( pTable == NULL )
-        return;
-
-    pTable->setFocus();
-
-    if( fromRow == toRow )
-        return;
-
-    if( fromRow < 0 || toRow < 0 )
-        return;
-
-    int nRowCount = pTable->rowCount();
-
-    if( fromRow >= nRowCount  || toRow > nRowCount )
-        return;
-
-    if( toRow < fromRow )
-        fromRow++;
-
-    pTable->insertRow( toRow );
-    int nCol = pTable->columnCount();
-
-    for( int i=0; i<nCol; i++ )
-    {
-        pTable->setItem( toRow, i, pTable->takeItem( fromRow , i ) );
+    for (int row = 0; row < pTable->rowCount(); row++) {
+        for (int column = 0; column < pTable->columnCount();column++) {
+            pTable->item(row,column)->setTextAlignment(flag);
+        }
     }
-
-    if( fromRow < toRow  )
-        toRow--;
-
-    pTable->removeRow( fromRow );
-    pTable->selectRow( toRow );
 }

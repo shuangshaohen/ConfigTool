@@ -34,6 +34,11 @@ public:
     static bool     splitStr(QString & str1, QString & str2, QString src);
     static bool     splitUnInt(unsigned int & num1, unsigned int & num2, QString src);
 
+    bool            checkName(QString name);
+    bool            checkSPSetCnnInfo(QString info);
+    bool            checkSoftYBCnnInfo(QString info);
+    bool            checkBICnnInfo(QString info);
+
     static QString  changeDecToHex(unsigned int val);
     static bool     changeQStringToUInt(unsigned int &val, QString str);
 private:

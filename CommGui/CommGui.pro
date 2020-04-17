@@ -33,12 +33,14 @@ DESTDIR = ../bin
 SOURCES += \
     CBaseThread.cpp \
     CCommActions.cpp \
+    CDelegate.cpp \
     CDockWidget.cpp \
     CMainWnd.cpp \
     CSplashScreen.cpp
 
 HEADERS += \
     CBaseThread.h \
+    CDelegate.h \
     CDockWidget.h \
     COutputWnd.h \
     CCommActions.h \

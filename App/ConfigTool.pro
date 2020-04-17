@@ -27,26 +27,34 @@ TARGET = CfgTool
 DESTDIR = ../bin
 
 SOURCES += \
+    CAnaItemWnd.cpp \
+    CBaseItemWnd.cpp \
     CCfgActions.cpp \
     CCfgCenterWnd.cpp \
     CCfgMainWnd.cpp \
     CCfgToolBox.cpp \
     CDefaultWnd.cpp \
+    CDeviceInfoWnd.cpp \
+    CDeviceParasWnd.cpp \
     CResourceTreeWnd.cpp \
     main.cpp \
 
 HEADERS += \
+    CAnaItemWnd.h \
+    CBaseItemWnd.h \
     CCfgActions.h \
     CCfgCenterWnd.h \
     CCfgToolBox.h \
     CDefaultWnd.h \
+    CDeviceInfoWnd.h \
+    CDeviceParasWnd.h \
     CMainWnd.h \
     CDataBase.h \
     CCfgMainWnd.h \ \
     CResourceTreeWnd.h
 
 FORMS += \
-    DefaultWnd.ui \
+    BaseItemWnd.ui \
     ToolBox.ui
 
 TRANSLATIONDebugS += \

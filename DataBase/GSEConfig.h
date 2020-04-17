@@ -14,11 +14,31 @@
 #define CN_SEND_ATTR        (0x2)       //0x02:信号上送标志
 #define CN_COMTRAD_ATTR     (0x4)       //0x04:录波标志
 
+
+enum _Enum_DeviceInfoTable_Column
+{
+    Enum_DeviceInfoTable_Type_Col = 0,      //装置类型
+    Enum_DeviceInfoTable_Desc_Col,          //描述
+    Enum_DeviceInfoTable_Version_Col,       //版本
+    Enum_DeviceInfoTable_Date_Col,          //配置文件日期
+    Enum_DeviceInfoTable_CRC_Col,           //配置文件校验码
+};
+
+enum _Enum_DeviceParasTable_Column
+{
+    Enum_DeviceParasTable_AnaNum_Col = 0,       //
+    Enum_DeviceParasTable_BiNum_Col,            //
+    Enum_DeviceParasTable_SvNum_Col,            //
+    Enum_DeviceParasTable_GsNum_Col,            //
+    Enum_DeviceParasTable_BoNum_Col,            //
+    Enum_DeviceParasTable_SmpRate_Col,          //
+};
+
 enum _Enum_PubTable_Column
 {
-    Enum_PubTable_Index_Col = 0,    //索引
-    Enum_PubTable_Desc_Col,         //描述
-    Enum_AnaTable_Name_Col,         //名字
+//    Enum_PubTable_Index_Col = 0,    //索引
+    Enum_PubTable_Desc_Col = 0,     //描述
+    Enum_PubTable_Name_Col,         //名字
     Enum_PubTable_Attr_Col,         //通道属性
 
     Enum_PubTable_End = Enum_PubTable_Attr_Col,
@@ -34,7 +54,7 @@ enum _Enum_AnaTable_Column
     Enum_AnaTable_RateSetS_Col,                             //关联的一次额定值索引号/二次额定值索引号
     Enum_AnaTable_RecSYb_Col,
     Enum_AnaTable_RecHYb_Col,                               //是否接收sv软压板号/硬压板号
-    Enum_AnaTable_DataWith_Col,
+    Enum_AnaTable_DataWidth_Col,
     Enum_AnaTable_DataDot_Col,                              //数据属性Width/DotBit
     Enum_AnaTable_Unit_Col,
     Enum_AnaTable_KUnit_Col,                                //一次值单位/二次值单位

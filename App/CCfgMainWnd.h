@@ -15,17 +15,9 @@ public:
     static CCfgMainWnd* Instance();
 
     void ShowDefaultInfo();
-    void ShowRootInfo();
-    void ShowAnaInfo();
-    void ShowBIInfo();
-    void ShowGSBIInfo();
-    void ShowGSBOInfo();
-    void ShowTripMatrixInfo();
-    void ShowSettingInfo();
-    void ShowSoftYBInfo();
-    void ShowAlarmInfo();
-    void ShowActInfo();
-    void ShowRemoteInfo();
+    void ShowDeviceInfo();
+    void ShowDeviceParas();
+    void ShowADAnaTable();
 
     void RefreshResourceInfo();
 protected:

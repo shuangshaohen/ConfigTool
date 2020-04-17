@@ -205,7 +205,7 @@ void CDataBase::SaveAnaItem(QDomDocument &doc, QDomElement &parentNode, AnaItem 
     item.setAttribute("RecYbIndex",p->sRecSYb+"/"+p->sRecHYb);
     item.setAttribute("DataAttr",QString::number(p->byWidth)+"/"+QString::number(p->byDotBit));
     item.setAttribute("Unit",p->sKiloUnit+"/"+p->sUnit);
-    item.setAttribute("Desc",p->sName);
+    item.setAttribute("Name",p->sName);
     parentNode.appendChild(item);
 }
 
@@ -356,6 +356,15 @@ void CDataBase::ParseAnaItem(QDomElement element, AnaConfig *parent)
         m_MsgInfoList.append(msgInfo);
     }
 
+    if(item->byDotBit >= item->byWidth)
+    {
+        item->byDotBit = item->byWidth - 1;
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+                          QString("%1表第%2条精度大于或等于位宽，修正为位宽减1!")
+                          .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("DataAttr").value()) );
+        m_MsgInfoList.append(msgInfo);
+    }
+
     if(false == splitStr(item->sKiloUnit,item->sUnit,element.attributeNode("Unit").value()))
     {
         CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
@@ -406,6 +415,30 @@ bool CDataBase::splitUnInt(unsigned int &num1, unsigned int &num2, QString src)
     {
         return false;
     }
+}
+
+bool CDataBase::checkName(QString name)
+{
+    //名称全局唯一,有重复时提示输出，返回false
+    return true;
+}
+
+bool CDataBase::checkSPSetCnnInfo(QString info)
+{
+    //检查不分组定值外部连接信息的格式是否正确，是否可以找到外部链接信息,需要输出检查记录
+    return true;
+}
+
+bool CDataBase::checkSoftYBCnnInfo(QString info)
+{
+    //检查软压板外部连接信息的格式是否正确，是否可以找到外部链接信息,需要输出检查记录
+    return true;
+}
+
+bool CDataBase::checkBICnnInfo(QString info)
+{
+    //检查BI外部连接信息的格式是否正确，是否可以找到外部链接信息,需要输出检查记录
+    return true;
 }
 
 QString CDataBase::changeDecToHex(unsigned int val)

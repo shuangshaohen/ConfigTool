@@ -45,69 +45,22 @@ void CCfgMainWnd::ShowDefaultInfo()
     m_pCenterWnd->ShowDefaultInfo(m_pProjectXml);
 }
 
-void CCfgMainWnd::ShowRootInfo()
+void CCfgMainWnd::ShowDeviceInfo()
 {
     GetCommAction()->m_pEditToolBar->setEnabled(false);
-    m_pCenterWnd->ShowDefaultInfo(m_pProjectXml);
+    m_pCenterWnd->ShowDeviceInfo(m_pProjectXml);
 }
 
-void CCfgMainWnd::ShowAnaInfo()
+void CCfgMainWnd::ShowDeviceParas()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(false);
+    m_pCenterWnd->ShowDeviceParas(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowADAnaTable()
 {
     GetCommAction()->m_pEditToolBar->setEnabled(true);
-    m_pCenterWnd->ShowAnaInfo(m_pProjectXml);
-}
-
-void CCfgMainWnd::ShowBIInfo()
-{
-    GetCommAction()->m_pEditToolBar->setEnabled(true);
-    m_pCenterWnd->ShowBIInfo(m_pProjectXml);
-}
-
-void CCfgMainWnd::ShowGSBIInfo()
-{
-    GetCommAction()->m_pEditToolBar->setEnabled(true);
-    m_pCenterWnd->ShowGSBIInfo(m_pProjectXml);
-}
-
-void CCfgMainWnd::ShowGSBOInfo()
-{
-    GetCommAction()->m_pEditToolBar->setEnabled(true);
-    m_pCenterWnd->ShowGSBOInfo(m_pProjectXml);
-}
-
-void CCfgMainWnd::ShowTripMatrixInfo()
-{
-    GetCommAction()->m_pEditToolBar->setEnabled(true);
-    m_pCenterWnd->ShowTripMatrixInfo(m_pProjectXml);
-}
-
-void CCfgMainWnd::ShowSettingInfo()
-{
-    GetCommAction()->m_pEditToolBar->setEnabled(true);
-    m_pCenterWnd->ShowSettingInfo(m_pProjectXml);
-}
-
-void CCfgMainWnd::ShowSoftYBInfo()
-{
-    GetCommAction()->m_pEditToolBar->setEnabled(true);
-    m_pCenterWnd->ShowSoftYBInfo(m_pProjectXml);
-}
-
-void CCfgMainWnd::ShowAlarmInfo()
-{
-    GetCommAction()->m_pEditToolBar->setEnabled(true);
-    m_pCenterWnd->ShowAlmRecInfo(m_pProjectXml);
-}
-
-void CCfgMainWnd::ShowActInfo()
-{
-    GetCommAction()->m_pEditToolBar->setEnabled(true);
-    m_pCenterWnd->ShowActRecInfo(m_pProjectXml);
-}
-
-void CCfgMainWnd::ShowRemoteInfo()
-{
-
+    m_pCenterWnd->ShowADAnaTable(m_pProjectXml);
 }
 
 void CCfgMainWnd::RefreshResourceInfo()

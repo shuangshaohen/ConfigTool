@@ -234,9 +234,18 @@ void CResourceTreeWnd::ShowCurrentNodeInfoWnd()
 
     switch(nNodeType)
     {
-    case Enum_Ana_Node:
-        CCfgMainWnd::Instance()->ShowAnaInfo();
+    case Enum_DeviceInfo_Node:
+        CCfgMainWnd::Instance()->ShowDeviceInfo();
         break;
+    case Enum_DeviceParas_Node:
+        CCfgMainWnd::Instance()->ShowDeviceParas();
+        break;
+    case Enum_Ana_AD_Node:
+        CCfgMainWnd::Instance()->ShowADAnaTable();
+        break;
+//    case Enum_Ana_AD_Node:
+//        CCfgMainWnd::Instance()->ShowAnaInfo();
+//        break;
         //TODO
     default:
         CCfgMainWnd::Instance()->ShowDefaultInfo();
