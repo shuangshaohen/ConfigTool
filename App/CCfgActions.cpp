@@ -24,7 +24,7 @@ void CCfgActions::CreateFileMenu()
     m_pFileMenu = m_pCfgMainWnd->menuBar()->addMenu("文件(&F)");
     m_pFileMenu->addAction(QIcon(":/png/Icon/FileNew.png"),"新建配置文件", m_pCfgMainWnd, SLOT(NewCfgProjectFileSlot()), QKeySequence(tr("Ctrl+N")));
     m_pFileMenu->addAction(QIcon(":/png/Icon/FileOpen.png"),"打开配置文件", m_pCfgMainWnd, SLOT(OpenProjectFileSlot()), QKeySequence(tr("Ctrl+O")));
-    m_pFileMenu->addAction(QIcon(":/png/Icon/FileSave.png"),"保存配置文件", m_pCfgMainWnd, SLOT(SaveProjectFileSlot()), QKeySequence(tr("Ctrl+S")));
+    m_pFileMenu->addAction(QIcon(":/png/Icon/FileSave.png"),"保存配置文件", m_pCfgMainWnd, SLOT(SaveProjectFileSlot()), QKeySequence(tr("Ctrl+Shift+S")));
 
     m_pFileMenu->addAction("配置另存为...", m_pCfgMainWnd, SLOT(SaveAsProjectFileSlot()) );
     m_pFileMenu->addSeparator();
@@ -78,11 +78,6 @@ void CCfgActions::CreateEditFileToolBar()
     pDeleteAction->setStatusTip(tr("删除"));
     connect(pDeleteAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(DeleteSlot()));
 
-    //复制
-    QAction *pCopyAction = m_pEditToolBar->addAction ( QIcon(":/png/Icon/copy.png"), "复制" );
-    pCopyAction->setStatusTip(tr("复制"));
-    connect(pCopyAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(CopySlot()));
-
     //上移
     QAction *pUpAction = m_pEditToolBar->addAction ( QIcon(":/png/Icon/up.png"), "上移" );
     pUpAction->setStatusTip(tr("上移"));
@@ -96,6 +91,24 @@ void CCfgActions::CreateEditFileToolBar()
 
     m_pCfgMainWnd->addToolBar(Qt::TopToolBarArea, m_pEditToolBar);
     m_pEditToolBar->setEnabled(false);
+}
+
+void CCfgActions::CreateSaveToolBar()
+{
+    m_pSaveToolBar = new QToolBar("保存工具条",m_pCfgMainWnd);
+    //确认更改
+    QAction *pSubmitAction = m_pSaveToolBar->addAction ( QIcon(":/png/Icon/submit.png"), "确认更改" );
+    pSubmitAction->setStatusTip(tr("确认更改"));
+    pSubmitAction->setShortcut(QKeySequence(tr("Ctrl+S")));
+    connect(pSubmitAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(SubmitSlot()));
+
+    //撤销更改
+    QAction *pRevertAction = m_pSaveToolBar->addAction ( QIcon(":/png/Icon/revert.png"), "撤销更改" );
+    pRevertAction->setStatusTip(tr("撤销更改"));
+    pRevertAction->setShortcut(QKeySequence(tr("Ctrl+Z")));
+    connect(pRevertAction, SIGNAL(triggered()), m_pCfgMainWnd, SLOT(RevertSlot()));
+    m_pCfgMainWnd->addToolBar(Qt::TopToolBarArea, m_pSaveToolBar);
+    m_pSaveToolBar->setEnabled(false);
 }
 
 void CCfgActions::CreateAppFileToolBar()

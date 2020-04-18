@@ -63,9 +63,38 @@ void CCfgMainWnd::ShowADAnaTable()
     m_pCenterWnd->ShowADAnaTable(m_pProjectXml);
 }
 
+void CCfgMainWnd::ShowDerivedInfoTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowDerivedInfoTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowSVInfoTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowSVInfoTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowGSAnaInfoTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowGSAnaInfoTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowOtherAnaTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowOtherAnaTable(m_pProjectXml);
+}
+
 void CCfgMainWnd::RefreshResourceInfo()
 {
     m_pCfgToolBox->RefreshResourceTreeNodes();
+}
+
+void CCfgMainWnd::SetModified(bool bModified)
+{
+    GetCommAction()->m_pSaveToolBar->setEnabled(bModified);
 }
 
 bool CCfgMainWnd::IsModified()
@@ -145,11 +174,6 @@ void CCfgMainWnd::DeleteSlot()
     m_pCenterWnd->DeleteInfo();
 }
 
-void CCfgMainWnd::CopySlot()
-{
-    m_pCenterWnd->CopyInfo();
-}
-
 void CCfgMainWnd::UpSlot()
 {
     m_pCenterWnd->UpInfo();
@@ -158,6 +182,21 @@ void CCfgMainWnd::UpSlot()
 void CCfgMainWnd::DownSlot()
 {
     m_pCenterWnd->DownInfo();
+}
+
+void CCfgMainWnd::SubmitSlot()
+{
+    SetModified(false);
+    m_pProjectXml->Submit();
+    RefreshResourceInfo();
+}
+
+void CCfgMainWnd::RevertSlot()
+{
+    SetModified(false);
+    m_pProjectXml->Revert();
+    RefreshResourceInfo();
+    m_pCfgToolBox->ShowCurrentNodeInfoWnd();
 }
 
 void CCfgMainWnd::NewCfgProjectFileSlot()

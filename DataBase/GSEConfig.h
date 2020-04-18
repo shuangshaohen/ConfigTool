@@ -121,7 +121,7 @@ struct AnaItem
     AnaItem(unsigned int index)
     {
         wIndex = index;
-        sDesc = QString("条目%1").arg(index);
+        sDesc = QString("缺省%1").arg(index);
         sName = QString("item%1").arg(index);
         dwAttr = 0;
 
@@ -135,8 +135,8 @@ struct AnaItem
         sRecHYb = "-1";
         byWidth = 7;
         byDotBit = 3;
-        sUnit = "";
-        sKiloUnit = "";
+        sUnit = "N";
+        sKiloUnit = "N";
     }
 };
 

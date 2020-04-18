@@ -72,6 +72,11 @@ void CCfgToolBox::RefreshResourceTreeNodes()
     m_pResourceTreeWnd->RefreshTreeNodes();
 }
 
+void CCfgToolBox::ShowCurrentNodeInfoWnd()
+{
+    m_pResourceTreeWnd->ShowCurrentNodeInfoWnd();
+}
+
 void CCfgToolBox::setIEDPage()
 {
     setCurrentWidget(m_pUi_ToolBox->m_ResourceEditPage);

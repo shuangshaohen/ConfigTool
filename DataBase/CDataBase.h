@@ -27,6 +27,9 @@ public:
 
     bool            GetModified();
 
+    void            Submit();
+    void            Revert();
+
     const           QList<CMsgInfo>& GetMsgInfoList(){ return m_MsgInfoList; };
 
     void            ClearMsgInfoList();
@@ -35,16 +38,20 @@ public:
     static bool     splitUnInt(unsigned int & num1, unsigned int & num2, QString src);
 
     bool            checkName(QString name);
+    bool            checkNameDuplicate(QString name);
     bool            checkSPSetCnnInfo(QString info);
     bool            checkSoftYBCnnInfo(QString info);
-    bool            checkBICnnInfo(QString info);
+    bool            checkHardBICnnInfo(QString info);
 
     static QString  changeDecToHex(unsigned int val);
     static bool     changeQStringToUInt(unsigned int &val, QString str);
 private:
     GseConfig       m_Config;
+    GseConfig       m_SaveConfig;
     bool            m_bModified;
     QList<CMsgInfo>	m_MsgInfoList;
+
+    void            copyConfig(GseConfig * pSrc, GseConfig * pDst);
 
     //文件解析
     void            ParseDeviceInfo(QDomElement element);

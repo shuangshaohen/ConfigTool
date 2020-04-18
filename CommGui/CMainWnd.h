@@ -62,6 +62,8 @@ protected slots:
     virtual void CloseProjectFileSlot();
     //编辑菜单槽
 
+    virtual void SubmitSlot(){};
+
     //视图工具条
     void ShowConsoleWndSlot();
     void ShowManageWndSlot();

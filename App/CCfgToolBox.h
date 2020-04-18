@@ -21,6 +21,7 @@ public:
     QSize sizeHint () const;
     void CreateResourceTreeNodes(CDataBase* pXercesXML);
     void RefreshResourceTreeNodes();
+    void ShowCurrentNodeInfoWnd();
 
     void setIEDPage();
 

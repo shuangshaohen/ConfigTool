@@ -9,5 +9,10 @@
         <file>Icon/minus.png</file>
         <file>Icon/plus.png</file>
         <file>Icon/up.png</file>
+        <file>Icon/revert.png</file>
+        <file>Icon/submit.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>Icon/revert.png</file>
     </qresource>
 </RCC>

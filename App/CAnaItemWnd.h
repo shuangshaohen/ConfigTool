@@ -24,10 +24,17 @@ public:
     void setTableType(int type) override;
     void showInfo(void * pData) override;
 
+    void AddOper() override;
+    void DeleteOper() override;
+    void UpOper() override;
+    void DownOper() override;
 signals:
 
+protected:
+    bool checkItemVal(QTableWidgetItem *item) override;
+
 protected slots:
-    void itemChangedSlot(QTableWidgetItem *item);
+    void itemChangedSlot(QTableWidgetItem *item) override;
     void keyTextChangedSlot(const QString &text) override;
     void descTextChangedSlot(const QString &text) override;
 private:
@@ -35,6 +42,8 @@ private:
     int                 m_type;
 
     void createItem(int row, AnaItem * item);
+
+    AnaConfig *     getConfig();
 };
 
 #endif // CANAITEMWND_H

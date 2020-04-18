@@ -15,9 +15,25 @@ CCfgCenterWnd::CCfgCenterWnd(QWidget *parent) : QStackedWidget(parent)
     m_pDeviceParasWnd = new CDeviceParasWnd(this);
     addWidget(m_pDeviceParasWnd);
 
-    m_pADAnaParasWnd = new CAnaItemWnd(this);
-    m_pADAnaParasWnd->setTableType(Enum_AnaTable_Type_AD);
-    addWidget(m_pADAnaParasWnd);
+    m_pADAnaInfoWnd = new CAnaItemWnd(this);
+    m_pADAnaInfoWnd->setTableType(Enum_AnaTable_Type_AD);
+    addWidget(m_pADAnaInfoWnd);
+
+    m_pDerivedInfoWnd = new CAnaItemWnd(this);
+    m_pDerivedInfoWnd->setTableType(Enum_AnaTable_Type_Derived);
+    addWidget(m_pDerivedInfoWnd);
+
+    m_pSVInfoWnd = new CAnaItemWnd(this);
+    m_pSVInfoWnd->setTableType(Enum_AnaTable_Type_SV);
+    addWidget(m_pSVInfoWnd);
+
+    m_pGSAnaInfoWnd = new CAnaItemWnd(this);
+    m_pGSAnaInfoWnd->setTableType(Enum_AnaTable_Type_GS);
+    addWidget(m_pGSAnaInfoWnd);
+
+    m_pOtherAnaInfoWnd = new CAnaItemWnd(this);
+    m_pOtherAnaInfoWnd->setTableType(Enum_AnaTable_Type_Other);
+    addWidget(m_pOtherAnaInfoWnd);
 }
 
 CCfgCenterWnd::~CCfgCenterWnd()
@@ -25,7 +41,11 @@ CCfgCenterWnd::~CCfgCenterWnd()
     delete m_pDefaultWnd;
     delete m_pDeviceInfoWnd;
     delete m_pDeviceParasWnd;
-    delete m_pADAnaParasWnd;
+    delete m_pADAnaInfoWnd;
+    delete m_pDerivedInfoWnd;
+    delete m_pSVInfoWnd;
+    delete m_pGSAnaInfoWnd;
+    delete m_pOtherAnaInfoWnd;
 }
 
 void CCfgCenterWnd::ShowDefaultInfo(CDataBase *pData)
@@ -48,8 +68,32 @@ void CCfgCenterWnd::ShowDeviceParas(CDataBase *pData)
 
 void CCfgCenterWnd::ShowADAnaTable(CDataBase *pData)
 {
-    m_pADAnaParasWnd->showInfo(pData);
-    this->setCurrentWidget(m_pADAnaParasWnd);
+    m_pADAnaInfoWnd->showInfo(pData);
+    this->setCurrentWidget(m_pADAnaInfoWnd);
+}
+
+void CCfgCenterWnd::ShowDerivedInfoTable(CDataBase *pData)
+{
+    m_pDerivedInfoWnd->showInfo(pData);
+    this->setCurrentWidget(m_pDerivedInfoWnd);
+}
+
+void CCfgCenterWnd::ShowSVInfoTable(CDataBase *pData)
+{
+    m_pSVInfoWnd->showInfo(pData);
+    this->setCurrentWidget(m_pSVInfoWnd);
+}
+
+void CCfgCenterWnd::ShowGSAnaInfoTable(CDataBase *pData)
+{
+    m_pGSAnaInfoWnd->showInfo(pData);
+    this->setCurrentWidget(m_pGSAnaInfoWnd);
+}
+
+void CCfgCenterWnd::ShowOtherAnaTable(CDataBase *pData)
+{
+    m_pOtherAnaInfoWnd->showInfo(pData);
+    this->setCurrentWidget(m_pOtherAnaInfoWnd);
 }
 
 void CCfgCenterWnd::AddInfo()
@@ -64,13 +108,6 @@ void CCfgCenterWnd::DeleteInfo()
     QWidget* pWidget = currentWidget ();
     CDefaultWnd * pWnd = (CDefaultWnd *) pWidget;
     pWnd->DeleteOper();
-}
-
-void CCfgCenterWnd::CopyInfo()
-{
-    QWidget* pWidget = currentWidget ();
-    CDefaultWnd * pWnd = (CDefaultWnd *) pWidget;
-    pWnd->CopyOper();
 }
 
 void CCfgCenterWnd::UpInfo()
@@ -92,5 +129,9 @@ void CCfgCenterWnd::ClearTableModel()
     m_pDefaultWnd->Clear();
     m_pDeviceInfoWnd->Clear();
     m_pDeviceParasWnd->Clear();
-    m_pADAnaParasWnd->Clear();
+    m_pADAnaInfoWnd->Clear();
+    m_pDerivedInfoWnd->Clear();
+    m_pSVInfoWnd->Clear();
+    m_pGSAnaInfoWnd->Clear();
+    m_pOtherAnaInfoWnd->Clear();
 }

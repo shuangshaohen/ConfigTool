@@ -19,10 +19,13 @@ public:
     void ShowDeviceInfo(CDataBase * pData);
     void ShowDeviceParas(CDataBase * pData);
     void ShowADAnaTable(CDataBase * pData);
+    void ShowDerivedInfoTable(CDataBase * pData);
+    void ShowSVInfoTable(CDataBase * pData);
+    void ShowGSAnaInfoTable(CDataBase * pData);
+    void ShowOtherAnaTable(CDataBase * pData);
 
     void AddInfo();
     void DeleteInfo();
-    void CopyInfo();
     void UpInfo();
     void DownInfo();
 
@@ -31,7 +34,11 @@ private:
     CDefaultWnd *   m_pDefaultWnd;
     CDefaultWnd *   m_pDeviceInfoWnd;
     CDefaultWnd *   m_pDeviceParasWnd;
-    CDefaultWnd *   m_pADAnaParasWnd;
+    CDefaultWnd *   m_pADAnaInfoWnd;
+    CDefaultWnd *   m_pDerivedInfoWnd;
+    CDefaultWnd *   m_pSVInfoWnd;
+    CDefaultWnd *   m_pGSAnaInfoWnd;
+    CDefaultWnd *   m_pOtherAnaInfoWnd;
 };
 
 #endif // CCFGCENTERWND_H

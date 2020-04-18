@@ -98,6 +98,7 @@ bool CDataBase::ParseConfig(const QString &fileName)
     CMsgInfo msgInfoEnd( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_HINT_MSG, strInfoEnd);
     m_MsgInfoList.append(msgInfoEnd);
 
+    copyConfig(&m_Config,&m_SaveConfig);
     return true;
 }
 
@@ -155,11 +156,11 @@ void CDataBase::SaveRoot(QDomDocument &doc, QString str)
     QDomElement smpConfig = doc.createElement("SmpConfig");
     smpConfig.setAttribute("Desc",QString("采样通道配置"));
     //子表保存
-    SaveAnaTable(doc,smpConfig,&m_Config.adAnaConfig,"AnaConfig");
-    SaveAnaTable(doc,smpConfig,&m_Config.derivedConfig,"DerivedConfig");
-    SaveAnaTable(doc,smpConfig,&m_Config.svConfig,"SvConfig");
-    SaveAnaTable(doc,smpConfig,&m_Config.gsAnaConfig,"GSConfig");
-    SaveAnaTable(doc,smpConfig,&m_Config.otherAnaConfig,"OtherConfig");
+    SaveAnaTable(doc,smpConfig,&m_SaveConfig.adAnaConfig,"AnaConfig");
+    SaveAnaTable(doc,smpConfig,&m_SaveConfig.derivedConfig,"DerivedConfig");
+    SaveAnaTable(doc,smpConfig,&m_SaveConfig.svConfig,"SvConfig");
+    SaveAnaTable(doc,smpConfig,&m_SaveConfig.gsAnaConfig,"GSConfig");
+    SaveAnaTable(doc,smpConfig,&m_SaveConfig.otherAnaConfig,"OtherConfig");
 
     root.appendChild(smpConfig);
 
@@ -169,25 +170,25 @@ void CDataBase::SaveRoot(QDomDocument &doc, QString str)
 void CDataBase::SaveDeviceInfo(QDomDocument &doc, QDomElement &parentNode)
 {
     QDomElement deviceInfo = doc.createElement("DeviceInfo");
-    deviceInfo.setAttribute("Type", m_Config.deviceInfo.sType);
-    deviceInfo.setAttribute("Desc",  m_Config.deviceInfo.sDesc);
-    deviceInfo.setAttribute("Version", m_Config.deviceInfo.sVersion);
+    deviceInfo.setAttribute("Type", m_SaveConfig.deviceInfo.sType);
+    deviceInfo.setAttribute("Desc",  m_SaveConfig.deviceInfo.sDesc);
+    deviceInfo.setAttribute("Version", m_SaveConfig.deviceInfo.sVersion);
     QDateTime time = QDateTime::currentDateTime();
     QString str = time.toString("yyyy-MM-dd hh:mm:ss");
     deviceInfo.setAttribute("Date", str);
-    deviceInfo.setAttribute("CRC", m_Config.deviceInfo.sCRC);
+    deviceInfo.setAttribute("CRC", m_SaveConfig.deviceInfo.sCRC);
     parentNode.appendChild(deviceInfo);
 }
 
 void CDataBase::SaveDeviceDeviceParas(QDomDocument &doc, QDomElement &parentNode)
 {
     QDomElement deviceParas = doc.createElement("DeviceParas");
-    deviceParas.setAttribute("MaxAnaNum", QString::number(m_Config.deviceParas.wMaxAnaNum));
-    deviceParas.setAttribute("MaxBiNum", QString::number(m_Config.deviceParas.wMaxBiNum));
-    deviceParas.setAttribute("MaxSvNum", QString::number(m_Config.deviceParas.wMaxSvNum));
-    deviceParas.setAttribute("MaxGooseNum", QString::number(m_Config.deviceParas.wMaxGooseNum));
-    deviceParas.setAttribute("MaxBoNum", QString::number(m_Config.deviceParas.wMaxBoNum));
-    deviceParas.setAttribute("SmpRate", QString::number(m_Config.deviceParas.wSmpRate));
+    deviceParas.setAttribute("MaxAnaNum", QString::number(m_SaveConfig.deviceParas.wMaxAnaNum));
+    deviceParas.setAttribute("MaxBiNum", QString::number(m_SaveConfig.deviceParas.wMaxBiNum));
+    deviceParas.setAttribute("MaxSvNum", QString::number(m_SaveConfig.deviceParas.wMaxSvNum));
+    deviceParas.setAttribute("MaxGooseNum", QString::number(m_SaveConfig.deviceParas.wMaxGooseNum));
+    deviceParas.setAttribute("MaxBoNum", QString::number(m_SaveConfig.deviceParas.wMaxBoNum));
+    deviceParas.setAttribute("SmpRate", QString::number(m_SaveConfig.deviceParas.wSmpRate));
     parentNode.appendChild(deviceParas);
 }
 
@@ -239,6 +240,18 @@ void CDataBase::SetModified(bool bModified)
 bool CDataBase::GetModified()
 {
     return m_bModified;
+}
+
+void CDataBase::Submit()
+{
+    copyConfig(&m_Config,&m_SaveConfig);
+    m_bModified = true;
+}
+
+void CDataBase::Revert()
+{
+    copyConfig(&m_SaveConfig,&m_Config);
+    m_bModified = true;
 }
 
 void CDataBase::ClearMsgInfoList()
@@ -310,7 +323,7 @@ void CDataBase::ParseAnaItem(QDomElement element, AnaConfig *parent)
 
     if(changeQStringToUInt(item->dwAttr, element.attributeNode("ChanAttr").value()) == false)
     {
-        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
                           QString("%1表第%2条ChanAttr参数%3解析格式失败!")
                           .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("ChanAttr").value()) );
         m_MsgInfoList.append(msgInfo);
@@ -323,7 +336,7 @@ void CDataBase::ParseAnaItem(QDomElement element, AnaConfig *parent)
     item->iXuYCDft  = element.attributeNode("VirtualDft").value().toInt(&ok);
     if(ok == false)
     {
-        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
                           QString("%1表第%2条VirtualDft参数%3解析格式失败!")
                           .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("VirtualDft").value()) );
         m_MsgInfoList.append(msgInfo);
@@ -334,7 +347,7 @@ void CDataBase::ParseAnaItem(QDomElement element, AnaConfig *parent)
 
     if(false == splitStr(item->sRateSetP,item->sRateSetS,element.attributeNode("RatedSetIndex").value()))
     {
-        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
                           QString("%1表第%2条RatedSetIndex参数%3解析格式失败!")
                           .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("RatedSetIndex").value()) );
         m_MsgInfoList.append(msgInfo);
@@ -342,7 +355,7 @@ void CDataBase::ParseAnaItem(QDomElement element, AnaConfig *parent)
 
     if(false == splitStr(item->sRecSYb,item->sRecHYb,element.attributeNode("RecYbIndex").value()))
     {
-        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
                           QString("%1表第%2条RecYbIndex参数%3解析格式失败!")
                           .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("RecYbIndex").value()) );
         m_MsgInfoList.append(msgInfo);
@@ -350,7 +363,7 @@ void CDataBase::ParseAnaItem(QDomElement element, AnaConfig *parent)
 
     if(false == splitUnInt(item->byWidth,item->byDotBit,element.attributeNode("DataAttr").value()))
     {
-        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
                           QString("%1表第%2条DataAttr参数%3解析格式失败!")
                           .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("DataAttr").value()) );
         m_MsgInfoList.append(msgInfo);
@@ -358,15 +371,15 @@ void CDataBase::ParseAnaItem(QDomElement element, AnaConfig *parent)
 
     if(item->byDotBit >= item->byWidth)
     {
-        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
-                          QString("%1表第%2条精度大于或等于位宽!")
-                          .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("DataAttr").value()) );
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
+                          QString("%1表第%2条精度(%3)大于或等于位宽(%4)!")
+                          .arg(parent->sDesc).arg(item->wIndex).arg(item->byDotBit).arg(item->byWidth) );
         m_MsgInfoList.append(msgInfo);
     }
 
     if(false == splitStr(item->sKiloUnit,item->sUnit,element.attributeNode("Unit").value()))
     {
-        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
                           QString("%1表第%2条Unit参数%3解析格式失败!")
                           .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("Unit").value()) );
         m_MsgInfoList.append(msgInfo);
@@ -419,7 +432,13 @@ bool CDataBase::splitUnInt(unsigned int &num1, unsigned int &num2, QString src)
 
 bool CDataBase::checkName(QString name)
 {
-    //名称全局唯一,有重复时提示输出，返回false
+    //改名的时候用，名称全局唯一,已有此名字时提示输出，返回false
+    return true;
+}
+
+bool CDataBase::checkNameDuplicate(QString name)
+{
+    //校验时用，名称全局唯一,有重复（找到2个及以上时）时提示输出，返回false
     return true;
 }
 
@@ -437,9 +456,9 @@ bool CDataBase::checkSoftYBCnnInfo(QString info)
     return true;
 }
 
-bool CDataBase::checkBICnnInfo(QString info)
+bool CDataBase::checkHardBICnnInfo(QString info)
 {
-    //检查BI外部连接信息的格式是否正确，是否可以找到外部链接信息,需要输出检查记录
+    //检查硬开入外部连接信息的格式是否正确，是否可以找到外部链接信息,需要输出检查记录
     //格式错误、关键字错误、索引越限
     return true;
 }
@@ -467,6 +486,59 @@ bool CDataBase::changeQStringToUInt(unsigned int &val, QString str)
 
     val = num;
     return true;
+}
+
+void CDataBase::copyConfig(GseConfig *pSrc, GseConfig *pDst)
+{
+    pDst->clear();
+    pDst->deviceInfo = pSrc->deviceInfo;
+    pDst->deviceParas = pSrc->deviceParas;
+
+    pDst->adAnaConfig.sDesc = pSrc->adAnaConfig.sDesc;
+    pDst->adAnaConfig.sKey = pSrc->adAnaConfig.sKey;
+    for(int i = 0 ; i < pSrc->adAnaConfig.items.size(); i++)
+    {
+        AnaItem * item = new AnaItem(i);
+        *item = *(pSrc->adAnaConfig.items[i]);
+        pDst->adAnaConfig.items.push_back(item);
+    }
+
+    pDst->derivedConfig.sDesc = pSrc->derivedConfig.sDesc;
+    pDst->derivedConfig.sKey = pSrc->derivedConfig.sKey;
+    for(int i = 0 ; i < pSrc->derivedConfig.items.size(); i++)
+    {
+        AnaItem * item = new AnaItem(i);
+        *item = *(pSrc->derivedConfig.items[i]);
+        pDst->derivedConfig.items.push_back(item);
+    }
+
+    pDst->svConfig.sDesc = pSrc->svConfig.sDesc;
+    pDst->svConfig.sKey = pSrc->svConfig.sKey;
+    for(int i = 0 ; i < pSrc->svConfig.items.size(); i++)
+    {
+        AnaItem * item = new AnaItem(i);
+        *item = *(pSrc->svConfig.items[i]);
+        pDst->svConfig.items.push_back(item);
+    }
+
+    pDst->gsAnaConfig.sDesc = pSrc->gsAnaConfig.sDesc;
+    pDst->gsAnaConfig.sKey = pSrc->gsAnaConfig.sKey;
+    for(int i = 0 ; i < pSrc->gsAnaConfig.items.size(); i++)
+    {
+        AnaItem * item = new AnaItem(i);
+        *item = *(pSrc->gsAnaConfig.items[i]);
+        pDst->gsAnaConfig.items.push_back(item);
+    }
+
+    pDst->otherAnaConfig.sDesc = pSrc->otherAnaConfig.sDesc;
+    pDst->otherAnaConfig.sKey = pSrc->otherAnaConfig.sKey;
+    for(int i = 0 ; i < pSrc->otherAnaConfig.items.size(); i++)
+    {
+        AnaItem * item = new AnaItem(i);
+        *item = *(pSrc->otherAnaConfig.items[i]);
+        pDst->otherAnaConfig.items.push_back(item);
+    }
+
 }
 
 void CDataBase::CheckConfig()

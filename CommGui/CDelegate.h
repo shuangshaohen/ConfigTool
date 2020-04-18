@@ -12,7 +12,7 @@ class COMMGUI_EXPORT CSpinBoxDelegate : public QItemDelegate
 {
     Q_OBJECT
 public:
-    explicit CSpinBoxDelegate(QObject *parent = nullptr, int min = 0, int max = 65535, int step = 1);
+    explicit CSpinBoxDelegate(QObject *parent = nullptr, int min = 0, int max = 65535, int step = 1, int base = 10);
     ~CSpinBoxDelegate();
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
@@ -26,6 +26,7 @@ private:
     int m_min;
     int m_max;
     int m_step;
+    int m_base;
 };
 
 class COMMGUI_EXPORT CComboBoxDelegate : public QItemDelegate

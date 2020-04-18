@@ -62,7 +62,7 @@ void CDeviceParasWnd::Clear()
 
 void CDeviceParasWnd::itemChangedSlot(QTableWidgetItem *item)
 {
-    m_data->SetModified(true);
+    setModified(true);
 
     switch (item->column())
     {

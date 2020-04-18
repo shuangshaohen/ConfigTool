@@ -58,7 +58,7 @@ void CDeviceInfoWnd::Clear()
 
 void CDeviceInfoWnd::itemChangedSlot(QTableWidgetItem *item)
 {
-    m_data->SetModified(true);
+    setModified(true);
 
     switch (item->column())
     {

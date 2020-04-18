@@ -107,6 +107,7 @@ void CCommActions::CreateMenuBar()
 void CCommActions::CreateToolBar()
 {
     CreateFileToolBar();
+    CreateSaveToolBar();
     CreateEditFileToolBar();
     CreateVerifyFileToolBar();
     CreateAppFileToolBar();

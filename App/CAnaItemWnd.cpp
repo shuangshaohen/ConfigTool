@@ -18,10 +18,8 @@ CAnaItemWnd::CAnaItemWnd(QWidget *parent)
     m_comboBox->addItems(headerList);
     m_comboBox->setCurrentIndex(0);
 
-    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
-
     m_table->setItemDelegateForColumn(Enum_AnaTable_Coe_Col,new CSpinBoxDelegate(this));
-    m_table->setItemDelegateForColumn(Enum_PubTable_Attr_Col,new CSpinBoxDelegate(this));
+    m_table->setItemDelegateForColumn(Enum_PubTable_Attr_Col,new CSpinBoxDelegate(this,0,65535,1,2));
     m_table->setItemDelegateForColumn(Enum_AnaTable_XuYCDft_Col,new CSpinBoxDelegate(this,-1,9999999));
     m_table->setItemDelegateForColumn(Enum_AnaTable_DataWidth_Col,new CSpinBoxDelegate(this,0,63));
     m_table->setItemDelegateForColumn(Enum_AnaTable_DataDot_Col,new CSpinBoxDelegate(this,0,63));
@@ -35,6 +33,14 @@ CAnaItemWnd::CAnaItemWnd(QWidget *parent)
              << "3U0" << "U1" << "U2" << "IA" << "IB" << "IC" << "3I0"
              << "P" << "Q" << "S" << "COS" << "FR" << "Other";
     m_table->setItemDelegateForColumn(Enum_AnaTable_ChanFlag_Col,new CComboBoxDelegate(flagList,this));
+
+    QStringList unitList;
+    unitList << "A" << "V" << "s" << "Ω" << "Hz" << "W"  << "V/s"  << "Hz/s" << "N";
+    m_table->setItemDelegateForColumn(Enum_AnaTable_Unit_Col,new CComboBoxDelegate(unitList,this));
+
+    QStringList kiloUnitList;
+    kiloUnitList << "kA" << "kV" << "s" << "Ω" << "Hz" << "mW"  << "kV/s"  << "Hz/s" << "N";
+    m_table->setItemDelegateForColumn(Enum_AnaTable_KUnit_Col,new CComboBoxDelegate(kiloUnitList,this));
     m_data = NULL;
 }
 
@@ -60,25 +66,7 @@ void CAnaItemWnd::showInfo(void *pData)
     m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
     m_data = (CDataBase *)pData;
 
-    AnaConfig * config = NULL;
-    switch (m_type)
-    {
-    case Enum_AnaTable_Type_AD:
-        config = &m_data->GetConfig()->adAnaConfig;
-        break;
-    case Enum_AnaTable_Type_Derived:
-        config = &m_data->GetConfig()->derivedConfig;
-        break;
-    case Enum_AnaTable_Type_SV:
-        config = &m_data->GetConfig()->svConfig;
-        break;
-    case Enum_AnaTable_Type_GS:
-        config = &m_data->GetConfig()->gsAnaConfig;
-        break;
-    case Enum_AnaTable_Type_Other:
-        config = &m_data->GetConfig()->otherAnaConfig;
-        break;
-    }
+    AnaConfig * config = getConfig();
 
     if(NULL == config)
         return;
@@ -91,14 +79,173 @@ void CAnaItemWnd::showInfo(void *pData)
     {
         createItem(row,config->items[row]);
     }
-
     setAlignment(m_table, Qt::AlignHCenter|Qt::AlignVCenter);
     connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
+    updateTableBackground();
+}
+
+void CAnaItemWnd::AddOper()
+{
+    setModified(true);
+
+    AnaConfig * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
+    int row = m_table->rowCount();
+    if(m_table->currentItem() != NULL)
+        row = m_table->currentRow()+1;
+    AnaItem * newItem = new AnaItem(row);
+    config->items.insert(row,newItem);
+
+    m_table->insertRow(row);
+    createItem(row,newItem);
+
+    for (int i = row + 1; i < config->items.size(); i++)
+    {
+        config->items[i]->wIndex += 1;
+    }
+    setAlignment(m_table, Qt::AlignHCenter|Qt::AlignVCenter);
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
+    updateTableBackground();
+}
+
+void CAnaItemWnd::DeleteOper()
+{
+    setModified(true);
+
+    AnaConfig * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
+    QList<int> rowList = getSelectedRows();
+
+    for (int i = rowList.size() - 1;i >= 0; i--)
+    {
+        int row = rowList[i];
+
+        for (int i = row + 1; i < config->items.size(); i++)
+        {
+            config->items[i]->wIndex -= 1;
+        }
+
+        config->items.remove(row);
+        m_table->removeRow(row);
+    }
+
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
+}
+
+void CAnaItemWnd::UpOper()
+{
+    setModified(true);
+
+    AnaConfig * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
+    QList<QTableWidgetItem *> itemList = m_table->selectedItems();
+    QList<int> rowList = getSelectedRows();
+
+    for (int i = 0;i < rowList.size(); i++)
+    {
+        int row = rowList[i];
+
+        if(row == 0)
+            break;
+
+        int tempIndex = config->items[row]->wIndex;
+        config->items[row]->wIndex = config->items[row-1]->wIndex;
+        config->items[row-1]->wIndex = tempIndex;
+        config->items.swapItemsAt(row,row -1);
+        tableExchange(row,row-1);
+    }
+
+    for (int i = 0; i < itemList.size(); i++) {
+        itemList[i]->setSelected(true);
+    }
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
+}
+
+void CAnaItemWnd::DownOper()
+{
+    setModified(true);
+
+    AnaConfig * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
+    QList<QTableWidgetItem *> itemList = m_table->selectedItems();
+
+    QList<int> rowList = getSelectedRows();
+
+    for (int i = rowList.size() - 1;i >= 0; i--)
+    {
+        int row = rowList[i];
+
+        if(row == config->items.size() -1)
+            break;
+
+        int tempIndex = config->items[row]->wIndex;
+        config->items[row]->wIndex = config->items[row+1]->wIndex;
+        config->items[row+1]->wIndex = tempIndex;
+        config->items.swapItemsAt(row,row +1);
+        tableExchange(row,row+2);
+    }
+
+    for (int i = 0; i < itemList.size(); i++) {
+        itemList[i]->setSelected(true);
+    }
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
+
+}
+
+bool CAnaItemWnd::checkItemVal(QTableWidgetItem *item)
+{
+    if(item == NULL)
+        return true;
+
+    bool ok = true;
+    AnaItem * ana = (AnaItem *)item->data(Qt::UserRole+1).toULongLong();
+    switch (item->column())
+    {
+    case Enum_PubTable_Name_Col:
+        ok = m_data->checkNameDuplicate(ana->sName);
+        break;
+    case Enum_AnaTable_RateSetP_Col:
+        ok = m_data->checkSPSetCnnInfo(ana->sRateSetP);
+        break;
+    case Enum_AnaTable_RateSetS_Col:
+        ok = m_data->checkSPSetCnnInfo(ana->sRateSetS);
+        break;
+    case Enum_AnaTable_RecSYb_Col:
+        ok = m_data->checkSoftYBCnnInfo(ana->sRecSYb);
+        break;
+    case Enum_AnaTable_RecHYb_Col:
+        ok = m_data->checkHardBICnnInfo(ana->sRecHYb);
+        break;
+    case Enum_AnaTable_DataWidth_Col:
+    case Enum_AnaTable_DataDot_Col:
+        if(ana->byDotBit >= ana->byWidth)
+            ok = false;
+        break;
+    default:
+        break;
+    }
+    return ok;
 }
 
 void CAnaItemWnd::itemChangedSlot(QTableWidgetItem *item)
 {
-    m_data->SetModified(true);
+    setModified(true);
 
     AnaItem * ana = (AnaItem *)item->data(Qt::UserRole + 1).toULongLong();
 
@@ -108,19 +255,14 @@ void CAnaItemWnd::itemChangedSlot(QTableWidgetItem *item)
         ana->sDesc = item->text();
         break;
     case Enum_PubTable_Name_Col:
-        if((ana->sName != item->text())
-                &&(m_data->checkName(item->text())))
-        {
-            ana->sName = item->text();
-        }
-        else
+        if(m_data->checkNameDuplicate(item->text()) == false)
         {
             CMsgInfo msgInfo( CMsgInfo::Enum_Application_Verify_Mode, CMsgInfo::CN_ERROR_MSG,
-                              QString("第%1行名称（%2 -> %3）存在重名，修改失败!")
+                              QString("第%1行名称（%2 -> %3）存在重名，需重新命名!")
                               .arg(item->row()+1).arg(ana->sName).arg(item->text()));
             outPutMsgInfo(msgInfo);
-            item->setText(ana->sName);
         }
+        ana->sName = item->text();
         break;
     case Enum_PubTable_Attr_Col:
         ana->dwAttr = item->data(Qt::EditRole).toInt();
@@ -138,89 +280,65 @@ void CAnaItemWnd::itemChangedSlot(QTableWidgetItem *item)
         ana->wCoe = item->text().toUInt();
         break;
     case Enum_AnaTable_RateSetP_Col:
-        if(m_data->checkSPSetCnnInfo(item->text()))
-        {
-            ana->sRateSetP = item->text();
-        }
-        else
+        if(m_data->checkSPSetCnnInfo(item->text()) == false)
         {
             CMsgInfo msgInfo( CMsgInfo::Enum_Application_Verify_Mode, CMsgInfo::CN_ERROR_MSG,
-                              QString("第%1行关联一次额定值（%2 -> %3）检验错误(格式错误、关键字错误、索引越限)，修改失败!")
+                              QString("第%1行关联一次额定值（%2 -> %3）检验错误(格式错误、关键字错误、索引越限)，需要修正!")
                               .arg(item->row()+1).arg(ana->sRateSetP).arg(item->text()));
             outPutMsgInfo(msgInfo);
-            item->setText(ana->sRateSetP);
         }
+        ana->sRateSetP = item->text();
         break;
     case Enum_AnaTable_RateSetS_Col:
-        if(m_data->checkSPSetCnnInfo(item->text()))
-        {
-            ana->sRateSetS = item->text();
-        }
-        else
+        if(m_data->checkSPSetCnnInfo(item->text()) == false)
         {
             CMsgInfo msgInfo( CMsgInfo::Enum_Application_Verify_Mode, CMsgInfo::CN_ERROR_MSG,
-                              QString("第%1行关联二次额定值（%2 -> %3）检验错误(格式错误、关键字错误、索引越限)，修改失败!")
+                              QString("第%1行关联二次额定值（%2 -> %3）检验错误(格式错误、关键字错误、索引越限)，需要修正!")
                               .arg(item->row()+1).arg(ana->sRateSetS).arg(item->text()));
             outPutMsgInfo(msgInfo);
-            item->setText(ana->sRateSetS);
         }
+        ana->sRateSetS = item->text();
         break;
 
     case Enum_AnaTable_RecSYb_Col:
-        if(m_data->checkSoftYBCnnInfo(item->text()))
-        {
-            ana->sRecSYb = item->text();
-        }
-        else
+        if(m_data->checkSoftYBCnnInfo(item->text()) == false)
         {
             CMsgInfo msgInfo( CMsgInfo::Enum_Application_Verify_Mode, CMsgInfo::CN_ERROR_MSG,
-                              QString("第%1行关联软压板（%2 -> %3）检验错误(格式错误、关键字错误、索引越限)，修改失败!")
+                              QString("第%1行关联软压板（%2 -> %3）检验错误(格式错误、关键字错误、索引越限)，需要修正!")
                               .arg(item->row()+1).arg(ana->sRecSYb).arg(item->text()));
             outPutMsgInfo(msgInfo);
-            item->setText(ana->sRecSYb);
         }
+        ana->sRecSYb = item->text();
         break;
     case Enum_AnaTable_RecHYb_Col:
-        if(m_data->checkBICnnInfo(item->text()))
-        {
-            ana->sRecHYb = item->text();
-        }
-        else
+        if(m_data->checkHardBICnnInfo(item->text()) == false)
         {
             CMsgInfo msgInfo( CMsgInfo::Enum_Application_Verify_Mode, CMsgInfo::CN_ERROR_MSG,
-                              QString("第%1行关联硬压板（%2 -> %3）检验错误(格式错误、关键字错误、索引越限)，修改失败!")
+                              QString("第%1行关联硬压板（%2 -> %3）检验错误(格式错误、关键字错误、索引越限)，需要修正!")
                               .arg(item->row()+1).arg(ana->sRecHYb).arg(item->text()));
             outPutMsgInfo(msgInfo);
-            item->setText(ana->sRecHYb);
         }
+        ana->sRecHYb = item->text();
         break;
     case Enum_AnaTable_DataWidth_Col:
-        if(item->text().toUInt() > ana->byDotBit)
-        {
-            ana->byWidth = item->text().toUInt();
-        }
-        else
+        if(item->text().toUInt() <= ana->byDotBit)
         {
             CMsgInfo msgInfo( CMsgInfo::Enum_Application_Verify_Mode, CMsgInfo::CN_ERROR_MSG,
-                              QString("第%1行位宽（%2 -> %3）设置小于或等于精度（%4），修改失败!")
+                              QString("第%1行位宽（%2 -> %3）设置小于或等于精度（%4），需要修正!")
                               .arg(item->row()+1).arg(ana->byWidth).arg(item->text()).arg(ana->byDotBit) );
             outPutMsgInfo(msgInfo);
-            item->setText(QString::number(ana->byWidth));
         }
+        ana->byWidth = item->text().toUInt();
         break;
     case Enum_AnaTable_DataDot_Col:
-        if(item->text().toUInt() < ana->byWidth)
-        {
-            ana->byDotBit = item->text().toUInt();
-        }
-        else
+        if(item->text().toUInt() >= ana->byWidth)
         {
             CMsgInfo msgInfo( CMsgInfo::Enum_Application_Verify_Mode, CMsgInfo::CN_ERROR_MSG,
-                              QString("第%1行精度（%2 -> %3）设置大于或等于位宽（%4），修改失败!")
+                              QString("第%1行精度（%2 -> %3）设置大于或等于位宽（%4），需要修正!")
                               .arg(item->row()+1).arg(ana->byDotBit).arg(item->text()).arg(ana->byWidth) );
             outPutMsgInfo(msgInfo);
-            item->setText(QString::number(ana->byDotBit));
         }
+        ana->byDotBit = item->text().toUInt();
         break;
     case Enum_AnaTable_Unit_Col:
         ana->sUnit = item->text();
@@ -231,29 +349,15 @@ void CAnaItemWnd::itemChangedSlot(QTableWidgetItem *item)
     default:
         break;
     }
+
+    updateTableBackground();
 }
 
 void CAnaItemWnd::keyTextChangedSlot(const QString &text)
 {
-    AnaConfig * config = NULL;
-    switch (m_type)
-    {
-    case Enum_AnaTable_Type_AD:
-        config = &m_data->GetConfig()->adAnaConfig;
-        break;
-    case Enum_AnaTable_Type_Derived:
-        config = &m_data->GetConfig()->derivedConfig;
-        break;
-    case Enum_AnaTable_Type_SV:
-        config = &m_data->GetConfig()->svConfig;
-        break;
-    case Enum_AnaTable_Type_GS:
-        config = &m_data->GetConfig()->gsAnaConfig;
-        break;
-    case Enum_AnaTable_Type_Other:
-        config = &m_data->GetConfig()->otherAnaConfig;
-        break;
-    }
+    setModified(true);
+
+    AnaConfig * config = getConfig();
 
     if(NULL == config)
         return;
@@ -263,25 +367,9 @@ void CAnaItemWnd::keyTextChangedSlot(const QString &text)
 
 void CAnaItemWnd::descTextChangedSlot(const QString &text)
 {
-    AnaConfig * config = NULL;
-    switch (m_type)
-    {
-    case Enum_AnaTable_Type_AD:
-        config = &m_data->GetConfig()->adAnaConfig;
-        break;
-    case Enum_AnaTable_Type_Derived:
-        config = &m_data->GetConfig()->derivedConfig;
-        break;
-    case Enum_AnaTable_Type_SV:
-        config = &m_data->GetConfig()->svConfig;
-        break;
-    case Enum_AnaTable_Type_GS:
-        config = &m_data->GetConfig()->gsAnaConfig;
-        break;
-    case Enum_AnaTable_Type_Other:
-        config = &m_data->GetConfig()->otherAnaConfig;
-        break;
-    }
+    setModified(true);
+
+    AnaConfig * config = getConfig();
 
     if(NULL == config)
         return;
@@ -303,7 +391,7 @@ void CAnaItemWnd::createItem(int row, AnaItem *item)
 
     AttrItem * attr = new AttrItem(QString::number(item->dwAttr));
     attr->setData(Qt::UserRole + 1 , data);
-    attr->setData(Qt::ToolTip, "0x01:可见标志，0x02:信号上送标志，0x04:录波标志，0x08:采样标志");
+    attr->setData(Qt::ToolTip, "二进制编辑：DB0:可见标志，DB1:信号上送标志，DB2:录波标志，DB3:采样标志");
     m_table->setItem(row,Enum_PubTable_Attr_Col,attr);
 
     QTableWidgetItem * type = new QTableWidgetItem(item->sChanType);
@@ -327,53 +415,21 @@ void CAnaItemWnd::createItem(int row, AnaItem *item)
     QTableWidgetItem * setP = new QTableWidgetItem(item->sRateSetP);
     setP->setData(Qt::UserRole + 1 , data);
     setP->setData(Qt::ToolTip, "一次额定值关联，格式为 <子表前缀：序号> （序号从0开始），缺省为-1或不填");
-    if(m_data->checkSPSetCnnInfo(item->sRateSetP) == false)
-    {
-        setP->setBackground(QBrush(QColor(255, 0, 0)));
-    }
-    else
-    {
-        setP->setBackground(QBrush(QColor(255, 255, 255)));
-    }
     m_table->setItem(row,Enum_AnaTable_RateSetP_Col,setP);
 
     QTableWidgetItem * setS = new QTableWidgetItem(item->sRateSetS);
     setS->setData(Qt::UserRole + 1 , data);
     setS->setData(Qt::ToolTip, "二次额定值关联，格式为 <子表前缀：序号> （序号从0开始），缺省为-1或不填");
-    if(m_data->checkSPSetCnnInfo(item->sRateSetS) == false)
-    {
-        setS->setBackground(QBrush(QColor(255, 0, 0)));
-    }
-    else
-    {
-        setS->setBackground(QBrush(QColor(255, 255, 255)));
-    }
     m_table->setItem(row,Enum_AnaTable_RateSetS_Col,setS);
 
     QTableWidgetItem * sYB = new QTableWidgetItem(item->sRecSYb);
     sYB->setData(Qt::UserRole + 1 , data);
     sYB->setData(Qt::ToolTip, "接收软压板关联，格式为 <子表前缀：序号> （序号从0开始），缺省为-1或不填");
-    if(m_data->checkSoftYBCnnInfo(item->sRecSYb) == false)
-    {
-        sYB->setBackground(QBrush(QColor(255, 0, 0)));
-    }
-    else
-    {
-        sYB->setBackground(QBrush(QColor(255, 255, 255)));
-    }
     m_table->setItem(row,Enum_AnaTable_RecSYb_Col,sYB);
 
     QTableWidgetItem * hYB = new QTableWidgetItem(item->sRecHYb);
     hYB->setData(Qt::UserRole + 1 , data);
     hYB->setData(Qt::ToolTip, "接收硬压板关联，格式为 <子表前缀：序号> （序号从0开始），缺省为-1或不填");
-    if(m_data->checkBICnnInfo(item->sRecHYb) == false)
-    {
-        hYB->setBackground(QBrush(QColor(255, 0, 0)));
-    }
-    else
-    {
-        hYB->setBackground(QBrush(QColor(255, 255, 255)));
-    }
     m_table->setItem(row,Enum_AnaTable_RecHYb_Col,hYB);
 
     QTableWidgetItem * width = new QTableWidgetItem(QString::number(item->byWidth));
@@ -383,14 +439,6 @@ void CAnaItemWnd::createItem(int row, AnaItem *item)
 
     QTableWidgetItem * dot = new QTableWidgetItem(QString::number(item->byDotBit));
     dot->setData(Qt::UserRole + 1 , data);
-    if(item->byDotBit >= item->byWidth)
-    {
-        dot->setBackground(QBrush(QColor(255, 0, 0)));
-    }
-    else
-    {
-        dot->setBackground(QBrush(QColor(255, 255, 255)));
-    }
     m_table->setItem(row,Enum_AnaTable_DataDot_Col,dot);
 
     QTableWidgetItem * unit = new QTableWidgetItem(item->sUnit);
@@ -400,4 +448,28 @@ void CAnaItemWnd::createItem(int row, AnaItem *item)
     QTableWidgetItem * kUnit = new QTableWidgetItem(item->sKiloUnit);
     kUnit->setData(Qt::UserRole + 1 , data);
     m_table->setItem(row,Enum_AnaTable_KUnit_Col,kUnit);
+}
+
+AnaConfig *CAnaItemWnd::getConfig()
+{
+    AnaConfig * config = NULL;
+    switch (m_type)
+    {
+    case Enum_AnaTable_Type_AD:
+        config = &m_data->GetConfig()->adAnaConfig;
+        break;
+    case Enum_AnaTable_Type_Derived:
+        config = &m_data->GetConfig()->derivedConfig;
+        break;
+    case Enum_AnaTable_Type_SV:
+        config = &m_data->GetConfig()->svConfig;
+        break;
+    case Enum_AnaTable_Type_GS:
+        config = &m_data->GetConfig()->gsAnaConfig;
+        break;
+    case Enum_AnaTable_Type_Other:
+        config = &m_data->GetConfig()->otherAnaConfig;
+        break;
+    }
+    return config;
 }

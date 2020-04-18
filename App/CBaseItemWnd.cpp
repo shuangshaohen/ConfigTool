@@ -2,6 +2,9 @@
 #include "ui_BaseItemWnd.h"
 #include <QToolTip>
 #include <QDebug>
+#include <algorithm>
+#include <QClipboard>
+#include <QKeyEvent>
 
 CBaseItemWnd::CBaseItemWnd(QWidget *parent) :
     CDefaultWnd(parent),
@@ -15,9 +18,32 @@ CBaseItemWnd::CBaseItemWnd(QWidget *parent) :
     m_lineEditDesc = ui->lineEditDesc;
     m_lineEditKey = ui->lineEditKey;
 
+    rightMenu = new QMenu(this);
+    addAction = new QAction("新增",this);
+    copyAction = new QAction("复制",this);
+    pasteAction = new QAction("粘贴",this);
+    deleteAction = new QAction("删除",this);
+
+    rightMenu->addAction(addAction);
+    rightMenu->addAction(deleteAction);
+    rightMenu->addAction(copyAction);
+    rightMenu->addAction(pasteAction);
+
+    connect(addAction,SIGNAL(triggered()),this,SLOT(AddOper()));
+    connect(deleteAction,SIGNAL(triggered()),this,SLOT(DeleteOper()));
+    connect(copyAction,SIGNAL(triggered()),this,SLOT(CopyOper()));
+    connect(pasteAction,SIGNAL(triggered()),this,SLOT(PasteOper()));
+
     //m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_table->horizontalHeader()->setStretchLastSection(true);
+    m_table->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_table->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(m_table,SIGNAL(customContextMenuRequested(QPoint)),
+            this,SLOT(customContextMenuRequestedSlot(QPoint)));
+    connect(m_table->verticalHeader(),SIGNAL(customContextMenuRequested(QPoint)),
+            this,SLOT(customContextMenuRequestedSlot(QPoint)));
 
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
     connect(m_comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(currentIndexChangedSlot(int)));
     connect(m_lineEdit,SIGNAL(textChanged(QString)),this,SLOT(textChangedSlot(QString)));
     connect(m_table,SIGNAL(itemClicked(QTableWidgetItem *)),this, SLOT(showToolTip(QTableWidgetItem *)));
@@ -59,6 +85,11 @@ void CBaseItemWnd::textChangedSlot(const QString &text)
     tableFilter(m_comboBox->currentIndex(),m_lineEdit->text());
 }
 
+void CBaseItemWnd::itemChangedSlot(QTableWidgetItem *item)
+{
+    Q_UNUSED(item);
+}
+
 void CBaseItemWnd::descTextChangedSlot(const QString &text)
 {
     Q_UNUSED(text);
@@ -67,6 +98,53 @@ void CBaseItemWnd::descTextChangedSlot(const QString &text)
 void CBaseItemWnd::keyTextChangedSlot(const QString &text)
 {
     Q_UNUSED(text);
+}
+
+void CBaseItemWnd::PasteOper()
+{
+    QString text_to_past = QApplication::clipboard()->text();
+    QStringList table_row_data_list = text_to_past.split("\n", QString::SkipEmptyParts);
+
+    QModelIndex current_index = m_table->currentIndex();
+    for (int i = 0; i < m_table->rowCount() - current_index.row() && i < table_row_data_list.length(); ++i){
+        QStringList row_data_list = table_row_data_list.at(i).split("\t");
+        for(int k = 0; k < m_table->columnCount() - current_index.column() && k<row_data_list.length(); k++){
+            QModelIndex temp_index = current_index.sibling(i+current_index.row(), k+current_index.column());
+            QTableWidgetItem * item = m_table->item(temp_index.row(),temp_index.column());
+            item->setText(row_data_list.at(k));
+        }
+    }
+}
+
+void CBaseItemWnd::CopyOper()
+{
+    QString copied_text;
+    QModelIndexList current_selected_indexs = m_table->selectionModel()->selectedIndexes();
+    if(current_selected_indexs.isEmpty())
+        return;
+
+    int current_row = current_selected_indexs.at(0).row();
+    for(int i = 0; i < current_selected_indexs.count(); i++){
+        if(current_row != current_selected_indexs.at(i).row()){
+            current_row = current_selected_indexs.at(i).row();
+            copied_text.append("\n");
+            copied_text.append(current_selected_indexs.at(i).data().toString());
+            continue;
+        }
+        if(0 != i){
+            copied_text.append("\t");
+        }
+        copied_text.append(current_selected_indexs.at(i).data().toString());
+    }
+    copied_text.append("\n");
+    QApplication::clipboard()->setText(copied_text);
+}
+
+void CBaseItemWnd::customContextMenuRequestedSlot(const QPoint &pos)
+{
+    Q_UNUSED(pos);
+
+    rightMenu->exec(cursor().pos());
 }
 
 void CBaseItemWnd::tableExchange(int fromRow, int toRow)
@@ -125,6 +203,70 @@ void CBaseItemWnd::tableFilter(int column, QString key)
 
 }
 
+void CBaseItemWnd::updateTableBackground()
+{
+    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
+    for (int row = 0; row < m_table->rowCount(); row++) {
+        for (int column = 0; column < m_table->columnCount();column++) {
+            if(checkItemVal(m_table->item(row,column)) == false)
+            {
+                m_table->item(row,column)->setBackground(QBrush(QColor(255, 0, 0)));
+            }
+            else
+            {
+                m_table->item(row,column)->setBackground(QBrush(QColor(255, 255, 255)));
+            }
+        }
+    }
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
+}
+
+QList<int> CBaseItemWnd::getSelectedRows()
+{
+    QList<int> rowList;
+
+    QList<QTableWidgetItem *> itemList = m_table->selectedItems();
+
+    for (int i = 0; i< itemList.size(); i++)
+    {
+        rowList.push_back(itemList[i]->row());
+    }
+    std::sort(rowList.begin(),rowList.end());
+    auto it= std::unique(rowList.begin(),rowList.end());   //去除容器内重复元素
+    rowList.erase(it,rowList.end());
+
+    return rowList;
+}
+
+bool CBaseItemWnd::checkItemVal(QTableWidgetItem *item)
+{
+    Q_UNUSED(item);
+    return true;
+}
+
+bool CBaseItemWnd::event(QEvent *event)
+{
+    QWidget * fWidget = focusWidget();
+    if(m_table != qobject_cast<QTableWidget *>(fWidget))
+        return QWidget::event(event);
+
+    if (event->type() == QEvent::KeyPress){
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->matches(QKeySequence::Paste)){
+            PasteOper();
+            event->accept();
+            return true;
+        }
+        else if(keyEvent->matches(QKeySequence::Copy)){
+            CopyOper();
+            event->accept();
+            return true;
+        }
+    }
+
+    return QWidget::event(event);
+}
+
 AttrItem::AttrItem(const QString &text, int type): QTableWidgetItem(text,type)
 {
 
@@ -135,8 +277,9 @@ QVariant AttrItem::data(int role) const
     if (role == Qt::TextAlignmentRole)
         return (int)Qt::AlignCenter;
     if(role == Qt::DisplayRole){
-        int val = QTableWidgetItem::data(Qt::EditRole).toInt();
+        QString strVal = QTableWidgetItem::data(Qt::EditRole).toString();
 
+        int val = strVal.toUInt();
         if(val == 0)
             return "0";
 
@@ -144,4 +287,23 @@ QVariant AttrItem::data(int role) const
         return s;
     }
     return QTableWidgetItem::data(role);
+}
+
+void AttrItem::setData(int role, const QVariant &value)
+{
+    //qDebug() << "AttrItem setData " << value.toString() << "role = " << role;
+    if(role == Qt::DisplayRole)
+    {
+        QTableWidgetItem::setData(role,value);
+
+        QString str = value.toString();
+
+        if(str.startsWith("0x"))
+        {
+            int val = str.toUInt(nullptr,16);
+            setData(Qt::EditRole,val);
+        }
+    }
+    else
+        QTableWidgetItem::setData(role,value);
 }

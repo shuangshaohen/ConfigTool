@@ -36,7 +36,8 @@ SOURCES += \
     CDelegate.cpp \
     CDockWidget.cpp \
     CMainWnd.cpp \
-    CSplashScreen.cpp
+    CSplashScreen.cpp \
+    HBaseSpinBox.cpp
 
 HEADERS += \
     CBaseThread.h \
@@ -47,7 +48,8 @@ HEADERS += \
     CSplashScreen.h \
     CommGui_global.h \
     CDataBase.h \
-    CMainWnd.h
+    CMainWnd.h \
+    HBaseSpinBox.h
 
 TRANSLATIONS += \
     CommGui_zh_CN.ts

@@ -1,12 +1,13 @@
 ﻿#include "CDelegate.h"
-#include <QSpinBox>
+#include <HBaseSpinBox.h>
 #include <QComboBox>
 
-CSpinBoxDelegate::CSpinBoxDelegate(QObject *parent, int min, int max, int step)
+CSpinBoxDelegate::CSpinBoxDelegate(QObject *parent, int min, int max, int step, int base)
     : QItemDelegate(parent),
       m_min(min),
       m_max(max),
-      m_step(step)
+      m_step(step),
+      m_base(base)
 {
 
 }
@@ -20,7 +21,8 @@ QWidget *CSpinBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
 {
     if (index.isValid())
     {
-        QSpinBox *editor = new QSpinBox(parent);
+        HBaseSpinBox *editor = new HBaseSpinBox(parent);
+        editor->setBase(m_base);
         editor->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
         editor->installEventFilter(const_cast<CSpinBoxDelegate *>(this));
         return editor;
@@ -36,7 +38,7 @@ void CSpinBoxDelegate::setEditorData(QWidget *editor, const QModelIndex &index) 
     if (index.isValid())
     {
         int value = index.model()->data(index, Qt::EditRole).toInt();
-        QSpinBox *box = static_cast<QSpinBox *>(editor);
+        HBaseSpinBox *box = static_cast<HBaseSpinBox *>(editor);
         box->setRange(m_min,m_max);
         box->setSingleStep(m_step);
         box->setValue(value);
@@ -51,7 +53,7 @@ void CSpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, 
 {
     if (index.isValid())
     {
-        QSpinBox *box = static_cast<QSpinBox *>(editor);
+        HBaseSpinBox *box = static_cast<HBaseSpinBox *>(editor);
         model->setData(index, box->value());
     }
     else

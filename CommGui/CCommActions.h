@@ -40,6 +40,7 @@ public:
 
     virtual void CreateToolBar();
     virtual void CreateFileToolBar()=0;
+    virtual void CreateSaveToolBar()=0;
     virtual	void CreateEditFileToolBar()=0;
     virtual void CreateVerifyFileToolBar();
     virtual void CreateAppFileToolBar()=0;
@@ -62,6 +63,7 @@ public:
     QToolBar		*	m_pFileToolBar;
     QToolBar		*	m_pVerifyToolBar;
     QToolBar		*	m_pEditToolBar;
+    QToolBar		*	m_pSaveToolBar;
     QToolBar		*	m_pAppToolBar;
 
     QAction			*	m_pAboutAction;

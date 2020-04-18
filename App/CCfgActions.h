@@ -11,16 +11,17 @@ class CCfgActions : public CCommActions
 public:
     CCfgActions(CCfgMainWnd *);
     void CreateActions();
-    void CreateMenuAndToolBar();
+    void CreateMenuAndToolBar() override;
 
-    void CreateFileMenu();
-    void CreateEditMenu();
+    void CreateFileMenu() override;
+    void CreateEditMenu() override;
 
-    void CreateFileToolBar();
-    void CreateEditFileToolBar();
+    void CreateFileToolBar() override;
+    void CreateEditFileToolBar() override;
+    void CreateSaveToolBar() override;
 
-    void CreateAppToolMenu();
-    void CreateAppFileToolBar();
+    void CreateAppToolMenu() override;
+    void CreateAppFileToolBar() override;
 
 public:
 

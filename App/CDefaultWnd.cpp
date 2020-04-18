@@ -26,3 +26,13 @@ void CDefaultWnd::outPutMsgInfo(const CMsgInfo &msgInfo)
 {
     CCfgMainWnd::Instance()->OutputMsgInfo(msgInfo);
 }
+
+void CDefaultWnd::setModified(bool bModified)
+{
+    CCfgMainWnd::Instance()->SetModified(bModified);
+}
+
+void CDefaultWnd::updateTree()
+{
+    CCfgMainWnd::Instance()->RefreshResourceInfo();
+}

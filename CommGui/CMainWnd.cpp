@@ -251,6 +251,7 @@ void CMainWnd::SaveProjectFileSlot()
     if( NULL==m_pProjectXml )
         return;
 
+    SubmitSlot();
     strInfo = "Cfg文件保存成功。文件位置：";
 
     if( m_strProjectFilePathName.isEmpty() )
@@ -295,6 +296,7 @@ void CMainWnd::SaveAsProjectFileSlot()
     if( NULL==m_pProjectXml )
         return;
 
+    SubmitSlot();
     strProjectFilePathName = QFileDialog::getSaveFileName( this, "另存为...", m_strLastOpenPorjectFilePath, "Cfg文件 (*.xml)" );
 
     if( strProjectFilePathName.length() <= 0 )

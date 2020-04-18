@@ -18,8 +18,14 @@ public:
     void ShowDeviceInfo();
     void ShowDeviceParas();
     void ShowADAnaTable();
+    void ShowDerivedInfoTable();
+    void ShowSVInfoTable();
+    void ShowGSAnaInfoTable();
+    void ShowOtherAnaTable();
 
     void RefreshResourceInfo();
+
+    void SetModified(bool bModified);
 protected:
     bool            IsModified();
     void            CreateActions();
@@ -37,9 +43,11 @@ public slots:
     //编辑菜单槽
     void AddSlot();
     void DeleteSlot();
-    void CopySlot();
     void UpSlot();
     void DownSlot();
+
+    void SubmitSlot();
+    void RevertSlot();
     //void EditTplLNSlot();
     //void CleanIcdLNSlot();
     //void EditIcdLNSlot();

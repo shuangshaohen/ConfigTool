@@ -194,13 +194,11 @@ void CResourceTreeWnd::RefreshTreeNodes()
 
     GseConfig * config = m_pXerceXML->GetConfig();
 
-    m_pAnaTreeWidgetItem->setText( 0, "AD模拟量" + QString(":%1").arg(config->adAnaConfig.items.size()));
-    m_pDerivedTreeWidgetItem->setText( 0, "衍生模拟量" + QString(":%1").arg(config->derivedConfig.items.size()) );
-    m_pSvTreeWidgetItem->setText( 0, "SV模拟量" + QString(":%1").arg(config->svConfig.items.size()) );
-    m_pGsAnaTreeWidgetItem->setText( 0, "GS模拟量" + QString(":%1").arg(config->gsAnaConfig.items.size()) );
-    m_pOherAnaTreeWidgetItem->setText( 0, "其他模拟量" + QString(":%1").arg(config->otherAnaConfig.items.size()) );
-
-
+    m_pAnaTreeWidgetItem->setText( 0, config->adAnaConfig.sDesc + QString(":%1").arg(config->adAnaConfig.items.size()));
+    m_pDerivedTreeWidgetItem->setText( 0, config->derivedConfig.sDesc + QString(":%1").arg(config->derivedConfig.items.size()) );
+    m_pSvTreeWidgetItem->setText( 0, config->svConfig.sDesc + QString(":%1").arg(config->svConfig.items.size()) );
+    m_pGsAnaTreeWidgetItem->setText( 0, config->gsAnaConfig.sDesc + QString(":%1").arg(config->gsAnaConfig.items.size()) );
+    m_pOherAnaTreeWidgetItem->setText( 0, config->otherAnaConfig.sDesc + QString(":%1").arg(config->otherAnaConfig.items.size()) );
 }
 
 void CResourceTreeWnd::ClearTreeNode()
@@ -242,6 +240,18 @@ void CResourceTreeWnd::ShowCurrentNodeInfoWnd()
         break;
     case Enum_Ana_AD_Node:
         CCfgMainWnd::Instance()->ShowADAnaTable();
+        break;
+    case Enum_Ana_Derived_Node:
+        CCfgMainWnd::Instance()->ShowDerivedInfoTable();
+        break;
+    case Enum_Ana_SV_Node:
+        CCfgMainWnd::Instance()->ShowSVInfoTable();
+        break;
+    case Enum_Ana_GS_Node:
+        CCfgMainWnd::Instance()->ShowGSAnaInfoTable();
+        break;
+    case Enum_Ana_Other_Node:
+        CCfgMainWnd::Instance()->ShowOtherAnaTable();
         break;
 //    case Enum_Ana_AD_Node:
 //        CCfgMainWnd::Instance()->ShowAnaInfo();
