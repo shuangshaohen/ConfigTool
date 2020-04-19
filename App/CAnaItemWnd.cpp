@@ -41,170 +41,10 @@ CAnaItemWnd::CAnaItemWnd(QWidget *parent)
     QStringList kiloUnitList;
     kiloUnitList << "kA" << "kV" << "s" << "Ω" << "Hz" << "mW"  << "kV/s"  << "Hz/s" << "N";
     m_table->setItemDelegateForColumn(Enum_AnaTable_KUnit_Col,new CComboBoxDelegate(kiloUnitList,this));
-    m_data = NULL;
 }
 
 CAnaItemWnd::~CAnaItemWnd()
 {
-
-}
-
-void CAnaItemWnd::setTableType(int type)
-{
-    m_type = type;
-}
-
-void CAnaItemWnd::showInfo(void *pData)
-{
-    m_table->clearContents();
-    if(NULL == pData)
-    {
-        m_data = NULL;
-        return;
-    }
-
-    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
-    m_data = (CDataBase *)pData;
-
-    AnaConfig * config = getConfig();
-
-    if(NULL == config)
-        return;
-
-    m_lineEditDesc->setText(config->sDesc);
-    m_lineEditKey->setText(config->sKey);
-
-    m_table->setRowCount(config->items.size());
-    for (int row = 0; row < config->items.size(); row++)
-    {
-        createItem(row,config->items[row]);
-    }
-    setAlignment(m_table, Qt::AlignHCenter|Qt::AlignVCenter);
-    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
-    updateTableBackground();
-}
-
-void CAnaItemWnd::AddOper()
-{
-    setModified(true);
-
-    AnaConfig * config = getConfig();
-
-    if(NULL == config)
-        return;
-
-    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
-    int row = m_table->rowCount();
-    if(m_table->currentItem() != NULL)
-        row = m_table->currentRow()+1;
-    AnaItem * newItem = new AnaItem(row);
-    config->items.insert(row,newItem);
-
-    m_table->insertRow(row);
-    createItem(row,newItem);
-
-    for (int i = row + 1; i < config->items.size(); i++)
-    {
-        config->items[i]->wIndex += 1;
-    }
-    setAlignment(m_table, Qt::AlignHCenter|Qt::AlignVCenter);
-    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
-    updateTableBackground();
-}
-
-void CAnaItemWnd::DeleteOper()
-{
-    setModified(true);
-
-    AnaConfig * config = getConfig();
-
-    if(NULL == config)
-        return;
-
-    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
-    QList<int> rowList = getSelectedRows();
-
-    for (int i = rowList.size() - 1;i >= 0; i--)
-    {
-        int row = rowList[i];
-
-        for (int i = row + 1; i < config->items.size(); i++)
-        {
-            config->items[i]->wIndex -= 1;
-        }
-
-        config->items.remove(row);
-        m_table->removeRow(row);
-    }
-
-    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
-}
-
-void CAnaItemWnd::UpOper()
-{
-    setModified(true);
-
-    AnaConfig * config = getConfig();
-
-    if(NULL == config)
-        return;
-
-    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
-    QList<QTableWidgetItem *> itemList = m_table->selectedItems();
-    QList<int> rowList = getSelectedRows();
-
-    for (int i = 0;i < rowList.size(); i++)
-    {
-        int row = rowList[i];
-
-        if(row == 0)
-            break;
-
-        int tempIndex = config->items[row]->wIndex;
-        config->items[row]->wIndex = config->items[row-1]->wIndex;
-        config->items[row-1]->wIndex = tempIndex;
-        config->items.swapItemsAt(row,row -1);
-        tableExchange(row,row-1);
-    }
-
-    for (int i = 0; i < itemList.size(); i++) {
-        itemList[i]->setSelected(true);
-    }
-    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
-}
-
-void CAnaItemWnd::DownOper()
-{
-    setModified(true);
-
-    AnaConfig * config = getConfig();
-
-    if(NULL == config)
-        return;
-
-    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
-    QList<QTableWidgetItem *> itemList = m_table->selectedItems();
-
-    QList<int> rowList = getSelectedRows();
-
-    for (int i = rowList.size() - 1;i >= 0; i--)
-    {
-        int row = rowList[i];
-
-        if(row == config->items.size() -1)
-            break;
-
-        int tempIndex = config->items[row]->wIndex;
-        config->items[row]->wIndex = config->items[row+1]->wIndex;
-        config->items[row+1]->wIndex = tempIndex;
-        config->items.swapItemsAt(row,row +1);
-        tableExchange(row,row+2);
-    }
-
-    for (int i = 0; i < itemList.size(); i++) {
-        itemList[i]->setSelected(true);
-    }
-    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
 
 }
 
@@ -243,10 +83,8 @@ bool CAnaItemWnd::checkItemVal(QTableWidgetItem *item)
     return ok;
 }
 
-void CAnaItemWnd::itemChangedSlot(QTableWidgetItem *item)
+void CAnaItemWnd::writeConfigVal(QTableWidgetItem *item)
 {
-    setModified(true);
-
     AnaItem * ana = (AnaItem *)item->data(Qt::UserRole + 1).toULongLong();
 
     switch (item->column())
@@ -349,36 +187,11 @@ void CAnaItemWnd::itemChangedSlot(QTableWidgetItem *item)
     default:
         break;
     }
-
-    updateTableBackground();
 }
 
-void CAnaItemWnd::keyTextChangedSlot(const QString &text)
+void CAnaItemWnd::createItem(int row, BaseItem *baseItem)
 {
-    setModified(true);
-
-    AnaConfig * config = getConfig();
-
-    if(NULL == config)
-        return;
-
-    config->sKey = text;
-}
-
-void CAnaItemWnd::descTextChangedSlot(const QString &text)
-{
-    setModified(true);
-
-    AnaConfig * config = getConfig();
-
-    if(NULL == config)
-        return;
-
-    config->sDesc = text;
-}
-
-void CAnaItemWnd::createItem(int row, AnaItem *item)
-{
+    AnaItem * item = (AnaItem *)baseItem;
     QVariant data = (qulonglong)item;
 
     QTableWidgetItem * desc = new QTableWidgetItem(item->sDesc);
@@ -450,9 +263,9 @@ void CAnaItemWnd::createItem(int row, AnaItem *item)
     m_table->setItem(row,Enum_AnaTable_KUnit_Col,kUnit);
 }
 
-AnaConfig *CAnaItemWnd::getConfig()
+BaseTab *CAnaItemWnd::getConfig()
 {
-    AnaConfig * config = NULL;
+    BaseTab * config = NULL;
     switch (m_type)
     {
     case Enum_AnaTable_Type_AD:
@@ -472,4 +285,9 @@ AnaConfig *CAnaItemWnd::getConfig()
         break;
     }
     return config;
+}
+
+BaseItem *CAnaItemWnd::CreateNewItem(int row)
+{
+    return new AnaItem(row);
 }

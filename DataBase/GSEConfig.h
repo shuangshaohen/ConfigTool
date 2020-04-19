@@ -1,4 +1,4 @@
-#ifndef GSECONFIG_H
+﻿#ifndef GSECONFIG_H
 #define GSECONFIG_H
 
 #include <QString>
@@ -14,6 +14,11 @@
 #define CN_SEND_ATTR        (0x2)       //0x02:信号上送标志
 #define CN_COMTRAD_ATTR     (0x4)       //0x04:录波标志
 
+enum _Enum_Table_Type
+{
+    Enum_Table_Type_Ana = 0,
+    Enum_Table_Type_Bi,
+};
 
 enum _Enum_DeviceInfoTable_Column
 {
@@ -60,8 +65,9 @@ enum _Enum_AnaTable_Column
     Enum_AnaTable_KUnit_Col,                                //一次值单位/二次值单位
 };
 
-struct DeviceInfo
+class DeviceInfo
 {
+public:
     QString                 sType;
     QString                 sDesc;
     QString                 sVersion;
@@ -78,8 +84,9 @@ struct DeviceInfo
     }
 };
 
-struct DeviceParas
+class DeviceParas
 {
+public:
     unsigned int            wMaxAnaNum;
     unsigned int            wMaxBiNum;
     unsigned int            wMaxSvNum;
@@ -98,13 +105,79 @@ struct DeviceParas
     }
 };
 
-struct AnaItem
+class BaseItem
 {
+public:
     unsigned int            wIndex;
     QString                 sDesc;
     QString                 sName;
     unsigned int            dwAttr;
 
+    BaseItem(unsigned int index)
+    {
+        wIndex = index;
+        sDesc = QString("缺省%1").arg(index);
+        sName = QString("item%1").arg(index);
+        dwAttr = 0;
+    }
+
+};
+
+class BaseTab
+{
+public:
+    QString                 sDesc;
+    QString                 sKey;
+    QVector<BaseItem *>     items;
+
+    void clear()
+    {
+        sDesc = "";
+        sKey = "";
+
+        for(int i = 0 ; i < items.size(); i++)
+        {
+            delete items[i];
+        }
+
+        items.clear();
+    }
+
+    void insertItem(int row , BaseItem * item)
+    {
+        items.insert(row,item);
+        for (int i = row + 1; i < items.size(); i++)
+        {
+            items[i]->wIndex += 1;
+        }
+    }
+
+    void deletItem(int row)
+    {
+        for (int i = row + 1; i < items.size(); i++)
+        {
+            items[i]->wIndex -= 1;
+        }
+
+        items.remove(row);
+    }
+
+    void swapItem(int row1, int row2)
+    {
+        if((row1 < items.size())
+                &&(row2 < items.size()))
+        {
+            int tempIndex = items[row1]->wIndex;
+            items[row1]->wIndex = items[row2]->wIndex;
+            items[row2]->wIndex = tempIndex;
+            items.swapItemsAt(row1,row2);
+        }
+    }
+};
+
+class AnaItem:public BaseItem
+{
+public:
     QString                 sChanType;
     QString                 sChanFlag;
     int                     iXuYCDft;
@@ -118,13 +191,8 @@ struct AnaItem
     QString                 sUnit;
     QString                 sKiloUnit;
 
-    AnaItem(unsigned int index)
+    AnaItem(unsigned int index):BaseItem(index)
     {
-        wIndex = index;
-        sDesc = QString("缺省%1").arg(index);
-        sName = QString("item%1").arg(index);
-        dwAttr = 0;
-
         sChanType = QString("Other");
         sChanFlag = QString("Other");
         iXuYCDft = -1;
@@ -140,11 +208,108 @@ struct AnaItem
     }
 };
 
-struct AnaConfig
+//struct AnaConfig
+//{
+//    QString                 sDesc;
+//    QString                 sKey;
+//    QVector<AnaItem *>      items;
+
+//    void clear()
+//    {
+//        sDesc = "";
+//        sKey = "";
+
+//        for(int i = 0 ; i < items.size(); i++)
+//        {
+//            delete items[i];
+//        }
+
+//        items.clear();
+//    }
+
+//    void insertItem(int row , AnaItem * item)
+//    {
+//        items.insert(row,item);
+//        for (int i = row + 1; i < items.size(); i++)
+//        {
+//            items[i]->wIndex += 1;
+//        }
+//    }
+//};
+
+struct BiItem
+{
+    unsigned int            wIndex;
+    QString                 sDesc;
+    QString                 sName;
+    unsigned int            dwAttr;
+
+    QString                 sChanType;
+    QString                 sIndexDPS;
+    QString                 sIndexAna;
+    unsigned int            wHoldTime;
+    QString                 sAlmLevel;
+
+    BiItem(unsigned int index)
+    {
+        wIndex = index;
+        sDesc = QString("缺省%1").arg(index);
+        sName = QString("item%1").arg(index);
+        dwAttr = 0;
+
+        sChanType = QString("SPS");
+        sIndexDPS = "-1";
+        sIndexAna = "-1";
+        wHoldTime = 40;
+        sAlmLevel = "A";
+    }
+};
+
+struct BiConfig
 {
     QString                 sDesc;
     QString                 sKey;
-    QVector<AnaItem *>      items;
+    QVector<BiItem *>       items;
+
+    void clear()
+    {
+        sDesc = "";
+        sKey = "";
+
+        for(int i = 0 ; i < items.size(); i++)
+        {
+            delete items[i];
+        }
+
+        items.clear();
+    }
+};
+
+struct SoftYBItem
+{
+    unsigned int            wIndex;
+    QString                 sDesc;
+    QString                 sName;
+    unsigned int            dwAttr;
+
+    unsigned int            wDftVal;
+
+    SoftYBItem(unsigned int index)
+    {
+        wIndex = index;
+        sDesc = QString("缺省%1").arg(index);
+        sName = QString("item%1").arg(index);
+        dwAttr = 0;
+
+        wDftVal = 0;
+    }
+};
+
+struct SoftYBConfig
+{
+    QString                 sDesc;
+    QString                 sKey;
+    QVector<SoftYBItem *>       items;
 
     void clear()
     {
@@ -165,11 +330,16 @@ struct GseConfig
     DeviceInfo              deviceInfo;
     DeviceParas             deviceParas;
 
-    AnaConfig               adAnaConfig;
-    AnaConfig               derivedConfig;
-    AnaConfig               svConfig;
-    AnaConfig               gsAnaConfig;
-    AnaConfig               otherAnaConfig;
+    BaseTab                 adAnaConfig;
+    BaseTab                 derivedConfig;
+    BaseTab                 svConfig;
+    BaseTab                 gsAnaConfig;
+    BaseTab                 otherAnaConfig;
+
+    BiConfig                generalBiConfig;
+    BiConfig                signalConfig;
+    BiConfig                GooseBiConfig;
+    SoftYBConfig            softYBConfig;
 
     void clear()
     {

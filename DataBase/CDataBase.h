@@ -42,6 +42,11 @@ public:
     bool            checkSPSetCnnInfo(QString info);
     bool            checkSoftYBCnnInfo(QString info);
     bool            checkHardBICnnInfo(QString info);
+    bool            checkIndexDPS(QString info);
+    bool            checkIndexAna(QString info);
+    bool            checkBiType(QString type);
+    bool            checkAlmLevel(QString level);
+    bool            checkCtlVal(unsigned int val);
 
     static QString  changeDecToHex(unsigned int val);
     static bool     changeQStringToUInt(unsigned int &val, QString str);
@@ -57,8 +62,14 @@ private:
     void            ParseDeviceInfo(QDomElement element);
     void            ParseDeviceParas(QDomElement element);
 
-    void            ParseAnaTable(QDomElement element , AnaConfig * ana);
-    void            ParseAnaItem(QDomElement element , AnaConfig * parent);
+    void            ParseTable(QDomElement element , BaseTab * config, int type);
+    void            ParseAnaItem(QDomElement element , BaseTab * parent);
+
+    void            ParseBiTable(QDomElement element , BiConfig * config);
+    void            ParseBiItem(QDomElement element , BiConfig *parent);
+
+    void            ParseSoftYBTable(QDomElement element , SoftYBConfig * config);
+    void            ParseSoftYBItem(QDomElement element , SoftYBConfig *parent);
 
     //文件保存
     void            SaveInstruction(QDomDocument &doc);
@@ -66,9 +77,10 @@ private:
     void            SaveDeviceInfo(QDomDocument &doc, QDomElement & parentNode);
     void            SaveDeviceDeviceParas(QDomDocument &doc, QDomElement & parentNode);
     void            SaveAnaItem(QDomDocument &doc, QDomElement &parentNode, AnaItem *p);
-    void            SaveAnaTable(QDomDocument &doc, QDomElement &parentNode, AnaConfig *ana, QString key);
+    void            SaveAnaTable(QDomDocument &doc, QDomElement &parentNode, BaseTab *ana, QString key);
 
     void            CheckConfig();
+    void            CheckAna();
 
     QString         bindString(QString str1, QString str2);
 };

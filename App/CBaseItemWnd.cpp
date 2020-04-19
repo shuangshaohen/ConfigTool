@@ -12,6 +12,9 @@ CBaseItemWnd::CBaseItemWnd(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    m_data = NULL;
+    m_type = 0;
+
     m_table = ui->table;
     m_comboBox = ui->comboBox;
     m_lineEdit = ui->lineEdit;
@@ -56,6 +59,41 @@ CBaseItemWnd::~CBaseItemWnd()
     delete ui;
 }
 
+void CBaseItemWnd::setTableType(int type)
+{
+    m_type = type;
+}
+
+void CBaseItemWnd::showInfo(void *pData)
+{
+    m_table->clearContents();
+    if(NULL == pData)
+    {
+        m_data = NULL;
+        return;
+    }
+
+    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
+    m_data = (CDataBase *)pData;
+
+    BaseTab * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    m_lineEditDesc->setText(config->sDesc);
+    m_lineEditKey->setText(config->sKey);
+
+    m_table->setRowCount(config->items.size());
+    for (int row = 0; row < config->items.size(); row++)
+    {
+        createItem(row,config->items[row]);
+    }
+    setAlignment(m_table, Qt::AlignHCenter|Qt::AlignVCenter);
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
+    updateTableBackground();
+}
+
 void CBaseItemWnd::Clear()
 {
     m_table->clearContents();
@@ -87,17 +125,143 @@ void CBaseItemWnd::textChangedSlot(const QString &text)
 
 void CBaseItemWnd::itemChangedSlot(QTableWidgetItem *item)
 {
-    Q_UNUSED(item);
+    setModified(true);
+
+    writeConfigVal(item);
+
+    updateTableBackground();
 }
 
 void CBaseItemWnd::descTextChangedSlot(const QString &text)
 {
-    Q_UNUSED(text);
+    setModified(true);
+
+    BaseTab * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    config->sDesc = text;
 }
 
 void CBaseItemWnd::keyTextChangedSlot(const QString &text)
 {
-    Q_UNUSED(text);
+    setModified(true);
+
+    BaseTab * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    config->sKey = text;
+}
+
+void CBaseItemWnd::AddOper()
+{
+    setModified(true);
+
+    BaseTab * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
+    int row = m_table->rowCount();
+    if(m_table->currentItem() != NULL)
+        row = m_table->currentRow()+1;
+    BaseItem * newItem = CreateNewItem(row);
+    config->insertItem(row,newItem);
+
+    m_table->insertRow(row);
+    createItem(row,newItem);
+
+    setAlignment(m_table, Qt::AlignHCenter|Qt::AlignVCenter);
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
+    updateTableBackground();
+}
+
+void CBaseItemWnd::DeleteOper()
+{
+    setModified(true);
+
+    BaseTab * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
+    QList<int> rowList = getSelectedRows();
+
+    for (int i = rowList.size() - 1;i >= 0; i--)
+    {
+        int row = rowList[i];
+
+        config->deletItem(row);
+        m_table->removeRow(row);
+    }
+
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
+}
+
+void CBaseItemWnd::UpOper()
+{
+    setModified(true);
+
+    BaseTab * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
+    QList<QTableWidgetItem *> itemList = m_table->selectedItems();
+    QList<int> rowList = getSelectedRows();
+
+    for (int i = 0;i < rowList.size(); i++)
+    {
+        int row = rowList[i];
+
+        if(row == 0)
+            break;
+
+        config->swapItem(row,row-1);
+        tableExchange(row,row-1);
+    }
+
+    for (int i = 0; i < itemList.size(); i++) {
+        itemList[i]->setSelected(true);
+    }
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
+}
+
+void CBaseItemWnd::DownOper()
+{
+    setModified(true);
+
+    BaseTab * config = getConfig();
+
+    if(NULL == config)
+        return;
+
+    m_table->disconnect(SIGNAL(itemChanged(QTableWidgetItem *)));
+    QList<QTableWidgetItem *> itemList = m_table->selectedItems();
+
+    QList<int> rowList = getSelectedRows();
+
+    for (int i = rowList.size() - 1;i >= 0; i--)
+    {
+        int row = rowList[i];
+
+        if(row == config->items.size() -1)
+            break;
+
+        config->swapItem(row,row+1);
+        tableExchange(row,row+2);
+    }
+
+    for (int i = 0; i < itemList.size(); i++) {
+        itemList[i]->setSelected(true);
+    }
+    connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
 }
 
 void CBaseItemWnd::PasteOper()
@@ -265,6 +429,27 @@ bool CBaseItemWnd::event(QEvent *event)
     }
 
     return QWidget::event(event);
+}
+
+void CBaseItemWnd::writeConfigVal(QTableWidgetItem *item)
+{
+    Q_UNUSED(item);
+}
+
+void CBaseItemWnd::createItem(int row, BaseItem *baseItem)
+{
+    Q_UNUSED(row);
+    Q_UNUSED(baseItem);
+}
+
+BaseTab *CBaseItemWnd::getConfig()
+{
+    return NULL;
+}
+
+BaseItem *CBaseItemWnd::CreateNewItem(int row)
+{
+    return new BaseItem(row);
 }
 
 AttrItem::AttrItem(const QString &text, int type): QTableWidgetItem(text,type)

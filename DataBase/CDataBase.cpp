@@ -83,15 +83,30 @@ bool CDataBase::ParseConfig(const QString &fileName)
     if(!elemAna.isNull())
     {
         //AD模拟量通道配置
-        ParseAnaTable(elemAna.firstChildElement("AnaConfig"),&m_Config.adAnaConfig);
+        ParseTable(elemAna.firstChildElement("AnaConfig"),&m_Config.adAnaConfig,Enum_Table_Type_Ana);
         //衍生通道配置
-        ParseAnaTable(elemAna.firstChildElement("DerivedConfig"),&m_Config.derivedConfig);
+        ParseTable(elemAna.firstChildElement("DerivedConfig"),&m_Config.derivedConfig,Enum_Table_Type_Ana);
         //Sv通道配置
-        ParseAnaTable(elemAna.firstChildElement("SvConfig"),&m_Config.svConfig);
+        ParseTable(elemAna.firstChildElement("SvConfig"),&m_Config.svConfig,Enum_Table_Type_Ana);
         //GS浮点通道配置
-        ParseAnaTable(elemAna.firstChildElement("GSConfig"),&m_Config.gsAnaConfig);
+        ParseTable(elemAna.firstChildElement("GSConfig"),&m_Config.gsAnaConfig,Enum_Table_Type_Ana);
         //其它通道配置
-        ParseAnaTable(elemAna.firstChildElement("OtherConfig"),&m_Config.otherAnaConfig);
+        ParseTable(elemAna.firstChildElement("OtherConfig"),&m_Config.otherAnaConfig,Enum_Table_Type_Ana);
+    }
+
+    //解析开关量
+    QDomElement elemBi = elemRoot.firstChildElement("BiConfig");
+    if(!elemBi.isNull())
+    {
+        //硬开入通道配置
+        ParseBiTable(elemBi.firstChildElement("GeneralBiConfig"),&m_Config.generalBiConfig);
+        //中间信号通道配置
+        ParseBiTable(elemBi.firstChildElement("SignalBiConfig"),&m_Config.signalConfig);
+        //GS开入通道配置
+        ParseBiTable(elemBi.firstChildElement("GooseBiConfig"),&m_Config.GooseBiConfig);
+
+        //软压板
+        ParseSoftYBTable(elemBi.firstChildElement("SoftYb"),&m_Config.softYBConfig);
     }
 
     QString strInfoEnd = QString("解析结束！");
@@ -210,14 +225,14 @@ void CDataBase::SaveAnaItem(QDomDocument &doc, QDomElement &parentNode, AnaItem 
     parentNode.appendChild(item);
 }
 
-void CDataBase::SaveAnaTable(QDomDocument &doc, QDomElement &parentNode, AnaConfig *ana , QString key)
+void CDataBase::SaveAnaTable(QDomDocument &doc, QDomElement &parentNode, BaseTab *ana , QString key)
 {
     QDomElement anaConfig = doc.createElement(key);
     anaConfig.setAttribute("Desc",ana->sDesc);
     anaConfig.setAttribute("SAddrIndexName",ana->sKey);
     for(int i = 0 ; i < ana->items.size(); i++)
     {
-        SaveAnaItem(doc,anaConfig,ana->items[i]);
+        SaveAnaItem(doc,anaConfig,(AnaItem *)ana->items[i]);
     }
     parentNode.appendChild(anaConfig);
 }
@@ -283,27 +298,34 @@ void CDataBase::ParseDeviceParas(QDomElement element)
     paras->wSmpRate = element.attributeNode("SmpRate").value().toUInt();
 }
 
-void CDataBase::ParseAnaTable(QDomElement element, AnaConfig *ana)
+void CDataBase::ParseTable(QDomElement element, BaseTab *config , int type)
 {
     if(!element.isNull())
     {
-        ana->sDesc  = element.attributeNode("Desc").value();
-        ana->sKey   = element.attributeNode("SAddrIndexName").value();
+        config->sDesc  = element.attributeNode("Desc").value();
+        config->sKey   = element.attributeNode("SAddrIndexName").value();
 
         QDomElement elemItem = element.firstChildElement("Item");
         while ( !elemItem.isNull() )
         {
-            ParseAnaItem(elemItem,ana);
+            switch (type)
+            {
+            case Enum_Table_Type_Ana:
+                ParseAnaItem(elemItem,config);
+                break;
+            default:
+                break;
+            }
             elemItem = elemItem.nextSiblingElement("Item");
         }
     }
 
-    QString strInfoAna = QString("解析%1表完成:%2").arg(ana->sDesc).arg(QString::number(ana->items.size()));
-    CMsgInfo msgInfoAna( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_HINT_MSG, strInfoAna );
-    m_MsgInfoList.append(msgInfoAna);
+    QString strInfo = QString("解析%1表完成:%2").arg(config->sDesc).arg(QString::number(config->items.size()));
+    CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_HINT_MSG, strInfo );
+    m_MsgInfoList.append(msgInfo);
 }
 
-void CDataBase::ParseAnaItem(QDomElement element, AnaConfig *parent)
+void CDataBase::ParseAnaItem(QDomElement element, BaseTab *parent)
 {
     if(element.isNull())
         return;
@@ -388,6 +410,153 @@ void CDataBase::ParseAnaItem(QDomElement element, AnaConfig *parent)
     parent->items.push_back(item);
 }
 
+void CDataBase::ParseBiTable(QDomElement element, BiConfig *config)
+{
+    if(!element.isNull())
+    {
+        config->sDesc  = element.attributeNode("Desc").value();
+        config->sKey   = element.attributeNode("SAddrIndexName").value();
+
+        QDomElement elemItem = element.firstChildElement("Item");
+        while ( !elemItem.isNull() )
+        {
+            ParseBiItem(elemItem,config);
+            elemItem = elemItem.nextSiblingElement("Item");
+        }
+    }
+
+    QString strInfo = QString("解析%1表完成:%2").arg(config->sDesc).arg(QString::number(config->items.size()));
+    CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_HINT_MSG, strInfo );
+    m_MsgInfoList.append(msgInfo);
+}
+
+void CDataBase::ParseBiItem(QDomElement element, BiConfig *parent)
+{
+    if(element.isNull())
+        return;
+
+    BiItem * item = new BiItem(parent->items.size());
+
+    unsigned int index = element.attributeNode("Index").value().toUInt();
+    if(index != item->wIndex)
+    {
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+                          QString("%1表第%2条index与其顺序不匹配,已自动修正!").arg(parent->sDesc).arg(item->wIndex) );
+        m_MsgInfoList.append(msgInfo);
+    }
+
+    item->sDesc     = element.attributeNode("Desc").value();
+    item->sName     = element.attributeNode("Name").value();
+
+    if(changeQStringToUInt(item->dwAttr, element.attributeNode("ChanAttr").value()) == false)
+    {
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
+                          QString("%1表第%2条ChanAttr参数%3解析格式失败!")
+                          .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("ChanAttr").value()) );
+        m_MsgInfoList.append(msgInfo);
+    }
+
+    item->sChanType = element.attributeNode("ChanType").value();
+    if(checkBiType(item->sChanType) == false)
+    {
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+                          QString("%1表第%2ChanType%3不属于标准类型（SPS：单点，DPS：双点，INS：整型，FLS：浮点数）!")
+                          .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("ChanType").value()) );
+        m_MsgInfoList.append(msgInfo);
+    }
+
+    item->sIndexDPS = element.attributeNode("IndexDPS").value();
+    item->sIndexAna = element.attributeNode("IndexAna").value();
+
+    bool ok;
+    item->wHoldTime  = element.attributeNode("HoldTime").value().toUInt(&ok);
+    if(( "" != element.attributeNode("HoldTime").value())&&(ok == false))
+    {
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
+                          QString("%1表第%2条HoldTime参数%3解析格式失败!")
+                          .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("HoldTime").value()) );
+        m_MsgInfoList.append(msgInfo);
+    }
+
+    item->sAlmLevel = element.attributeNode("AlmLevel").value();
+    if(checkAlmLevel(item->sAlmLevel) == false)
+    {
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+                          QString("%1表第%2AlmLevel%3不属于标准类型（A类、B类、C类）!")
+                          .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("AlmLevel").value()) );
+        m_MsgInfoList.append(msgInfo);
+    }
+
+    parent->items.push_back(item);
+}
+
+void CDataBase::ParseSoftYBTable(QDomElement element, SoftYBConfig *config)
+{
+    if(!element.isNull())
+    {
+        config->sDesc  = element.attributeNode("Desc").value();
+        config->sKey   = element.attributeNode("SAddrIndexName").value();
+
+        QDomElement elemItem = element.firstChildElement("Item");
+        while ( !elemItem.isNull() )
+        {
+            ParseSoftYBItem(elemItem,config);
+            elemItem = elemItem.nextSiblingElement("Item");
+        }
+    }
+
+    QString strInfo = QString("解析%1表完成:%2").arg(config->sDesc).arg(QString::number(config->items.size()));
+    CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_HINT_MSG, strInfo );
+    m_MsgInfoList.append(msgInfo);
+}
+
+void CDataBase::ParseSoftYBItem(QDomElement element, SoftYBConfig *parent)
+{
+    if(element.isNull())
+        return;
+
+    SoftYBItem * item = new SoftYBItem(parent->items.size());
+
+    unsigned int index = element.attributeNode("Index").value().toUInt();
+    if(index != item->wIndex)
+    {
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_WARNNING_MSG,
+                          QString("%1表第%2条index与其顺序不匹配,已自动修正!").arg(parent->sDesc).arg(item->wIndex) );
+        m_MsgInfoList.append(msgInfo);
+    }
+
+    item->sDesc     = element.attributeNode("Desc").value();
+    item->sName     = element.attributeNode("Name").value();
+
+    if(changeQStringToUInt(item->dwAttr, element.attributeNode("ChanAttr").value()) == false)
+    {
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
+                          QString("%1表第%2条ChanAttr参数%3解析格式失败!")
+                          .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("ChanAttr").value()) );
+        m_MsgInfoList.append(msgInfo);
+    }
+
+    bool ok;
+    item->wDftVal  = element.attributeNode("ValDft").value().toUInt(&ok);
+    if(ok == false)
+    {
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
+                          QString("%1表第%2条ValDft参数%3解析格式失败!")
+                          .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("ValDft").value()) );
+        m_MsgInfoList.append(msgInfo);
+    }
+
+    if(checkCtlVal(item->wDftVal) == false)
+    {
+        CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
+                          QString("%1表第%2条ValDft参数%3只能为0或者1!")
+                          .arg(parent->sDesc).arg(item->wIndex).arg(element.attributeNode("ValDft").value()) );
+        m_MsgInfoList.append(msgInfo);
+    }
+
+    parent->items.push_back(item);
+}
+
 bool CDataBase::splitStr(QString &str1, QString &str2, QString src)
 {
     QStringList strList = src.split("/");
@@ -463,6 +632,48 @@ bool CDataBase::checkHardBICnnInfo(QString info)
     return true;
 }
 
+bool CDataBase::checkIndexDPS(QString info)
+{
+    return true;
+}
+
+bool CDataBase::checkIndexAna(QString info)
+{
+    return true;
+}
+
+bool CDataBase::checkBiType(QString type)
+{
+    //BI类型为SPS：单点，DPS：双点，INS：整型，FLS：浮点数
+    if(("SPS" == type)
+            || ("DPS" == type)
+            || ("INS" == type)
+            || ("FLS" == type))
+        return true;
+    else
+        return false;
+}
+
+bool CDataBase::checkAlmLevel(QString level)
+{
+    //A类、B类、C类，缺省A类
+    if(("A" == level)
+            || ("B" == level)
+            || ("C" == level))
+        return true;
+    else
+        return false;
+}
+
+bool CDataBase::checkCtlVal(unsigned int val)
+{
+    if((0 != val)
+            &&(1 != val))
+        return false;
+    else
+        return true;
+}
+
 QString CDataBase::changeDecToHex(unsigned int val)
 {
     if(val == 0)
@@ -499,7 +710,7 @@ void CDataBase::copyConfig(GseConfig *pSrc, GseConfig *pDst)
     for(int i = 0 ; i < pSrc->adAnaConfig.items.size(); i++)
     {
         AnaItem * item = new AnaItem(i);
-        *item = *(pSrc->adAnaConfig.items[i]);
+        *item = *(AnaItem *)(pSrc->adAnaConfig.items[i]);
         pDst->adAnaConfig.items.push_back(item);
     }
 
@@ -508,7 +719,7 @@ void CDataBase::copyConfig(GseConfig *pSrc, GseConfig *pDst)
     for(int i = 0 ; i < pSrc->derivedConfig.items.size(); i++)
     {
         AnaItem * item = new AnaItem(i);
-        *item = *(pSrc->derivedConfig.items[i]);
+        *item = *(AnaItem *)(pSrc->derivedConfig.items[i]);
         pDst->derivedConfig.items.push_back(item);
     }
 
@@ -517,7 +728,7 @@ void CDataBase::copyConfig(GseConfig *pSrc, GseConfig *pDst)
     for(int i = 0 ; i < pSrc->svConfig.items.size(); i++)
     {
         AnaItem * item = new AnaItem(i);
-        *item = *(pSrc->svConfig.items[i]);
+        *item = *(AnaItem *)(pSrc->svConfig.items[i]);
         pDst->svConfig.items.push_back(item);
     }
 
@@ -526,7 +737,7 @@ void CDataBase::copyConfig(GseConfig *pSrc, GseConfig *pDst)
     for(int i = 0 ; i < pSrc->gsAnaConfig.items.size(); i++)
     {
         AnaItem * item = new AnaItem(i);
-        *item = *(pSrc->gsAnaConfig.items[i]);
+        *item = *(AnaItem *)(pSrc->gsAnaConfig.items[i]);
         pDst->gsAnaConfig.items.push_back(item);
     }
 
@@ -535,7 +746,7 @@ void CDataBase::copyConfig(GseConfig *pSrc, GseConfig *pDst)
     for(int i = 0 ; i < pSrc->otherAnaConfig.items.size(); i++)
     {
         AnaItem * item = new AnaItem(i);
-        *item = *(pSrc->otherAnaConfig.items[i]);
+        *item = *(AnaItem *)(pSrc->otherAnaConfig.items[i]);
         pDst->otherAnaConfig.items.push_back(item);
     }
 
@@ -550,6 +761,11 @@ void CDataBase::CheckConfig()
 
     CMsgInfo msgInfoEnd( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_HINT_MSG, QString("表重名检测完成！"));
     m_MsgInfoList.append(msgInfoEnd);
+}
+
+void CDataBase::CheckAna()
+{
+
 }
 
 QString CDataBase::bindString(QString str1, QString str2)
