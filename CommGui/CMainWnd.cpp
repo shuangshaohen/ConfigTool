@@ -1,4 +1,4 @@
-#include "CMainWnd.h"
+﻿#include "CMainWnd.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -433,29 +433,21 @@ void CMainWnd::ShowAppToolBarSlot()
     }
 }
 
-void CMainWnd::VerifyBySchemaSlot()
+void CMainWnd::VerifySlot()
 {
-
-}
-
-void CMainWnd::VerifyByProtocolSlot()
-{
-
-}
-
-void CMainWnd::VerifyByApplicationSlot()
-{
-
-}
-
-void CMainWnd::VerifyByAllSlot()
-{
-
+    if( NULL==m_pProjectXml )
+    {
+        return;
+    }
+    m_pProjectXml->CheckConfig();
+    //输出信息到输出框
+    OutputMsgInfoList(m_pProjectXml->GetMsgInfoList());
+    m_pProjectXml->ClearMsgInfoList();
 }
 
 void CMainWnd::ClearOutputInfoSlot()
 {
-
+    m_pOutputWnd->ClearMsgInfo();
 }
 
 void CMainWnd::HelpSlot()

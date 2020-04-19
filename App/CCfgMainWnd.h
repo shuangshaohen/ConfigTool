@@ -1,4 +1,4 @@
-#ifndef CCFGMAINWND_H
+﻿#ifndef CCFGMAINWND_H
 #define CCFGMAINWND_H
 
 #include "CMainWnd.h"

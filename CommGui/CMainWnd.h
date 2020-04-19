@@ -1,4 +1,4 @@
-#ifndef CMAINWND_H
+﻿#ifndef CMAINWND_H
 #define CMAINWND_H
 
 #include <QMainWindow>
@@ -31,7 +31,6 @@ protected:
     QString						m_strProjectFilePathName;
     QString						m_strLastOpenPorjectFilePath;
     QLabel			*           m_pFileNameLable;
-    CDataBase       *           m_DataBase;
 
     QStatusBar		*			m_pStatusBar;
     CDockWidget		*   		m_pOutPutDockWidget;
@@ -75,10 +74,7 @@ protected slots:
     //工具菜单槽
 
     //验证菜单槽
-    void VerifyBySchemaSlot();
-    void VerifyByProtocolSlot();
-    void VerifyByApplicationSlot();
-    void VerifyByAllSlot();
+    void VerifySlot();
     void ClearOutputInfoSlot();
 
     //帮助

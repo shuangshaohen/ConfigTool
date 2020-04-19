@@ -1,4 +1,4 @@
-#include "CCommActions.h"
+﻿#include "CCommActions.h"
 #include "CMainWnd.h"
 #include <QtGui>
 
@@ -11,7 +11,7 @@ CCommActions::CCommActions(CMainWnd *pMainWnd) : m_pMainWnd(pMainWnd)
 //帮助菜单
 void CCommActions::CreateHelpMenu()
 {
-    m_pHelpMenu = m_pMainWnd->menuBar()->addMenu("帮助(&F)");
+    m_pHelpMenu = m_pMainWnd->menuBar()->addMenu("帮助(&H)");
     m_pHelpMenu->addAction("使用说明", m_pMainWnd, SLOT(HelpSlot()));
     m_pHelpMenu->addAction("关于", m_pMainWnd, SLOT(AboutSlot()));
 }
@@ -19,33 +19,33 @@ void CCommActions::CreateHelpMenu()
 //验证菜单
 void CCommActions::CreateVerifyMenu()
 {
-    m_pVerifyMenu = m_pMainWnd->menuBar()->addMenu("验证(&F)");
-    //m_pVerifyMenu->addAction( CIcon(":/Icon/Verigy_Schema.png"), "Schema验证", m_pMainWnd, SLOT(VerifyBySchemaSlot()));	//添加了菜单图标
+    m_pVerifyMenu = m_pMainWnd->menuBar()->addMenu("验证(&V)");
+    m_pVerifyMenu->addAction( QIcon(":/Icon/verigy .png"), "配置校验", m_pMainWnd, SLOT(VerifySlot()));	//添加了菜单图标
 
-    //m_pVerifyMenu->addSeparator();
+    m_pVerifyMenu->addSeparator();
 
     //清除信息
-    //m_pVerifyMenu->addAction(CIcon(":/Icon/ClearVerifyResult.png"), "清除信息", m_pMainWnd, SLOT(ClearOutputInfoSlot()));
+    m_pVerifyMenu->addAction(QIcon(":/Icon/clear.png"), "清除信息", m_pMainWnd, SLOT(ClearOutputInfoSlot()));
 
 }
 
 //验证工具条
 void CCommActions::CreateVerifyFileToolBar()
 {
-    //m_pVerifyToolBar = new QToolBar("验证工具条",m_pMainWnd);
-    //Schema验证
-    //QAction *pSchemaVerifyAction = m_pVerifyToolBar->addAction ( CIcon(":/Icon/Verigy_Schema.png"), "Schema验证" );
-    //pSchemaVerifyAction->setStatusTip(tr("Schema验证"));
-    //connect(pSchemaVerifyAction, SIGNAL(triggered()), m_pMainWnd, SLOT(VerifyBySchemaSlot()));
+    m_pVerifyToolBar = new QToolBar("验证工具条",m_pMainWnd);
+    //验证
+    QAction *pSchemaVerifyAction = m_pVerifyToolBar->addAction ( QIcon(":/Icon/verigy .png"), "配置校验" );
+    pSchemaVerifyAction->setStatusTip(tr("配置校验"));
+    connect(pSchemaVerifyAction, SIGNAL(triggered()), m_pMainWnd, SLOT(VerifySlot()));
 
-    //m_pVerifyToolBar->addSeparator();
+    m_pVerifyToolBar->addSeparator();
 
     //清除信息
-    //QAction *pClearOutPutInfoAction = m_pVerifyToolBar->addAction ( CIcon(":/Icon/ClearVerifyResult.png"), "清除信息" );
-    //pClearOutPutInfoAction->setStatusTip(tr("清除信息"));
-    //connect(pClearOutPutInfoAction, SIGNAL(triggered()), m_pMainWnd, SLOT(ClearOutputInfoSlot()));
+    QAction *pClearOutPutInfoAction = m_pVerifyToolBar->addAction ( QIcon(":/Icon/clear.png"), "清除信息" );
+    pClearOutPutInfoAction->setStatusTip(tr("清除信息"));
+    connect(pClearOutPutInfoAction, SIGNAL(triggered()), m_pMainWnd, SLOT(ClearOutputInfoSlot()));
 
-    //m_pMainWnd->addToolBar(Qt::TopToolBarArea, m_pVerifyToolBar);
+    m_pMainWnd->addToolBar(Qt::TopToolBarArea, m_pVerifyToolBar);
 }
 
 //视图菜单
@@ -86,7 +86,7 @@ void CCommActions::CreateMenuBar()
     CreateFileMenu();
 
     //编辑菜单
-    CreateEditMenu();
+    //CreateEditMenu();
 
     //视图菜单
     CreateViewMenu();

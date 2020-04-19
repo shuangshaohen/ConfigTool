@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>Icon/SplashSreenImage.png</file>
+        <file>Icon/clear.png</file>
+        <file>Icon/verigy .png</file>
     </qresource>
 </RCC>

@@ -8,9 +8,9 @@ CDeviceParasWnd::CDeviceParasWnd(QWidget *parent) : CDefaultWnd(parent)
 {
     m_table = new QTableWidget(this);
 
-    m_table->setColumnCount(6);
+    m_table->setColumnCount(7);
     QStringList headerList;
-    headerList << "模拟量数目" << "BI数目" << "SV数目" << "GS数目" << "BO数目" << "采样频率";
+    headerList << "模拟量数目" << "BI数目" << "SV数目" << "GS数目" << "BO数目" << "采样频率" << "定值区数目";
     m_table->setHorizontalHeaderLabels(headerList);
     //m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     m_table->horizontalHeader()->setStretchLastSection(true);
@@ -49,6 +49,7 @@ void CDeviceParasWnd::showInfo(void *pData)
     m_table->setItem(0,Enum_DeviceParasTable_GsNum_Col,new QTableWidgetItem(QString::number(paras->wMaxGooseNum)));
     m_table->setItem(0,Enum_DeviceParasTable_BoNum_Col,new QTableWidgetItem(QString::number(paras->wMaxBoNum)));
     m_table->setItem(0,Enum_DeviceParasTable_SmpRate_Col,new QTableWidgetItem(QString::number(paras->wSmpRate)));
+    m_table->setItem(0,Enum_DeviceParasTable_ZoneNum_Col,new QTableWidgetItem(QString::number(paras->wZoneNum)));
 
     setAlignment(m_table, Qt::AlignHCenter|Qt::AlignVCenter);
 
@@ -83,6 +84,9 @@ void CDeviceParasWnd::itemChangedSlot(QTableWidgetItem *item)
         break;
     case Enum_DeviceParasTable_SmpRate_Col:
         m_data->GetConfig()->deviceParas.wSmpRate = item->text().toUInt();
+        break;
+    case Enum_DeviceParasTable_ZoneNum_Col:
+        m_data->GetConfig()->deviceParas.wZoneNum = item->text().toUInt();
         break;
     default:
         break;

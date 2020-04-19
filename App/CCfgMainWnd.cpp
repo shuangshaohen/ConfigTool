@@ -1,4 +1,4 @@
-#include "CCfgMainWnd.h"
+﻿#include "CCfgMainWnd.h"
 #include "CCfgActions.h"
 #include "CDockWidget.h"
 #include "CCfgToolBox.h"
@@ -225,3 +225,5 @@ void CCfgMainWnd::UpdateToolBoxNode()
     m_pCfgToolBox->CreateResourceTreeNodes(m_pProjectXml);
     CSplashScreen::Instance()->EndShow();
 }
+
+

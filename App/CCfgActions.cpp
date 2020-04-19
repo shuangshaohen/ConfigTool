@@ -1,4 +1,4 @@
-#include "CCfgActions.h"
+﻿#include "CCfgActions.h"
 #include "CCfgMainWnd.h"
 
 CCfgActions::CCfgActions(CCfgMainWnd *pCfgMainWnd) : CCommActions(pCfgMainWnd), m_pCfgMainWnd(pCfgMainWnd)
@@ -57,7 +57,7 @@ void CCfgActions::CreateFileToolBar()
 //编辑菜单
 void CCfgActions::CreateEditMenu()
 {
-    m_pEditMenu = m_pCfgMainWnd->menuBar()->addMenu("编辑(&F)");
+    m_pEditMenu = m_pCfgMainWnd->menuBar()->addMenu("编辑(&E)");
     //m_pEditMenu->addAction("编辑ICD数据类型模板", m_pCfgMainWnd, SLOT(EditIcdLNSlot()));
     //m_pEditMenu->addSeparator();
     //m_pEditMenu->addAction("编辑通用数据类型词典", m_pCfgMainWnd, SLOT(EditTplLNSlot()));

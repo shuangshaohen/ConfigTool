@@ -58,7 +58,7 @@ bool CAnaItemWnd::checkItemVal(QTableWidgetItem *item)
     switch (item->column())
     {
     case Enum_PubTable_Name_Col:
-        ok = m_data->checkNameDuplicate(ana->sName);
+        ok = m_data->checkNameNotDuplicate(ana->sName);
         break;
     case Enum_AnaTable_RateSetP_Col:
         ok = m_data->checkSPSetCnnInfo(ana->sRateSetP);
@@ -93,7 +93,7 @@ void CAnaItemWnd::writeConfigVal(QTableWidgetItem *item)
         ana->sDesc = item->text();
         break;
     case Enum_PubTable_Name_Col:
-        if(m_data->checkNameDuplicate(item->text()) == false)
+        if(m_data->checkNameNoExit(item->text()) == false)
         {
             CMsgInfo msgInfo( CMsgInfo::Enum_Application_Verify_Mode, CMsgInfo::CN_ERROR_MSG,
                               QString("第%1行名称（%2 -> %3）存在重名，需重新命名!")

@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QVector>
+#include <QDateTime>
 
 #define CN_AD_I_COE (153)
 #define CN_AD_U_COE (154)
@@ -18,6 +19,12 @@ enum _Enum_Table_Type
 {
     Enum_Table_Type_Ana = 0,
     Enum_Table_Type_Bi,
+    Enum_Table_Type_SoftYB,
+    Enum_Table_Type_GsBo,
+    Enum_Table_Type_TripMatrix,
+    Enum_Table_Type_Yk,
+    Enum_Table_Type_Set,
+    Enum_Table_Type_Evt,
 };
 
 enum _Enum_DeviceInfoTable_Column
@@ -37,6 +44,7 @@ enum _Enum_DeviceParasTable_Column
     Enum_DeviceParasTable_GsNum_Col,            //
     Enum_DeviceParasTable_BoNum_Col,            //
     Enum_DeviceParasTable_SmpRate_Col,          //
+    Enum_DeviceParasTable_ZoneNum_Col,
 };
 
 enum _Enum_PubTable_Column
@@ -74,6 +82,15 @@ public:
     QString                 sDate;
     QString                 sCRC;
 
+    DeviceInfo()
+    {
+        sType = "GSE8500";
+        sDesc = "区域保护控制系统";
+        sVersion = "V1.00";
+        sDate = QDateTime::currentDateTime().toString();
+        sCRC = "1234ABCD";
+    }
+
     void clear()
     {
         sType = "";
@@ -93,6 +110,18 @@ public:
     unsigned int            wMaxGooseNum;
     unsigned int            wMaxBoNum;
     unsigned int            wSmpRate;
+    unsigned int            wZoneNum;
+
+    DeviceParas()
+    {
+        wMaxAnaNum = 0;
+        wMaxBiNum = 0;
+        wMaxSvNum = 0;
+        wMaxGooseNum = 0;
+        wMaxBoNum = 0;
+        wSmpRate = 4000;
+        wZoneNum= 20;
+    }
 
     void clear()
     {
@@ -102,6 +131,7 @@ public:
         wMaxGooseNum = 0;
         wMaxBoNum = 0;
         wSmpRate = 0;
+        wZoneNum= 0;
     }
 };
 
@@ -173,6 +203,41 @@ public:
             items.swapItemsAt(row1,row2);
         }
     }
+
+    int getNameCounts(QString name)
+    {
+        int num = 0;
+        for (int i = 0; i < items.size(); i++)
+        {
+            if(items[i]->sName == name)
+                num++;
+        }
+        return num;
+    }
+
+    bool matchKeyAndRowExit(QString info)
+    {
+        if((info == "")
+                ||(info == "-1"))
+            return true;
+
+        QStringList list = info.split(":");
+        if(list.size() != 2)
+            return false;
+
+        if(list[0] != sKey)
+            return false;
+
+        bool ok;
+        int row = list[1].toUInt(&ok);
+        if(ok == false)
+            return false;
+
+        if(row >= items.size() )
+            return false;
+
+        return true;
+    }
 };
 
 class AnaItem:public BaseItem
@@ -208,55 +273,17 @@ public:
     }
 };
 
-//struct AnaConfig
-//{
-//    QString                 sDesc;
-//    QString                 sKey;
-//    QVector<AnaItem *>      items;
-
-//    void clear()
-//    {
-//        sDesc = "";
-//        sKey = "";
-
-//        for(int i = 0 ; i < items.size(); i++)
-//        {
-//            delete items[i];
-//        }
-
-//        items.clear();
-//    }
-
-//    void insertItem(int row , AnaItem * item)
-//    {
-//        items.insert(row,item);
-//        for (int i = row + 1; i < items.size(); i++)
-//        {
-//            items[i]->wIndex += 1;
-//        }
-//    }
-//};
-
-struct BiItem
+class BiItem:public BaseItem
 {
-    unsigned int            wIndex;
-    QString                 sDesc;
-    QString                 sName;
-    unsigned int            dwAttr;
-
+public:
     QString                 sChanType;
     QString                 sIndexDPS;
     QString                 sIndexAna;
     unsigned int            wHoldTime;
     QString                 sAlmLevel;
 
-    BiItem(unsigned int index)
+    BiItem(unsigned int index):BaseItem(index)
     {
-        wIndex = index;
-        sDesc = QString("缺省%1").arg(index);
-        sName = QString("item%1").arg(index);
-        dwAttr = 0;
-
         sChanType = QString("SPS");
         sIndexDPS = "-1";
         sIndexAna = "-1";
@@ -265,63 +292,92 @@ struct BiItem
     }
 };
 
-struct BiConfig
+class SoftYBItem:public BaseItem
 {
-    QString                 sDesc;
-    QString                 sKey;
-    QVector<BiItem *>       items;
-
-    void clear()
-    {
-        sDesc = "";
-        sKey = "";
-
-        for(int i = 0 ; i < items.size(); i++)
-        {
-            delete items[i];
-        }
-
-        items.clear();
-    }
-};
-
-struct SoftYBItem
-{
-    unsigned int            wIndex;
-    QString                 sDesc;
-    QString                 sName;
-    unsigned int            dwAttr;
-
+public:
     unsigned int            wDftVal;
 
-    SoftYBItem(unsigned int index)
+    SoftYBItem(unsigned int index):BaseItem(index)
     {
-        wIndex = index;
-        sDesc = QString("缺省%1").arg(index);
-        sName = QString("item%1").arg(index);
-        dwAttr = 0;
-
         wDftVal = 0;
     }
 };
 
-struct SoftYBConfig
+class GooseBOItem:public BaseItem
 {
-    QString                 sDesc;
-    QString                 sKey;
-    QVector<SoftYBItem *>       items;
+public:
+    QString                 sHWChan;
+    QString                 sFWChan;
 
-    void clear()
+    GooseBOItem(unsigned int index):BaseItem(index)
     {
-        sDesc = "";
-        sKey = "";
+        sHWChan = "-1";
+        sFWChan = "-1";
+    }
+};
 
-        for(int i = 0 ; i < items.size(); i++)
-        {
-            delete items[i];
-        }
+class TripMatrixItem:public BaseItem
+{
+public:
+    unsigned int            wBoardIndex;
+    unsigned int            wBOFlag;
 
-        items.clear();
+    TripMatrixItem(unsigned int index):BaseItem(index)
+    {
+        wBoardIndex = 0;
+        wBOFlag = 0;
+    }
+};
+
+class SettingItem:public BaseItem
+{
+public:
+    unsigned int            wValMin;
+    unsigned int            wValMax;
+    unsigned int            wValDft;
+
+    QString                 sSecIn;
+    unsigned int            wCoeRet;
+    QString                 sType;
+    unsigned int            byWidth;
+    unsigned int            byDotBit;
+    QString                 sUnit;
+    QString                 sKiloUnit;
+
+    SettingItem(unsigned int index):BaseItem(index)
+    {
+        wValMin = 0;
+        wValMax = 0;
+        wValDft = 0;
+
+        sSecIn = "-1";
+        wCoeRet = 100;
+        sType = "NULL";
+        byWidth = 7;
+        byDotBit = 3;
+        sUnit = "N";
+        sKiloUnit = "N";
+    }
+};
+
+class EvtItem:public BaseItem
+{
+public:
+    unsigned int            boConfig1;
+    unsigned int            boConfig2;
+    unsigned int            boSignal;
+    unsigned int            boLight;
+
+    QString                 sCnnGSIn;
+
+    EvtItem(unsigned int index):BaseItem(index)
+    {
+        boConfig1 = 0;
+        boConfig2 = 0;
+        boSignal = 0;
+        boLight = 0;
+
+        sCnnGSIn = "-1";
     }
 };
 
@@ -330,16 +386,34 @@ struct GseConfig
     DeviceInfo              deviceInfo;
     DeviceParas             deviceParas;
 
+    //模拟量表
     BaseTab                 adAnaConfig;
     BaseTab                 derivedConfig;
     BaseTab                 svConfig;
     BaseTab                 gsAnaConfig;
     BaseTab                 otherAnaConfig;
 
-    BiConfig                generalBiConfig;
-    BiConfig                signalConfig;
-    BiConfig                GooseBiConfig;
-    SoftYBConfig            softYBConfig;
+    //开关量表
+    BaseTab                 generalBiConfig;
+    BaseTab                 signalConfig;
+    BaseTab                 gooseBiConfig;
+    BaseTab                 softYBConfig;
+
+    //开出表
+    BaseTab                 gooseBoConfig;
+    BaseTab                 tripMaxtrixConfig;
+    //YK表后期添加
+    BaseTab                 ykConfig;
+
+    //定值表
+    BaseTab                 settingSPConifg;
+    BaseTab                 settingSGConifg;
+
+    //事件表
+    BaseTab                 evtAlmConfig;
+    BaseTab                 evtActConfig;
+    BaseTab                 evtCheckConfig;
+    BaseTab                 remoteTripConfig;
 
     void clear()
     {
@@ -351,6 +425,26 @@ struct GseConfig
         svConfig.clear();
         gsAnaConfig.clear();
         otherAnaConfig.clear();
+
+        generalBiConfig.clear();
+        signalConfig.clear();
+        gooseBiConfig.clear();
+        softYBConfig.clear();
+
+        gooseBoConfig.clear();
+        tripMaxtrixConfig.clear();
+
+        ykConfig.clear();
+
+
+        settingSPConifg.clear();
+        settingSGConifg.clear();
+
+
+        evtAlmConfig.clear();
+        evtActConfig.clear();
+        evtCheckConfig.clear();
+        remoteTripConfig.clear();
     }
 };
 
