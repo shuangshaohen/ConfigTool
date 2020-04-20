@@ -1,25 +1,24 @@
-﻿#ifndef CANAITEMWND_H
-#define CANAITEMWND_H
+#ifndef CEVTITEMWND_H
+#define CEVTITEMWND_H
 
 #include <CBaseItemWnd.h>
 #include <QTableWidget>
 #include "CDataBase.h"
 
-enum _Enum_AnaTable_Type
+enum _Enum_EvtTable_Type
 {
-    Enum_AnaTable_Type_AD = 1,
-    Enum_AnaTable_Type_Derived,
-    Enum_AnaTable_Type_SV,
-    Enum_AnaTable_Type_GS,
-    Enum_AnaTable_Type_Other,
+    Enum_EvtTable_Type_Alm = 1,
+    Enum_EvtTable_Type_Act,
+    Enum_EvtTable_Type_Check,
+    Enum_EvtTable_Type_Remote,
 };
 
-class CAnaItemWnd : public CBaseItemWnd
+class CEvtItemWnd : public CBaseItemWnd
 {
     Q_OBJECT
 public:
-    explicit        CAnaItemWnd(QWidget *parent = nullptr );
-    ~CAnaItemWnd();
+    explicit CEvtItemWnd(QWidget *parent = nullptr);
+    ~CEvtItemWnd();
 
 protected slots:
     void            itemDoubleClickedSlot(QTableWidgetItem *item) override;
@@ -35,6 +34,8 @@ private:
     BaseTab *       getConfig() override;
     //新建一行数据源
     BaseItem *      CreateNewItem(int row) override;
+    //列隐藏选择
+    void            columnHidden() override;
 };
 
-#endif // CANAITEMWND_H
+#endif // CEVTITEMWND_H

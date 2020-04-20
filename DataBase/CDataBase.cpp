@@ -290,6 +290,8 @@ void CDataBase::SaveDeviceInfo(QDomDocument &doc, QDomElement &parentNode)
     QDateTime time = QDateTime::currentDateTime();
     QString str = time.toString("yyyy-MM-dd hh:mm:ss");
     deviceInfo.setAttribute("Date", str);
+    m_SaveConfig.deviceInfo.sDate = str;
+    m_Config.deviceInfo.sDate = str;
     deviceInfo.setAttribute("CRC", m_SaveConfig.deviceInfo.sCRC);
     parentNode.appendChild(deviceInfo);
 }

@@ -73,6 +73,55 @@ enum _Enum_AnaTable_Column
     Enum_AnaTable_KUnit_Col,                                //一次值单位/二次值单位
 };
 
+enum _Enum_BiTable_Column
+{
+    Enum_BiTable_ChanType_Col = Enum_PubTable_End + 1,     //通道类型,SPS：单点，DPS：双点，INS：整型，FLS：浮点数
+    Enum_BiTable_IndexDPS_Col,                             //关联的双点状态配对常闭虚端子
+    Enum_BiTable_IndexAna_Col,                             //浮点值关联的模拟量索引
+    Enum_BiTable_HoldTime_Col,                             //防抖时间（ms）
+    Enum_BiTable_AlmLevel_Col,                             //告警级别,A类、B类、C类，缺省A类
+};
+
+enum _Enum_SoftYBTable_Column
+{
+    Enum_SoftYBTable_ValDft_Col = Enum_PubTable_End + 1,     //缺省默认值
+};
+
+enum _Enum_GSBOTable_Column
+{
+    Enum_GSBOTable_HWChan_Col = Enum_PubTable_End + 1,     //合位通道索引
+    Enum_GSBOTable_FWChan_Col,                              //分位通道索引
+};
+
+enum _Enum_TripMatrixTable_Column
+{
+    Enum_TripMatrixTable_Baod_Col = Enum_PubTable_End + 1,     //出口槽位
+    Enum_TripMatrixTable_Flag_Col,                              //出口标记
+};
+
+enum _Enum_SetTable_Column
+{
+    Enum_SetTable_Min_Col = Enum_PubTable_End + 1,     //最大值
+    Enum_SetTable_Max_Col,                              //最小值
+    Enum_SetTable_Dft_Col,                              //缺省值
+    Enum_SetTable_SecIn_Col,                            //二次额定值索引
+    Enum_SetTable_CoeRet_Col,                            //返回系数
+    Enum_SetTable_Type_Col,                            //定值类型
+    Enum_SetTable_Width_Col,                            //位宽
+    Enum_SetTable_Dotbit_Col,                            //精度
+    Enum_SetTable_Unit_Col,                            //二次单位
+    Enum_SetTable_KUnit_Col,                            //一次单位
+};
+
+enum _Enum_EvtTable_Column
+{
+    Enum_EvtTable_GSIN_Col = Enum_PubTable_End + 1,     //GOOSE开入
+    Enum_EvtTable_BO1_Col,                              //出口1
+    Enum_EvtTable_BO2_Col,                              //出口2
+    Enum_EvtTable_SIGNAL_Col,                           //信号
+    Enum_EvtTable_Light_Col,                            //灯
+};
+
 class DeviceInfo
 {
 public:

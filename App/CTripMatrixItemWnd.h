@@ -1,25 +1,16 @@
-﻿#ifndef CANAITEMWND_H
-#define CANAITEMWND_H
+#ifndef CTRIPMATRIXITEMWND_H
+#define CTRIPMATRIXITEMWND_H
 
 #include <CBaseItemWnd.h>
 #include <QTableWidget>
 #include "CDataBase.h"
 
-enum _Enum_AnaTable_Type
-{
-    Enum_AnaTable_Type_AD = 1,
-    Enum_AnaTable_Type_Derived,
-    Enum_AnaTable_Type_SV,
-    Enum_AnaTable_Type_GS,
-    Enum_AnaTable_Type_Other,
-};
-
-class CAnaItemWnd : public CBaseItemWnd
+class CTripMatrixItemWnd : public CBaseItemWnd
 {
     Q_OBJECT
 public:
-    explicit        CAnaItemWnd(QWidget *parent = nullptr );
-    ~CAnaItemWnd();
+    explicit CTripMatrixItemWnd(QWidget *parent = nullptr);
+    ~CTripMatrixItemWnd();
 
 protected slots:
     void            itemDoubleClickedSlot(QTableWidgetItem *item) override;
@@ -37,4 +28,4 @@ private:
     BaseItem *      CreateNewItem(int row) override;
 };
 
-#endif // CANAITEMWND_H
+#endif // CTRIPMATRIXITEMWND_H

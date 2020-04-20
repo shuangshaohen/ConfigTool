@@ -87,6 +87,84 @@ void CCfgMainWnd::ShowOtherAnaTable()
     m_pCenterWnd->ShowOtherAnaTable(m_pProjectXml);
 }
 
+void CCfgMainWnd::ShowGeneralBiTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowGeneralBiTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowSignalTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowSignalTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowGooseBiTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowGooseBiTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowSoftYBTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowSoftYBTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowGooseBoTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowGooseBoTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowTripMatrixTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowTripMatrixTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowYKTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(false);
+    m_pCenterWnd->ShowYKTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowSetSPTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowSetSPTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowSetSGTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowSetSGTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowEvtAlmTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowEvtAlmTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowEvtActTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowEvtActTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowEvtCheckTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowEvtCheckTable(m_pProjectXml);
+}
+
+void CCfgMainWnd::ShowRemoteTripTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(true);
+    m_pCenterWnd->ShowRemoteTripTable(m_pProjectXml);
+}
+
 void CCfgMainWnd::RefreshResourceInfo()
 {
     m_pCfgToolBox->RefreshResourceTreeNodes();

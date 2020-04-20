@@ -29,6 +29,8 @@ DESTDIR = ../bin
 SOURCES += \
     CAnaItemWnd.cpp \
     CBaseItemWnd.cpp \
+    CBiItemWnd.cpp \
+    CBitSelectedDialog.cpp \
     CCfgActions.cpp \
     CCfgCenterWnd.cpp \
     CCfgMainWnd.cpp \
@@ -36,25 +38,38 @@ SOURCES += \
     CDefaultWnd.cpp \
     CDeviceInfoWnd.cpp \
     CDeviceParasWnd.cpp \
+    CEvtItemWnd.cpp \
+    CGSBOItemWnd.cpp \
     CResourceTreeWnd.cpp \
+    CSettingItemWnd.cpp \
+    CSoftYBItemWnd.cpp \
+    CTripMatrixItemWnd.cpp \
     main.cpp \
 
 HEADERS += \
     CAnaItemWnd.h \
     CBaseItemWnd.h \
+    CBiItemWnd.h \
+    CBitSelectedDialog.h \
     CCfgActions.h \
     CCfgCenterWnd.h \
     CCfgToolBox.h \
     CDefaultWnd.h \
     CDeviceInfoWnd.h \
     CDeviceParasWnd.h \
+    CEvtItemWnd.h \
+    CGSBOItemWnd.h \
     CMainWnd.h \
     CDataBase.h \
     CCfgMainWnd.h \ \
-    CResourceTreeWnd.h
+    CResourceTreeWnd.h \
+    CSettingItemWnd.h \
+    CSoftYBItemWnd.h \
+    CTripMatrixItemWnd.h
 
 FORMS += \
     BaseItemWnd.ui \
+    BitSelectedDialog.ui \
     ToolBox.ui
 
 TRANSLATIONDebugS += \

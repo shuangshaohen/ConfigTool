@@ -23,6 +23,23 @@ public:
     void ShowGSAnaInfoTable();
     void ShowOtherAnaTable();
 
+    void ShowGeneralBiTable();
+    void ShowSignalTable();
+    void ShowGooseBiTable();
+    void ShowSoftYBTable();
+
+    void ShowGooseBoTable();
+    void ShowTripMatrixTable();
+    void ShowYKTable();
+
+    void ShowSetSPTable();
+    void ShowSetSGTable();
+
+    void ShowEvtAlmTable();
+    void ShowEvtActTable();
+    void ShowEvtCheckTable();
+    void ShowRemoteTripTable();
+
     void RefreshResourceInfo();
 
     void SetModified(bool bModified);

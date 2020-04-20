@@ -46,6 +46,7 @@ protected slots:
     void currentIndexChangedSlot(int index);
     void textChangedSlot(const QString &text);
 
+    virtual void itemDoubleClickedSlot(QTableWidgetItem *item);
     void itemChangedSlot(QTableWidgetItem *item);
     void descTextChangedSlot(const QString &text);
     void keyTextChangedSlot(const QString &text);
@@ -77,6 +78,7 @@ protected:
     void tableExchange(int fromRow, int toRow);
     void tableFilter(int column, QString key);
     void updateTableBackground();
+    virtual void columnHidden();
 
     QList<int> getSelectedRows();
 

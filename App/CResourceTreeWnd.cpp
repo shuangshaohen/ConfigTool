@@ -104,7 +104,7 @@ void CResourceTreeWnd::CreateTreeNodes(CDataBase *pXercesXML)
 
     m_pSignalTreeWidgetItem   = new QTreeWidgetItem(m_pBITreeWidgetItem);
     m_pSignalTreeWidgetItem->setText( 0, "软遥信" );
-    SetNodeType(m_pSignalTreeWidgetItem, Enum_BI_General_Node);
+    SetNodeType(m_pSignalTreeWidgetItem, Enum_BI_Signal_Node);
 
     m_pGSBITreeWidgetItem   = new QTreeWidgetItem(m_pBITreeWidgetItem);
     m_pGSBITreeWidgetItem->setText( 0, "GS开入" );
@@ -199,6 +199,23 @@ void CResourceTreeWnd::RefreshTreeNodes()
     m_pSvTreeWidgetItem->setText( 0, config->svConfig.sDesc + QString(":%1").arg(config->svConfig.items.size()) );
     m_pGsAnaTreeWidgetItem->setText( 0, config->gsAnaConfig.sDesc + QString(":%1").arg(config->gsAnaConfig.items.size()) );
     m_pOherAnaTreeWidgetItem->setText( 0, config->otherAnaConfig.sDesc + QString(":%1").arg(config->otherAnaConfig.items.size()) );
+
+    m_pGeneralBITreeWidgetItem->setText( 0, config->generalBiConfig.sDesc + QString(":%1").arg(config->generalBiConfig.items.size()) );
+    m_pSignalTreeWidgetItem->setText( 0, config->signalConfig.sDesc + QString(":%1").arg(config->signalConfig.items.size()) );
+    m_pGSBITreeWidgetItem->setText( 0, config->gooseBiConfig.sDesc + QString(":%1").arg(config->gooseBiConfig.items.size()) );
+    m_pSoftYBTreeWidgetItem->setText( 0, config->softYBConfig.sDesc + QString(":%1").arg(config->softYBConfig.items.size()) );
+
+    m_pGSBOTreeWidgetItem->setText( 0, config->gooseBoConfig.sDesc + QString(":%1").arg(config->gooseBoConfig.items.size()) );
+    m_pTripMatrixTreeWidgetItem->setText( 0, config->tripMaxtrixConfig.sDesc + QString(":%1").arg(config->tripMaxtrixConfig.items.size()) );
+    m_pYKTreeWidgetItem->setText( 0, config->ykConfig.sDesc + QString(":%1").arg(config->ykConfig.items.size()) );
+
+    m_pSPSetTreeWidgetItem->setText( 0, config->settingSPConifg.sDesc + QString(":%1").arg(config->settingSPConifg.items.size()) );
+    m_pSGSetTreeWidgetItem->setText( 0, config->settingSGConifg.sDesc + QString(":%1").arg(config->settingSGConifg.items.size()) );
+
+    m_pAlmEvtTreeWidgetItem->setText( 0, config->evtAlmConfig.sDesc + QString(":%1").arg(config->evtAlmConfig.items.size()) );
+    m_pActEvtTreeWidgetItem->setText( 0, config->evtActConfig.sDesc + QString(":%1").arg(config->evtActConfig.items.size()) );
+    m_pRemoteTripTreeWidgetItem->setText( 0, config->remoteTripConfig.sDesc + QString(":%1").arg(config->remoteTripConfig.items.size()) );
+    m_pCheckEvtTreeWidgetItem->setText( 0, config->evtCheckConfig.sDesc + QString(":%1").arg(config->evtCheckConfig.items.size()) );
 }
 
 void CResourceTreeWnd::ClearTreeNode()
@@ -253,10 +270,45 @@ void CResourceTreeWnd::ShowCurrentNodeInfoWnd()
     case Enum_Ana_Other_Node:
         CCfgMainWnd::Instance()->ShowOtherAnaTable();
         break;
-//    case Enum_Ana_AD_Node:
-//        CCfgMainWnd::Instance()->ShowAnaInfo();
-//        break;
-        //TODO
+    case Enum_BI_General_Node:
+        CCfgMainWnd::Instance()->ShowGeneralBiTable();
+        break;
+    case Enum_BI_Signal_Node:
+        CCfgMainWnd::Instance()->ShowSignalTable();
+        break;
+    case Enum_GSBI_Node:
+        CCfgMainWnd::Instance()->ShowGooseBiTable();
+        break;
+    case Enum_SoftYB_Node:
+        CCfgMainWnd::Instance()->ShowSoftYBTable();
+        break;
+    case Enum_GSBO_Node:
+        CCfgMainWnd::Instance()->ShowGooseBoTable();
+        break;
+    case Enum_TripMatrix_Node:
+        CCfgMainWnd::Instance()->ShowTripMatrixTable();
+        break;
+    case Enum_BO_YK_Node:
+        CCfgMainWnd::Instance()->ShowYKTable();
+        break;
+    case Enum_SPSet_Node:
+        CCfgMainWnd::Instance()->ShowSetSPTable();
+        break;
+    case Enum_SGSet_Node:
+        CCfgMainWnd::Instance()->ShowSetSGTable();
+        break;
+    case Enum_Alarm_Node:
+        CCfgMainWnd::Instance()->ShowEvtAlmTable();
+        break;
+    case Enum_Act_Node:
+        CCfgMainWnd::Instance()->ShowEvtActTable();
+        break;
+    case Enum_Remote_Node:
+        CCfgMainWnd::Instance()->ShowRemoteTripTable();
+        break;
+    case Enum_Check_Node:
+        CCfgMainWnd::Instance()->ShowEvtCheckTable();
+        break;
     default:
         CCfgMainWnd::Instance()->ShowDefaultInfo();
         break;

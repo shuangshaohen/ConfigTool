@@ -46,6 +46,7 @@ CBaseItemWnd::CBaseItemWnd(QWidget *parent) :
     connect(m_table->verticalHeader(),SIGNAL(customContextMenuRequested(QPoint)),
             this,SLOT(customContextMenuRequestedSlot(QPoint)));
 
+    connect(m_table,SIGNAL(itemDoubleClicked(QTableWidgetItem *)),this,SLOT(itemDoubleClickedSlot(QTableWidgetItem *)));
     connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
     connect(m_comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(currentIndexChangedSlot(int)));
     connect(m_lineEdit,SIGNAL(textChanged(QString)),this,SLOT(textChangedSlot(QString)));
@@ -62,6 +63,7 @@ CBaseItemWnd::~CBaseItemWnd()
 void CBaseItemWnd::setTableType(int type)
 {
     m_type = type;
+    columnHidden();
 }
 
 void CBaseItemWnd::showInfo(void *pData)
@@ -121,6 +123,11 @@ void CBaseItemWnd::textChangedSlot(const QString &text)
 {
     Q_UNUSED(text);
     tableFilter(m_comboBox->currentIndex(),m_lineEdit->text());
+}
+
+void CBaseItemWnd::itemDoubleClickedSlot(QTableWidgetItem *item)
+{
+    Q_UNUSED(item);
 }
 
 void CBaseItemWnd::itemChangedSlot(QTableWidgetItem *item)
@@ -385,6 +392,11 @@ void CBaseItemWnd::updateTableBackground()
     connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
 }
 
+void CBaseItemWnd::columnHidden()
+{
+
+}
+
 QList<int> CBaseItemWnd::getSelectedRows()
 {
     QList<int> rowList;
@@ -464,7 +476,7 @@ QVariant AttrItem::data(int role) const
     if(role == Qt::DisplayRole){
         QString strVal = QTableWidgetItem::data(Qt::EditRole).toString();
 
-        int val = strVal.toUInt();
+        unsigned int val = strVal.toUInt();
         if(val == 0)
             return "0";
 
