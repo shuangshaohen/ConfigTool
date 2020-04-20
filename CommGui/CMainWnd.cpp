@@ -8,6 +8,7 @@
 #include "COutputWnd.h"
 #include "CDockWidget.h"
 #include "CCommActions.h"
+#include <QDesktopServices>
 
 void CMainWnd::SetFlagOfOtherThread(bool bHasOtherThread)
 {
@@ -452,12 +453,14 @@ void CMainWnd::ClearOutputInfoSlot()
 
 void CMainWnd::HelpSlot()
 {
-
+    QString strDoc = "./help.pdf";
+    //qDebug() << QDir::currentPath();
+    QDesktopServices::openUrl(QUrl::fromLocalFile(strDoc));
 }
 
 void CMainWnd::AboutSlot()
 {
-
+    QMessageBox::about(this,"Config配置工具","用于新版本config配置文件的编辑");
 }
 
 void CMainWnd::SetToolMenuCheckStateSlot(bool bShow)
