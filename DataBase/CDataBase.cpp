@@ -499,7 +499,7 @@ void CDataBase::SaveSettingTable(QDomDocument &doc, QDomElement &parentNode, Bas
         item.setAttribute("ValAttr",QString::number(p->wValMin)+"/"+QString::number(p->wValMax)+"/"+QString::number(p->wValDft));
         item.setAttribute("SecIn",p->sSecIn);
         item.setAttribute("CoeRet",p->wCoeRet);
-        item.setAttribute("Type",p->sType);
+        item.setAttribute("ChanType",p->sType);
         item.setAttribute("DataAttr",QString::number(p->byWidth)+"/"+QString::number(p->byDotBit));
         item.setAttribute("Unit",p->sKiloUnit+"/"+p->sUnit);
         item.setAttribute("Name",p->sName);
@@ -970,7 +970,7 @@ void CDataBase::ParseSettingItem(QDomElement element, BaseTab *parent)
         m_MsgInfoList.append(msgInfo);
     }
 
-    item->sType     = element.attributeNode("Type").value();
+    item->sType     = element.attributeNode("ChanType").value();
 
     if(false == splitUnInt(item->byWidth,item->byDotBit,element.attributeNode("DataAttr").value()))
     {

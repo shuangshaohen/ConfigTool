@@ -23,7 +23,7 @@ CCfgMainWnd::CCfgMainWnd(QWidget *parent, Qt::WindowFlags flags):CMainWnd(parent
 
 void CCfgMainWnd::SetToolTile()
 {
-    m_strToolName = "Config配置工具V1.00";
+    m_strToolName = "Config配置工具V1.10";
     setWindowIcon( QIcon(":/png/Icon/CfgTitleIcon.png" ));
     setWindowTitle(m_strToolName);
 }

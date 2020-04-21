@@ -50,7 +50,7 @@ void CSettingItemWnd::itemDoubleClickedSlot(QTableWidgetItem *item)
     {
         SettingItem * p = (SettingItem *)item->data(Qt::UserRole+1).toULongLong();
         QStringList list;
-        list << "DB0:可见标志" << "DB1:信号上送标志" << "DB2:录波标志" << "DB3:采样标志 ";
+        list << "DB0:可见标志" << "DB1:信号上送标志" << "DB2:录波标志" << "DB3:不分组定值 ";
         CBitSelectedDialog * dialog = new CBitSelectedDialog(p->dwAttr,list,this);
         dialog->exec();
         item->setData(Qt::EditRole,dialog->getVal());
