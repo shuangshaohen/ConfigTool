@@ -20,7 +20,7 @@ UI_DIR = ../temp/cfgtool/uic
 OBJECTS_DIR = ../temp/cfgtool/obj
 
 QMAKE_LIBDIR = ../bin
-INCLUDEPATH += $$PWD/../bin ../CommGui ../DataBase
+INCLUDEPATH += $$PWD/../bin ../CommGui ../DataBase ../TopoPara
 DEPENDPATH += $$PWD/../bin
 
 TARGET = CfgTool
@@ -80,9 +80,9 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../bin/ -lCommGui -lDataBase
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../bin/ -lCommGui -lDataBase
-else:unix: LIBS += -L$$PWD/../bin/ -lCommGui -lDataBase
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../bin/ -lCommGui -lDataBase -lTopoPara
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../bin/ -lCommGui -lDataBase -lTopoPara
+else:unix: LIBS += -L$$PWD/../bin/ -lCommGui -lDataBase -lTopoPara
 
 RESOURCES += \
     src.qrc

@@ -21,6 +21,8 @@ CBaseItemWnd::CBaseItemWnd(QWidget *parent) :
     m_lineEditDesc = ui->lineEditDesc;
     m_lineEditKey = ui->lineEditKey;
 
+    m_lineEditKey->setReadOnly(true);
+
     rightMenu = new QMenu(this);
     addAction = new QAction("新增",this);
     copyAction = new QAction("复制",this);

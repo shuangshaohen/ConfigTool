@@ -4,6 +4,7 @@
 #include "CResourceTreeWnd.h"
 #include "CCfgMainWnd.h"
 #include "ui_ToolBox.h"
+#include "TopoPara.h"
 
 void CCfgToolBox::CurrentPageChanged(int index)
 {
@@ -12,21 +13,25 @@ void CCfgToolBox::CurrentPageChanged(int index)
     if( pWidget==m_pUi_ToolBox->m_ResourceEditPage)
     {
         CCfgMainWnd::Instance()->SetEditToolBarVisible(true);
+        CCfgMainWnd::Instance()->SetVerifyToolBarVisible(true);
         m_pResourceTreeWnd->ShowCurrentNodeInfoWnd();
     }
     else if( pWidget==m_pUi_ToolBox->m_LogicEditPage)
     {
         CCfgMainWnd::Instance()->SetEditToolBarVisible(false);
+        CCfgMainWnd::Instance()->SetVerifyToolBarVisible(false);
         //CIcdMainWnd::Instance()->RaiseTextBrowsePageInCenterWnd();
     }
     else if( pWidget==m_pUi_ToolBox->m_FunctionPage)
     {
         CCfgMainWnd::Instance()->SetEditToolBarVisible(false);
+        CCfgMainWnd::Instance()->SetVerifyToolBarVisible(false);
         //CIcdMainWnd::Instance()->RaiseFnBrowsePageInCenterWnd();
     }
     else if( pWidget==m_pUi_ToolBox->m_TextViewPage)
     {
         CCfgMainWnd::Instance()->SetEditToolBarVisible(false);
+        CCfgMainWnd::Instance()->SetVerifyToolBarVisible(false);
         //CIcdMainWnd::Instance()->RaiseDataTypeEditPageInCenterWnd();
     }
 }
@@ -42,6 +47,7 @@ CCfgToolBox::CCfgToolBox(QWidget *parent):QTabWidget(parent)
     pGridLayout->setMargin(0);
     pGridLayout->addWidget(m_pResourceTreeWnd, 0, 0, 1, 1);
 
+    TopoPara::GetInstance()->setTreeView(m_pUi_ToolBox->treeView);
 
     connect( this, SIGNAL(currentChanged(int)), this, SLOT(CurrentPageChanged(int)));
 

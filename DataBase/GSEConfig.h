@@ -65,12 +65,12 @@ enum _Enum_AnaTable_Column
     Enum_AnaTable_Coe_Col,                                  //通道系数(放大倍数)
     Enum_AnaTable_RateSetP_Col,
     Enum_AnaTable_RateSetS_Col,                             //关联的一次额定值索引号/二次额定值索引号
+    Enum_AnaTable_KUnit_Col,                                //一次值单位/二次值单位
+    Enum_AnaTable_Unit_Col,
     Enum_AnaTable_RecSYb_Col,
     Enum_AnaTable_RecHYb_Col,                               //是否接收sv软压板号/硬压板号
     Enum_AnaTable_DataWidth_Col,
     Enum_AnaTable_DataDot_Col,                              //数据属性Width/DotBit
-    Enum_AnaTable_Unit_Col,
-    Enum_AnaTable_KUnit_Col,                                //一次值单位/二次值单位
 };
 
 enum _Enum_BiTable_Column
@@ -109,8 +109,8 @@ enum _Enum_SetTable_Column
     Enum_SetTable_Type_Col,                            //定值类型
     Enum_SetTable_Width_Col,                            //位宽
     Enum_SetTable_Dotbit_Col,                            //精度
-    Enum_SetTable_Unit_Col,                            //二次单位
     Enum_SetTable_KUnit_Col,                            //一次单位
+    Enum_SetTable_Unit_Col,                            //二次单位
 };
 
 enum _Enum_EvtTable_Column
@@ -208,6 +208,12 @@ public:
     QString                 sDesc;
     QString                 sKey;
     QVector<BaseItem *>     items;
+
+    void set(QString desc, QString key)
+    {
+        sDesc = desc;
+        sKey = key;
+    }
 
     void clear()
     {
@@ -464,6 +470,32 @@ struct GseConfig
     BaseTab                 evtCheckConfig;
     BaseTab                 remoteTripConfig;
 
+    void inital()
+    {
+        adAnaConfig.set("模拟量通道配置","ANA");
+        derivedConfig.set("衍生通道配置","DRV");
+        svConfig.set("Sv通道配置","SV");
+        gsAnaConfig.set("GS浮点通道配置","GSFLT");
+        otherAnaConfig.set("其它通道配置","OTH");
+
+        generalBiConfig.set("常规开入配置","BI");
+        signalConfig.set("中间信号开入配置","SIGNAL");
+        gooseBiConfig.set("Goose开入配置","GSBI");
+        softYBConfig.set("软压板配置信息","SOFT");
+
+        gooseBoConfig.set("Goose开出配置信息","GSBO");
+        tripMaxtrixConfig.set("跳闸矩阵配置信息","BO");
+        ykConfig.set("遥控配置信息表","YK");
+
+        settingSPConifg.set("不分区定值","SPSET");
+        settingSGConifg.set("分区定值","SGSET");
+
+        evtAlmConfig.set("告警事件常量表配置信息","ALM");
+        evtActConfig.set("动作事件常量表配置信息","EVT");
+        evtCheckConfig.set("自检事件常量表配置信息","CHECK");
+        remoteTripConfig.set("远方跳闸定义表配置信息","RMT");
+    }
+
     void clear()
     {
         deviceInfo.clear();
@@ -482,13 +514,10 @@ struct GseConfig
 
         gooseBoConfig.clear();
         tripMaxtrixConfig.clear();
-
         ykConfig.clear();
-
 
         settingSPConifg.clear();
         settingSGConifg.clear();
-
 
         evtAlmConfig.clear();
         evtActConfig.clear();

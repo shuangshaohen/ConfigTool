@@ -24,6 +24,7 @@ public:
     void OutputMsgInfo( const CMsgInfo &msgInfo );
     void OutputMsgInfoList( const QList<CMsgInfo>& msgInfoList );
     void SetEditToolBarVisible( bool bVisible );
+    void SetVerifyToolBarVisible( bool bVisible );
 protected:
     bool						m_bHasOtherThread;
     CDataBase       *           m_pProjectXml;

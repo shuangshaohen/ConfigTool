@@ -72,6 +72,9 @@ public slots:
     //模板编辑后显示
     //void ShowSlot();
 
+    //新建拓扑配置
+    void NewTopoPara();
+
     //新建文件
     void NewCfgProjectFileSlot();
 

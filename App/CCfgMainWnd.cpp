@@ -6,6 +6,7 @@
 #include "CCfgCenterWnd.h"
 #include <QGridLayout>
 #include <QSettings>
+#include "TopoPara.h"
 
 CCfgMainWnd::CCfgMainWnd(QWidget *parent, Qt::WindowFlags flags):CMainWnd(parent,flags)
 {
@@ -275,6 +276,11 @@ void CCfgMainWnd::RevertSlot()
     m_pProjectXml->Revert();
     RefreshResourceInfo();
     m_pCfgToolBox->ShowCurrentNodeInfoWnd();
+}
+
+void CCfgMainWnd::NewTopoPara()
+{
+    TopoPara::GetInstance()->NewPara();
 }
 
 void CCfgMainWnd::NewCfgProjectFileSlot()

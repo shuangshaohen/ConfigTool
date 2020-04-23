@@ -44,7 +44,9 @@ void CDeviceInfoWnd::showInfo(void *pData)
     m_table->setItem(0,Enum_DeviceInfoTable_Type_Col,new QTableWidgetItem(info->sType));
     m_table->setItem(0,Enum_DeviceInfoTable_Desc_Col,new QTableWidgetItem(info->sDesc));
     m_table->setItem(0,Enum_DeviceInfoTable_Version_Col,new QTableWidgetItem(info->sVersion));
-    m_table->setItem(0,Enum_DeviceInfoTable_Date_Col,new QTableWidgetItem(info->sDate));
+    QTableWidgetItem * date = new QTableWidgetItem(info->sDate);
+    date->setFlags(date->flags()&(~Qt::ItemIsEditable));
+    m_table->setItem(0,Enum_DeviceInfoTable_Date_Col,date);
     m_table->setItem(0,Enum_DeviceInfoTable_CRC_Col,new QTableWidgetItem(info->sCRC));
 
     setAlignment(m_table, Qt::AlignHCenter|Qt::AlignVCenter);

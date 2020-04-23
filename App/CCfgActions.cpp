@@ -30,6 +30,8 @@ void CCfgActions::CreateFileMenu()
     m_pFileMenu->addSeparator();
     m_pFileMenu->addAction("关闭配置文件", m_pCfgMainWnd, SLOT(CloseProjectFileSlot()));
     m_pFileMenu->addSeparator();
+    m_pFileMenu->addAction("新建拓扑配置", m_pCfgMainWnd, SLOT(NewTopoPara()));
+    m_pFileMenu->addSeparator();
     m_pFileMenu->addAction("退出", m_pCfgMainWnd, SLOT(close()));
 }
 

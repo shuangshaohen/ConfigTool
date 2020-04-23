@@ -194,28 +194,28 @@ void CResourceTreeWnd::RefreshTreeNodes()
 
     GseConfig * config = m_pXerceXML->GetConfig();
 
-    m_pAnaTreeWidgetItem->setText( 0, config->adAnaConfig.sDesc + QString(":%1").arg(config->adAnaConfig.items.size()));
-    m_pDerivedTreeWidgetItem->setText( 0, config->derivedConfig.sDesc + QString(":%1").arg(config->derivedConfig.items.size()) );
-    m_pSvTreeWidgetItem->setText( 0, config->svConfig.sDesc + QString(":%1").arg(config->svConfig.items.size()) );
-    m_pGsAnaTreeWidgetItem->setText( 0, config->gsAnaConfig.sDesc + QString(":%1").arg(config->gsAnaConfig.items.size()) );
-    m_pOherAnaTreeWidgetItem->setText( 0, config->otherAnaConfig.sDesc + QString(":%1").arg(config->otherAnaConfig.items.size()) );
+    m_pAnaTreeWidgetItem->setText( 0, /*config->adAnaConfig.sDesc +*/ QString("AD模拟量:%1").arg(config->adAnaConfig.items.size()));
+    m_pDerivedTreeWidgetItem->setText( 0, /*config->derivedConfig.sDesc +*/ QString("衍生模拟量:%1").arg(config->derivedConfig.items.size()) );
+    m_pSvTreeWidgetItem->setText( 0, /*config->svConfig.sDesc + */QString("SV模拟量:%1").arg(config->svConfig.items.size()) );
+    m_pGsAnaTreeWidgetItem->setText( 0, /*config->gsAnaConfig.sDesc +*/ QString("GS模拟量:%1").arg(config->gsAnaConfig.items.size()) );
+    m_pOherAnaTreeWidgetItem->setText( 0, /*config->otherAnaConfig.sDesc +*/ QString("其他模拟量:%1").arg(config->otherAnaConfig.items.size()) );
 
-    m_pGeneralBITreeWidgetItem->setText( 0, config->generalBiConfig.sDesc + QString(":%1").arg(config->generalBiConfig.items.size()) );
-    m_pSignalTreeWidgetItem->setText( 0, config->signalConfig.sDesc + QString(":%1").arg(config->signalConfig.items.size()) );
-    m_pGSBITreeWidgetItem->setText( 0, config->gooseBiConfig.sDesc + QString(":%1").arg(config->gooseBiConfig.items.size()) );
-    m_pSoftYBTreeWidgetItem->setText( 0, config->softYBConfig.sDesc + QString(":%1").arg(config->softYBConfig.items.size()) );
+    m_pGeneralBITreeWidgetItem->setText( 0, /*config->generalBiConfig.sDesc +*/ QString("硬开入:%1").arg(config->generalBiConfig.items.size()) );
+    m_pSignalTreeWidgetItem->setText( 0, /*config->signalConfig.sDesc +*/ QString("软遥信:%1").arg(config->signalConfig.items.size()) );
+    m_pGSBITreeWidgetItem->setText( 0, /*config->gooseBiConfig.sDesc +*/ QString("GS开入:%1").arg(config->gooseBiConfig.items.size()) );
+    m_pSoftYBTreeWidgetItem->setText( 0, /*config->softYBConfig.sDesc +*/ QString("软压板:%1").arg(config->softYBConfig.items.size()) );
 
-    m_pGSBOTreeWidgetItem->setText( 0, config->gooseBoConfig.sDesc + QString(":%1").arg(config->gooseBoConfig.items.size()) );
-    m_pTripMatrixTreeWidgetItem->setText( 0, config->tripMaxtrixConfig.sDesc + QString(":%1").arg(config->tripMaxtrixConfig.items.size()) );
-    m_pYKTreeWidgetItem->setText( 0, config->ykConfig.sDesc + QString(":%1").arg(config->ykConfig.items.size()) );
+    m_pGSBOTreeWidgetItem->setText( 0, /*config->gooseBoConfig.sDesc +*/ QString("GS开出:%1").arg(config->gooseBoConfig.items.size()) );
+    m_pTripMatrixTreeWidgetItem->setText( 0, /*config->tripMaxtrixConfig.sDesc + */QString("跳闸矩阵:%1").arg(config->tripMaxtrixConfig.items.size()) );
+    m_pYKTreeWidgetItem->setText( 0, /*config->ykConfig.sDesc +*/ QString("遥控:%1").arg(config->ykConfig.items.size()) );
 
-    m_pSPSetTreeWidgetItem->setText( 0, config->settingSPConifg.sDesc + QString(":%1").arg(config->settingSPConifg.items.size()) );
-    m_pSGSetTreeWidgetItem->setText( 0, config->settingSGConifg.sDesc + QString(":%1").arg(config->settingSGConifg.items.size()) );
+    m_pSPSetTreeWidgetItem->setText( 0, /*config->settingSPConifg.sDesc +*/ QString("不分组定值:%1").arg(config->settingSPConifg.items.size()) );
+    m_pSGSetTreeWidgetItem->setText( 0, /*config->settingSGConifg.sDesc +*/ QString("分组定值:%1").arg(config->settingSGConifg.items.size()) );
 
-    m_pAlmEvtTreeWidgetItem->setText( 0, config->evtAlmConfig.sDesc + QString(":%1").arg(config->evtAlmConfig.items.size()) );
-    m_pActEvtTreeWidgetItem->setText( 0, config->evtActConfig.sDesc + QString(":%1").arg(config->evtActConfig.items.size()) );
-    m_pRemoteTripTreeWidgetItem->setText( 0, config->remoteTripConfig.sDesc + QString(":%1").arg(config->remoteTripConfig.items.size()) );
-    m_pCheckEvtTreeWidgetItem->setText( 0, config->evtCheckConfig.sDesc + QString(":%1").arg(config->evtCheckConfig.items.size()) );
+    m_pAlmEvtTreeWidgetItem->setText( 0, /*config->evtAlmConfig.sDesc +*/ QString("告警记录:%1").arg(config->evtAlmConfig.items.size()) );
+    m_pActEvtTreeWidgetItem->setText( 0, /*config->evtActConfig.sDesc +*/ QString("动作记录:%1").arg(config->evtActConfig.items.size()) );
+    m_pRemoteTripTreeWidgetItem->setText( 0, /*config->remoteTripConfig.sDesc +*/ QString("远方跳闸:%1").arg(config->remoteTripConfig.items.size()) );
+    m_pCheckEvtTreeWidgetItem->setText( 0, /*config->evtCheckConfig.sDesc +*/ QString("自检记录:%1").arg(config->evtCheckConfig.items.size()) );
 }
 
 void CResourceTreeWnd::ClearTreeNode()

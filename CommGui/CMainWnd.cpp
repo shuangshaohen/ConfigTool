@@ -9,6 +9,7 @@
 #include "CDockWidget.h"
 #include "CCommActions.h"
 #include <QDesktopServices>
+#include <QApplication>
 
 void CMainWnd::SetFlagOfOtherThread(bool bHasOtherThread)
 {
@@ -31,8 +32,15 @@ void CMainWnd::OutputMsgInfoList(const QList<CMsgInfo> &msgInfoList)
 void CMainWnd::SetEditToolBarVisible(bool bVisible)
 {
     GetCommAction()->m_pEditToolBar->setVisible(bVisible);
+    GetCommAction()->m_pSaveToolBar->setVisible(bVisible);
 
     GetCommAction()->m_pEditToolBarDockAction->setChecked(bVisible);
+}
+
+void CMainWnd::SetVerifyToolBarVisible(bool bVisible)
+{
+    GetCommAction()->m_pVerifyToolBar->setVisible(bVisible);
+    GetCommAction()->m_pVerifyToolBarDockAction->setChecked(bVisible);
 }
 
 CMainWnd::CMainWnd(QWidget *parent, Qt::WindowFlags flags)
@@ -198,7 +206,6 @@ bool CMainWnd::NewProjectFileSlot()
     }
 
     m_pFileNameLable->setText("文件位置：" + m_strProjectFilePathName);
-
     ShowDefaultInfo();
 
     return true;
@@ -402,10 +409,12 @@ void CMainWnd::ShowEditToolBarSlot()
 {
     if( GetCommAction()->m_pEditToolBar->isHidden() )
     {
+        GetCommAction()->m_pSaveToolBar->show();
         GetCommAction()->m_pEditToolBar->show();
     }
     else
     {
+        GetCommAction()->m_pSaveToolBar->hide();
         GetCommAction()->m_pEditToolBar->hide();
     }
 }
@@ -460,7 +469,12 @@ void CMainWnd::HelpSlot()
 
 void CMainWnd::AboutSlot()
 {
-    QMessageBox::about(this,"Config配置工具","用于新版本config配置文件的编辑");
+    QString strAppFileName = qApp->arguments().at(0);
+    QFileInfo fileInfo(strAppFileName);
+    QString strDate = fileInfo.lastModified().date().toString("yyyy-MM-dd");
+    QString strTime = fileInfo.lastModified().time().toString("hh:mm:ss");
+    QString about = QString("用于新版本config配置文件的编辑.\n编译日期：%1\n编译时间：%2").arg(strDate).arg(strTime);
+    QMessageBox::about(this,"Config配置工具",about);
 }
 
 void CMainWnd::SetToolMenuCheckStateSlot(bool bShow)

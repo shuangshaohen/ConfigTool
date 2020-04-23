@@ -12,8 +12,10 @@ CAnaItemWnd::CAnaItemWnd(QWidget *parent)
     m_table->setColumnCount(15);
     QStringList headerList;
     headerList  << "描述" << "名称" << "属性" << "类型" << "标识"
-                << "缺省" << "系数" << "一次额定定值" << "二次额定定值" << "接收软压板"
-                << "接收硬压板" << "位宽" << "精度" << "二次单位" << "一次单位";
+                << "缺省" << "系数" << "一次额定定值" << "二次额定定值"
+                << "一次单位" << "二次单位"
+                << "接收软压板"
+                << "接收硬压板" << "位宽" << "精度" ;
     m_table->setHorizontalHeaderLabels(headerList);
 
     m_comboBox->addItems(headerList);
@@ -57,8 +59,9 @@ void CAnaItemWnd::itemDoubleClickedSlot(QTableWidgetItem *item)
         QStringList list;
         list << "DB0:可见标志" << "DB1:信号上送标志" << "DB2:录波标志" << "DB3:采样标志 ";
         CBitSelectedDialog * dialog = new CBitSelectedDialog(p->dwAttr,list,this);
-        dialog->exec();
-        item->setData(Qt::EditRole,dialog->getVal());
+        int res = dialog->exec();
+        if(res == QDialog::Accepted)
+            item->setData(Qt::EditRole,dialog->getVal());
         delete dialog;
     }
 }

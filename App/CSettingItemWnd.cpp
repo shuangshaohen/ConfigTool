@@ -10,9 +10,9 @@ CSettingItemWnd::CSettingItemWnd(QWidget *parent) : CBaseItemWnd(parent)
     m_table->clear();
     m_table->setColumnCount(13);
     QStringList headerList;
-    headerList  << "描述" << "名称" << "属性" << "最大值" << "最小值"
+    headerList  << "描述" << "名称" << "属性" << "最小值" << "最大值"
                 << "缺省值" << "二次额定值" << "返回系数" << "定值类型"
-                << "位宽" << "精度" << "二次单位" << "一次单位";
+                << "位宽" << "精度" << "一次单位" << "二次单位";
     m_table->setHorizontalHeaderLabels(headerList);
 
     m_comboBox->addItems(headerList);

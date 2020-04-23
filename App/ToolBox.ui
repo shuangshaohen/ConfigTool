@@ -44,8 +44,13 @@
   </widget>
   <widget class="QWidget" name="m_LogicEditPage">
    <attribute name="title">
-    <string>逻辑组件</string>
+    <string>拓扑参数配置</string>
    </attribute>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTreeView" name="treeView"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QWidget" name="m_FunctionPage">
    <attribute name="title">

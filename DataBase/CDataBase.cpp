@@ -10,6 +10,7 @@ CDataBase::CDataBase()
     m_bModified = false;
     m_tables.clear();
 
+    m_Config.inital();
     m_tables.push_back(&m_Config.adAnaConfig);
     m_tables.push_back(&m_Config.derivedConfig);
     m_tables.push_back(&m_Config.svConfig);
