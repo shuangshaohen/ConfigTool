@@ -9,6 +9,7 @@
 #include "CTripMatrixItemWnd.h"
 #include "CSettingItemWnd.h"
 #include "CEvtItemWnd.h"
+#include "CParaTable.h"
 
 CCfgCenterWnd::CCfgCenterWnd(QWidget *parent) : QStackedWidget(parent)
 {
@@ -88,6 +89,9 @@ CCfgCenterWnd::CCfgCenterWnd(QWidget *parent) : QStackedWidget(parent)
     m_pRemoteTripInfoWnd = new CEvtItemWnd(this);
     m_pRemoteTripInfoWnd->setTableType(Enum_EvtTable_Type_Remote);
     addWidget(m_pRemoteTripInfoWnd);
+
+    m_pParaTable = new CParaTable(this);
+    addWidget(m_pParaTable);
 }
 
 CCfgCenterWnd::~CCfgCenterWnd()
@@ -116,6 +120,8 @@ CCfgCenterWnd::~CCfgCenterWnd()
     delete m_pEvtActInfoWnd;
     delete m_pEvtCheckInfoWnd;
     delete m_pRemoteTripInfoWnd;
+
+    delete m_pParaTable;
 }
 
 void CCfgCenterWnd::ShowDefaultInfo(CDataBase *pData)
@@ -244,6 +250,11 @@ void CCfgCenterWnd::ShowRemoteTripTable(CDataBase *pData)
     this->setCurrentWidget(m_pRemoteTripInfoWnd);
 }
 
+void CCfgCenterWnd::ShowParaTable()
+{
+    this->setCurrentWidget(m_pParaTable);
+}
+
 void CCfgCenterWnd::AddInfo()
 {
     QWidget* pWidget = currentWidget ();
@@ -298,4 +309,6 @@ void CCfgCenterWnd::ClearTableModel()
     m_pEvtActInfoWnd->Clear();
     m_pEvtCheckInfoWnd->Clear();
     m_pRemoteTripInfoWnd->Clear();
+
+    m_pParaTable->Clear();
 }

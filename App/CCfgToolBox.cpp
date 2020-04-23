@@ -20,7 +20,7 @@ void CCfgToolBox::CurrentPageChanged(int index)
     {
         CCfgMainWnd::Instance()->SetEditToolBarVisible(false);
         CCfgMainWnd::Instance()->SetVerifyToolBarVisible(false);
-        //CIcdMainWnd::Instance()->RaiseTextBrowsePageInCenterWnd();
+        CCfgMainWnd::Instance()->ShowParaTable();
     }
     else if( pWidget==m_pUi_ToolBox->m_FunctionPage)
     {
@@ -86,6 +86,11 @@ void CCfgToolBox::ShowCurrentNodeInfoWnd()
 void CCfgToolBox::setIEDPage()
 {
     setCurrentWidget(m_pUi_ToolBox->m_ResourceEditPage);
+}
+
+void CCfgToolBox::setParaPage()
+{
+    setCurrentWidget(m_pUi_ToolBox->m_LogicEditPage);
 }
 
 void CCfgToolBox::ClearTreeNode()

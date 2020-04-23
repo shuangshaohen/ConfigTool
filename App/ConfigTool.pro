@@ -40,6 +40,7 @@ SOURCES += \
     CDeviceParasWnd.cpp \
     CEvtItemWnd.cpp \
     CGSBOItemWnd.cpp \
+    CParaTable.cpp \
     CResourceTreeWnd.cpp \
     CSettingItemWnd.cpp \
     CSoftYBItemWnd.cpp \
@@ -62,6 +63,7 @@ HEADERS += \
     CMainWnd.h \
     CDataBase.h \
     CCfgMainWnd.h \ \
+    CParaTable.h \
     CResourceTreeWnd.h \
     CSettingItemWnd.h \
     CSoftYBItemWnd.h \

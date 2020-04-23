@@ -30,8 +30,6 @@ void CCfgActions::CreateFileMenu()
     m_pFileMenu->addSeparator();
     m_pFileMenu->addAction("关闭配置文件", m_pCfgMainWnd, SLOT(CloseProjectFileSlot()));
     m_pFileMenu->addSeparator();
-    m_pFileMenu->addAction("新建拓扑配置", m_pCfgMainWnd, SLOT(NewTopoPara()));
-    m_pFileMenu->addSeparator();
     m_pFileMenu->addAction("退出", m_pCfgMainWnd, SLOT(close()));
 }
 
@@ -59,7 +57,11 @@ void CCfgActions::CreateFileToolBar()
 //编辑菜单
 void CCfgActions::CreateEditMenu()
 {
-    m_pEditMenu = m_pCfgMainWnd->menuBar()->addMenu("编辑(&E)");
+    m_pEditMenu = m_pCfgMainWnd->menuBar()->addMenu("拓扑(&T)");
+    m_pEditMenu->addAction("新建拓扑配置", m_pCfgMainWnd, SLOT(NewTopoPara()));
+    m_pEditMenu->addAction("打开拓扑配置", m_pCfgMainWnd, SLOT(OpenTopoPara()));
+    m_pEditMenu->addAction("保存拓扑配置", m_pCfgMainWnd, SLOT(SaveTopoPara()));
+    m_pEditMenu->addAction("关闭拓扑配置", m_pCfgMainWnd, SLOT(CloseTopoPara()));
     //m_pEditMenu->addAction("编辑ICD数据类型模板", m_pCfgMainWnd, SLOT(EditIcdLNSlot()));
     //m_pEditMenu->addSeparator();
     //m_pEditMenu->addAction("编辑通用数据类型词典", m_pCfgMainWnd, SLOT(EditTplLNSlot()));

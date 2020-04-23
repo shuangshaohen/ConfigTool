@@ -166,6 +166,12 @@ void CCfgMainWnd::ShowRemoteTripTable()
     m_pCenterWnd->ShowRemoteTripTable(m_pProjectXml);
 }
 
+void CCfgMainWnd::ShowParaTable()
+{
+    GetCommAction()->m_pEditToolBar->setEnabled(false);
+    m_pCenterWnd->ShowParaTable();
+}
+
 void CCfgMainWnd::RefreshResourceInfo()
 {
     m_pCfgToolBox->RefreshResourceTreeNodes();
@@ -281,6 +287,25 @@ void CCfgMainWnd::RevertSlot()
 void CCfgMainWnd::NewTopoPara()
 {
     TopoPara::GetInstance()->NewPara();
+    m_pCfgToolBox->setParaPage();
+}
+
+void CCfgMainWnd::OpenTopoPara()
+{
+    TopoPara::GetInstance()->OpenPara();
+    m_pCfgToolBox->setParaPage();
+}
+
+void CCfgMainWnd::SaveTopoPara()
+{
+    TopoPara::GetInstance()->SavePara();
+    m_pCfgToolBox->setParaPage();
+}
+
+void CCfgMainWnd::CloseTopoPara()
+{
+    TopoPara::GetInstance()->ClearPara();
+    m_pCfgToolBox->setIEDPage();
 }
 
 void CCfgMainWnd::NewCfgProjectFileSlot()

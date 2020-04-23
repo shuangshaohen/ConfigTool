@@ -14,6 +14,14 @@ TopoPara::TopoPara()
 
     m_TableView = nullptr;
     m_TreeView = nullptr;
+
+    QStringList header;
+    header << "关键字" << "描述";
+    m_TreeModel->setRootItem(&m_TopoPara,header);
+
+    QStringList headerList;
+    headerList << "关键词" << "描述" << "关联名";
+    m_TableModel->setRootItem(m_TopoPara.ptPara,headerList);
 }
 
 void TopoPara::setTableView(QTableView *TableView)
@@ -77,6 +85,7 @@ void TopoPara::NewPara()
     if(res == QDialog::Accepted)
     {
         CBasePara * m_pBasePara = new CBasePara();
+        ClearPara();
         m_pBasePara->CreatePara(&m_TopoPara,
                                 dialog->getOnlyDevice(),
                                 dialog->getSourceNum(),
@@ -88,9 +97,15 @@ void TopoPara::NewPara()
                                 dialog->getSwitchNum());
         delete m_pBasePara;
 
-        QStringList header;
-        header << "关键字" << "描述";
-        m_TreeModel->setRootItem(&m_TopoPara,header);
+//        QStringList header;
+//        header << "关键字" << "描述";
+//        m_TreeModel->setRootItem(&m_TopoPara,header);
+
+        QStringList headerList;
+        headerList << "关键词" << "描述" << "关联名";
+        m_TableModel->setRootItem(m_TopoPara.ptPara,headerList);
+        if(m_TreeView != NULL)
+            m_TreeView->expand(m_TreeModel->index(0,0));
     }
     delete dialog;
 }
@@ -106,18 +121,25 @@ void TopoPara::OpenPara()
         return;
     }
 
+    ClearPara();
     CParsePara * parse = new CParsePara();
     parse->ParsePara(strProjectFilePathName.toStdString(),&m_TopoPara);
     delete parse;
 
-    QStringList header;
-    header << "关键字" << "描述";
-    m_TreeModel->setRootItem(&m_TopoPara,header);
+
+    QStringList headerList;
+    headerList << "关键词" << "描述" << "关联名";
+    m_TableModel->setRootItem(m_TopoPara.ptPara,headerList);
+
+    if(m_TreeView != NULL)
+        m_TreeView->expand(m_TreeModel->index(0,0));
 }
 
 void TopoPara::ClearPara()
 {
-    m_TreeModel->clear();
+    m_TopoPara.ptPara->items.clear();
+    m_TopoPara.ptPara->sons.clear();
+
     m_TableModel->clear();
 }
 

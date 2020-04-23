@@ -24,6 +24,7 @@ public:
     void ShowCurrentNodeInfoWnd();
 
     void setIEDPage();
+    void setParaPage();
 
     void ClearTreeNode();
     //void UpdateIEDTreeNode(DOMElement* pElement,bool bDel);

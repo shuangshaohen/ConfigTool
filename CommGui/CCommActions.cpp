@@ -86,7 +86,7 @@ void CCommActions::CreateMenuBar()
     CreateFileMenu();
 
     //编辑菜单
-    //CreateEditMenu();
+    CreateEditMenu();
 
     //视图菜单
     CreateViewMenu();

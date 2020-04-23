@@ -41,6 +41,8 @@ public:
     void ShowEvtCheckTable(CDataBase * pData);
     void ShowRemoteTripTable(CDataBase * pData);
 
+    void ShowParaTable();
+
     void AddInfo();
     void DeleteInfo();
     void UpInfo();
@@ -73,6 +75,8 @@ private:
     CDefaultWnd *   m_pEvtActInfoWnd;
     CDefaultWnd *   m_pEvtCheckInfoWnd;
     CDefaultWnd *   m_pRemoteTripInfoWnd;
+
+    CDefaultWnd  *   m_pParaTable;
 };
 
 #endif // CCFGCENTERWND_H

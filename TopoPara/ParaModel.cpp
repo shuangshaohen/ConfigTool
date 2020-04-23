@@ -355,5 +355,7 @@ tdsPara *ParaTableModel::itemRoot() const
 
 void ParaTableModel::clear()
 {
+    beginResetModel();
     mRootItem = nullptr;
+    endResetModel();
 }

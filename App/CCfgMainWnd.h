@@ -40,6 +40,8 @@ public:
     void ShowEvtCheckTable();
     void ShowRemoteTripTable();
 
+    void ShowParaTable();
+
     void RefreshResourceInfo();
 
     void SetModified(bool bModified);
@@ -74,6 +76,9 @@ public slots:
 
     //新建拓扑配置
     void NewTopoPara();
+    void OpenTopoPara();
+    void SaveTopoPara();
+    void CloseTopoPara();
 
     //新建文件
     void NewCfgProjectFileSlot();
