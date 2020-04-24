@@ -352,7 +352,7 @@ void CDataBase::SaveGeneralBiConfigTable(QDomDocument &doc, QDomElement &parentN
         item.setAttribute("Index",QString::number(p->wIndex));
         item.setAttribute("Desc",p->sDesc);
         item.setAttribute("ChanAttr",changeDecToHex(p->dwAttr));
-        item.setAttribute("Type",p->sChanType);
+        item.setAttribute("ChanType",p->sChanType);
         item.setAttribute("IndexDPS",p->sIndexDPS);
         //item.setAttribute("IndexAna",p->sIndexAna);
         item.setAttribute("HoldTime",p->wHoldTime);
@@ -376,7 +376,7 @@ void CDataBase::SaveSignalConfigTable(QDomDocument &doc, QDomElement &parentNode
         item.setAttribute("Index",QString::number(p->wIndex));
         item.setAttribute("Desc",p->sDesc);
         item.setAttribute("ChanAttr",changeDecToHex(p->dwAttr));
-        item.setAttribute("Type",p->sChanType);
+        item.setAttribute("ChanType",p->sChanType);
         item.setAttribute("IndexDPS",p->sIndexDPS);
         //item.setAttribute("IndexAna",p->sIndexAna);
         //item.setAttribute("HoldTime",p->wHoldTime);
@@ -400,7 +400,7 @@ void CDataBase::SaveGooseBiConfigTable(QDomDocument &doc, QDomElement &parentNod
         item.setAttribute("Index",QString::number(p->wIndex));
         item.setAttribute("Desc",p->sDesc);
         item.setAttribute("ChanAttr",changeDecToHex(p->dwAttr));
-        item.setAttribute("Type",p->sChanType);
+        item.setAttribute("ChanType",p->sChanType);
         item.setAttribute("IndexDPS",p->sIndexDPS);
         item.setAttribute("IndexAna",p->sIndexAna);
         //item.setAttribute("HoldTime",p->wHoldTime);
@@ -497,7 +497,7 @@ void CDataBase::SaveSettingTable(QDomDocument &doc, QDomElement &parentNode, Bas
         item.setAttribute("Index",QString::number(p->wIndex));
         item.setAttribute("Desc",p->sDesc);
         item.setAttribute("ChanAttr",changeDecToHex(p->dwAttr));
-        item.setAttribute("ValAttr",QString::number(p->wValMin)+"/"+QString::number(p->wValMax)+"/"+QString::number(p->wValDft));
+        item.setAttribute("ValAttr",QString::number(p->wValMin)+"/"+QString::number(p->wValMax)+"/"+QString::number(p->wValDft)+"/"+QString::number(p->wValStep));
         item.setAttribute("SecIn",p->sSecIn);
         item.setAttribute("CoeRet",p->wCoeRet);
         item.setAttribute("ChanType",p->sType);
@@ -951,7 +951,7 @@ void CDataBase::ParseSettingItem(QDomElement element, BaseTab *parent)
         m_MsgInfoList.append(msgInfo);
     }
 
-    if(false == split3UnInt(item->wValMin,item->wValMax,item->wValDft ,element.attributeNode("ValAttr").value()))
+    if(false == split4UnInt(item->wValMin,item->wValMax,item->wValDft , item->wValStep ,element.attributeNode("ValAttr").value()))
     {
         CMsgInfo msgInfo( CMsgInfo::Enum_Application_Parse_Mode, CMsgInfo::CN_ERROR_MSG,
                           QString("%1表第%2条ValAttr参数(%3)解析格式失败!")
@@ -1106,25 +1106,29 @@ bool CDataBase::splitUnInt(unsigned int &num1, unsigned int &num2, QString src)
     }
 }
 
-bool CDataBase::split3UnInt(unsigned int &num1, unsigned int &num2, unsigned int &num3, QString src)
+bool CDataBase::split4UnInt(unsigned int &num1, unsigned int &num2, unsigned int &num3, unsigned int &num4, QString src)
 {
     QStringList strList = src.split("/");
-    if(strList.size() == 3)
+    if(strList.size() == 4)
     {
         bool ok1;
         bool ok2;
         bool ok3;
+        bool ok4;
         int tem1 = strList[0].toUInt(&ok1);
         int tem2 = strList[1].toUInt(&ok2);
         int tem3 = strList[2].toUInt(&ok3);
+        int tem4 = strList[3].toUInt(&ok4);
         if(ok1)
             num1 = tem1;
         if(ok2)
             num2 = tem2;
         if(ok3)
             num3 = tem3;
+        if(ok4)
+            num4 = tem4;
 
-        if(ok1&&ok2&&ok3)
+        if(ok1&&ok2&&ok3&&ok4)
             return true;
         else
             return false;

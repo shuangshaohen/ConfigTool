@@ -4,6 +4,7 @@
 #include "CBasePara.h"
 #include "CParsePara.h"
 #include <QFileDialog>
+#include "CParaToCfgDialog.h"
 
 TopoPara* TopoPara::s_instance = NULL;
 
@@ -141,6 +142,33 @@ void TopoPara::ClearPara()
     m_TopoPara.ptPara->sons.clear();
 
     m_TableModel->clear();
+}
+
+void TopoPara::SaveConfig()
+{
+    QString strProjectFilePathName;
+
+    strProjectFilePathName = QFileDialog::getSaveFileName( nullptr, "Save...", "", "Config (*.xml)" );
+
+    if( strProjectFilePathName.length() <= 0 )
+    {
+        return;
+    }
+
+    if( !strProjectFilePathName.endsWith(".xml", Qt::CaseInsensitive) )
+    {
+        strProjectFilePathName.append(".xml");
+    }
+
+    CParaToCfgDialog * dialog = new CParaToCfgDialog(&m_TopoPara);
+    dialog->exec();
+    dialog->Save(strProjectFilePathName);
+    delete dialog;
+}
+
+void TopoPara::SaveICD()
+{
+
 }
 
 

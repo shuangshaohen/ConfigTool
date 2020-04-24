@@ -21,6 +21,8 @@ public:
     void OpenPara();
     void ClearPara();
 
+    void SaveConfig();
+    void SaveICD();
 
     void setTreeView(QTreeView *TreeView);
 

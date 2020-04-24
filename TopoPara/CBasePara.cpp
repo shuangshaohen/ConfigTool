@@ -21,20 +21,20 @@ void CBasePara::CreatePara(tdsTopoPara *   pTopoPara,int bDeviceOnly, int SNum, 
     m_RemoteMaxCount = RNum;
     m_SwitchMaxCount = SWNum;
 
-    m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexTripTime","跳闸时间定值","EN_SET_TRIPTIME"));
+    m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexTripTime","跳闸时间定值","EN_SET_T_TRIPTIME"));
 
     m_TopoPara->ptPara->items.push_back(new tdsItem("wSoftYBIndexRly","保护投退软压板","EN_SOFTYB_RLY"));
     m_TopoPara->ptPara->items.push_back(new tdsItem("wSoftYBIndexTrip","故障跳闸投退软压板","EN_SOFTYB_TRIP"));
 
     if(m_bDeviceOnly)
     {
-        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexFenduanTripTime","分段开关跳闸时间定值","EN_SET_FENDUANTRIPTIME"));
-        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexFenduanCloseTime","分段开关合闸时间定值","EN_SET_FENDUANCLOSETIME"));
-        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexFenduanCloseGDTime","分段开关合闸固定时间定值","EN_SET_FENDUANCLOSEGDTIME"));
-        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexLianLuoCloseTime","联络开关合闸时间定值","EN_SET_LIANLUOCLOSETIME"));
+        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexFenduanTripTime","分段开关跳闸时间定值","EN_SET_T_FENDUANTRIPTIME"));
+        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexFenduanCloseTime","分段开关合闸时间定值","EN_SET_T_FENDUANCLOSETIME"));
+        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexFenduanCloseGDTime","分段开关合闸固定时间定值","EN_SET_T_FENDUANCLOSEGDTIME"));
+        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexLianLuoCloseTime","联络开关合闸时间定值","EN_SET_T_LIANLUOCLOSETIME"));
         m_TopoPara->ptPara->items.push_back(new tdsItem("wSoftYBIndexOFFLine","离线馈线自动化投退软压板","EN_SOFTYB_OFFLINE"));
 
-        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexIsolateTime","隔离等待时间定值","EN_SET_ISOLATETIME"));
+        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexIsolateTime","隔离等待时间定值","EN_SET_T_ISOLATETIME"));
         m_TopoPara->ptPara->items.push_back(new tdsItem("wSoftYBIndexIsolate","隔离投退软压板","EN_SOFTYB_ISOLATE"));
         m_TopoPara->ptPara->items.push_back(new tdsItem("wSoftYBIndexRecovery","自愈投退软压板","EN_SOFTYB_RECOVERY"));
     }
@@ -46,7 +46,7 @@ void CBasePara::CreatePara(tdsTopoPara *   pTopoPara,int bDeviceOnly, int SNum, 
         m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexLianLuoCloseTime","联络开关合闸时间定值",""));
         m_TopoPara->ptPara->items.push_back(new tdsItem("wSoftYBIndexOFFLine","离线馈线自动化投退软压板",""));
 
-        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexIsolateTime","隔离等待时间定值","EN_SET_ISOLATETIME"));
+        m_TopoPara->ptPara->items.push_back(new tdsItem("wSetIndexIsolateTime","隔离等待时间定值","EN_SET_T_ISOLATETIME"));
         m_TopoPara->ptPara->items.push_back(new tdsItem("wSoftYBIndexIsolate","隔离投退软压板","EN_SOFTYB_ISOLATE"));
         m_TopoPara->ptPara->items.push_back(new tdsItem("wSoftYBIndexRecovery","自愈投退软压板","EN_SOFTYB_RECOVERY"));
     }
@@ -334,9 +334,9 @@ tdsPara *CBasePara::CreateTransformer(tdsPara *parent, int index)
         ptPara->items.push_back(new tdsItem("wFlgInBIIndexRlyAct6","外部保护动作6标志",""));
     }
 
-    ptPara->items.push_back(new tdsItem("wSetIndexHPTPrimary","高压侧PT一次额定值","EN_SET_HPTPRIMARY"));
-    ptPara->items.push_back(new tdsItem("wSetIndexLPTPrimary","高压侧PT一次额定值","EN_SET_LPTPRIMARY"));
-    ptPara->items.push_back(new tdsItem("wSetIndexCnnMode","接线方式","EN_SET_CNNMODE"));
+    ptPara->items.push_back(new tdsItem("wSetIndexHPTPrimary","高压侧PT一次额定值","EN_SPSET_U_HPTPRIMARY"));
+    ptPara->items.push_back(new tdsItem("wSetIndexLPTPrimary","低压侧PT一次额定值","EN_SPSET_U_LPTPRIMARY"));
+    ptPara->items.push_back(new tdsItem("wSetIndexCnnMode","接线方式","EN_SPSET_CNNMODE"));
 
     ptPara->sons.push_back(CreateNodeStatus(ptPara));
 
@@ -527,6 +527,7 @@ tdsPara *CBasePara::CreateSwitch(tdsPara *parent, int index)
     {
         ptPara->items.push_back(new tdsItem("wBITWJ","跳位","EN_BI_TWJ"));
         ptPara->items.push_back(new tdsItem("wBIHWJ","合位","EN_BI_HWJ"));
+        ptPara->items.push_back(new tdsItem("wBlockRemote","远方就地","EN_BI_BLOCKREMOTE"));
         ptPara->items.push_back(new tdsItem("wGroundSWIndex","地刀","EN_BI_GROUND"));
         ptPara->items.push_back(new tdsItem("wNoEnergyIndex","未储能","EN_BI_NOENERGY"));
 
@@ -585,6 +586,7 @@ tdsPara *CBasePara::CreateSwitch(tdsPara *parent, int index)
     {
         ptPara->items.push_back(new tdsItem("wBITWJ","跳位","EN_GSIN_TWJ"));
         ptPara->items.push_back(new tdsItem("wBIHWJ","合位","EN_GSIN_HWJ"));
+        ptPara->items.push_back(new tdsItem("wBlockRemote","远方就地",""));
         ptPara->items.push_back(new tdsItem("wGroundSWIndex","地刀","EN_GSIN_GROUND"));
         ptPara->items.push_back(new tdsItem("wNoEnergyIndex","未储能","EN_GSIN_NOENERGY"));
 
@@ -597,7 +599,7 @@ tdsPara *CBasePara::CreateSwitch(tdsPara *parent, int index)
 
         ptPara->items.push_back(new tdsItem("wFlgInBIIndexHaveCurrent","外部有流标志","EN_GSIN_HAVEI"));
         ptPara->items.push_back(new tdsItem("wAnaInPower","外部采集功率","EN_GSANA_POWER"));
-        ptPara->items.push_back(new tdsItem("wSetIndexPowerPositive","外部采集功率极性定值","EN_SET_POWERPOSITIVE"));
+        ptPara->items.push_back(new tdsItem("wSetIndexPowerPositive","外部采集功率极性定值","EN_SPSET_CTL_POWERPOSITIVE"));
 
         tdsPara * ptFenDuanTrip = CreateSWOper(ptPara);
         ptFenDuanTrip->key += "_FenDuanTrip";
@@ -824,8 +826,8 @@ tdsPara *CBasePara::CreatePositionAlm(tdsPara *parent)
 {
     tdsPara * ptPara = new tdsPara(parent,"Position","位置采集判断逻辑");
 
-    ptPara->items.push_back(new tdsItem("wBITWJ","跳位","EN_BI_TWJ"));
-    ptPara->items.push_back(new tdsItem("wBIHWJ","合位","EN_BI_HWJ"));
+    //ptPara->items.push_back(new tdsItem("wBITWJ","跳位","EN_BI_TWJ"));
+    //ptPara->items.push_back(new tdsItem("wBIHWJ","合位","EN_BI_HWJ"));
 
     ptPara->items.push_back(new tdsItem("wAlmEvtTabIndex" ,"位置异常告警事件"     ,   "EN_ALM_POSITION" ));
     ptPara->items.push_back(new tdsItem("wFlgOutIndexAlm","位置异常标志"     ,   "EN_SIGNAL_POSITIONALM"));

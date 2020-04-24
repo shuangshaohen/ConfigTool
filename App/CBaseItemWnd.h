@@ -84,6 +84,8 @@ protected:
 
     bool event(QEvent *event) override;
 
+    void setTableAlignment();
+
     //以下部分需要重写
     //表格元素变化时需重写响应函数
     virtual void writeConfigVal(QTableWidgetItem * item);

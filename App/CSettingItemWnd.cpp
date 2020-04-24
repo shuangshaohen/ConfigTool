@@ -8,10 +8,10 @@ CSettingItemWnd::CSettingItemWnd(QWidget *parent) : CBaseItemWnd(parent)
 {
     m_type = Enum_SetTable_Type_SP;
     m_table->clear();
-    m_table->setColumnCount(13);
+    m_table->setColumnCount(14);
     QStringList headerList;
     headerList  << "描述" << "名称" << "属性" << "最小值" << "最大值"
-                << "缺省值" << "二次额定值" << "返回系数" << "定值类型"
+                << "缺省值" << "步长" << "二次额定值" << "返回系数" << "定值类型"
                 << "位宽" << "精度" << "一次单位" << "二次单位";
     m_table->setHorizontalHeaderLabels(headerList);
 
@@ -22,6 +22,7 @@ CSettingItemWnd::CSettingItemWnd(QWidget *parent) : CBaseItemWnd(parent)
     m_table->setItemDelegateForColumn(Enum_SetTable_Min_Col,new CSpinBoxDelegate(this,0,9999999,1,10));
     m_table->setItemDelegateForColumn(Enum_SetTable_Max_Col,new CSpinBoxDelegate(this,0,9999999,1,10));
     m_table->setItemDelegateForColumn(Enum_SetTable_Dft_Col,new CSpinBoxDelegate(this,0,9999999,1,10));
+    m_table->setItemDelegateForColumn(Enum_SetTable_Step_Col,new CSpinBoxDelegate(this,0,9999999,1,10));
     m_table->setItemDelegateForColumn(Enum_SetTable_Width_Col,new CSpinBoxDelegate(this,0,63));
     m_table->setItemDelegateForColumn(Enum_SetTable_Dotbit_Col,new CSpinBoxDelegate(this,0,63));
 
@@ -88,6 +89,9 @@ void CSettingItemWnd::writeConfigVal(QTableWidgetItem *item)
         break;
     case Enum_SetTable_Dft_Col:
         p->wValDft = item->text().toUInt();
+        break;
+    case Enum_SetTable_Step_Col:
+        p->wValStep = item->text().toUInt();
         break;
     case Enum_SetTable_SecIn_Col:
         if(m_data->checkSPSetCnnInfo(item->text()) == false)
@@ -214,6 +218,11 @@ void CSettingItemWnd::createItem(int row, BaseItem *baseItem)
     dft->setData(Qt::UserRole + 1 , data);
     dft->setData(Qt::ToolTip,"缺省值 = 真实缺省值*10^精度");
     m_table->setItem(row,Enum_SetTable_Dft_Col,dft);
+
+    QTableWidgetItem * step = new QTableWidgetItem(QString::number(item->wValStep));
+    step->setData(Qt::UserRole + 1 , data);
+    step->setData(Qt::ToolTip,"步长 = 真实步长*10^精度");
+    m_table->setItem(row,Enum_SetTable_Step_Col,step);
 
     QTableWidgetItem * setS = new QTableWidgetItem(item->sSecIn);
     setS->setData(Qt::UserRole + 1 , data);

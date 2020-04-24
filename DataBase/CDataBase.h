@@ -67,7 +67,7 @@ public:
 
     static bool     splitStr(QString & str1, QString & str2, QString src);
     static bool     splitUnInt(unsigned int & num1, unsigned int & num2, QString src);
-    static bool     split3UnInt(unsigned int & num1, unsigned int & num2, unsigned int & num3, QString src);
+    static bool     split4UnInt(unsigned int & num1, unsigned int & num2, unsigned int & num3, unsigned int &num4, QString src);
     static bool     changeQStringToUInt(unsigned int &val, QString str);
     static bool     splitChan0(unsigned int & board, unsigned int &flag, QString chan0);
 

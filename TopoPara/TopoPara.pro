@@ -32,6 +32,7 @@ DESTDIR = ../bin
 
 SOURCES += \
     CBasePara.cpp \
+    CParaToCfgDialog.cpp \
     CParsePara.cpp \
     CSavePara.cpp \
     CharacterData.cpp \
@@ -43,6 +44,7 @@ SOURCES += \
 
 HEADERS += \
     CBasePara.h \
+    CParaToCfgDialog.h \
     CParsePara.h \
     CSavePara.h \
     InitalDialog.h \
@@ -65,4 +67,5 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../bin/ -lDataBase
 else:unix: LIBS += -L$$PWD/../bin/ -lDataBase
 
 FORMS += \
-    InitalDialog.ui
+    InitalDialog.ui \
+    ParaToCfgDialog.ui

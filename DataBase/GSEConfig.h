@@ -104,6 +104,7 @@ enum _Enum_SetTable_Column
     Enum_SetTable_Min_Col = Enum_PubTable_End + 1,     //最大值
     Enum_SetTable_Max_Col,                              //最小值
     Enum_SetTable_Dft_Col,                              //缺省值
+    Enum_SetTable_Step_Col,                              //步长
     Enum_SetTable_SecIn_Col,                            //二次额定值索引
     Enum_SetTable_CoeRet_Col,                            //返回系数
     Enum_SetTable_Type_Col,                            //定值类型
@@ -390,10 +391,12 @@ public:
     unsigned int            wValMin;
     unsigned int            wValMax;
     unsigned int            wValDft;
+    unsigned int            wValStep;
 
     QString                 sSecIn;
     unsigned int            wCoeRet;
-    QString                 sType;
+    QString                 sType;      //"NULL"|"CTL"|"CUR"|"VOL"|"IMP"|"ANG"|"TIME"
+                                        //"PTCT"|"STR";
     unsigned int            byWidth;
     unsigned int            byDotBit;
     QString                 sUnit;
@@ -404,6 +407,7 @@ public:
         wValMin = 0;
         wValMax = 0;
         wValDft = 0;
+        wValStep = 1;
 
         sSecIn = "-1";
         wCoeRet = 100;

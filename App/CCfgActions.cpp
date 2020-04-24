@@ -62,6 +62,8 @@ void CCfgActions::CreateEditMenu()
     m_pEditMenu->addAction("打开拓扑配置", m_pCfgMainWnd, SLOT(OpenTopoPara()));
     m_pEditMenu->addAction("保存拓扑配置", m_pCfgMainWnd, SLOT(SaveTopoPara()));
     m_pEditMenu->addAction("关闭拓扑配置", m_pCfgMainWnd, SLOT(CloseTopoPara()));
+    m_pEditMenu->addAction("导出Config文件", m_pCfgMainWnd, SLOT(SaveConfigFromTopoPara()));
+    m_pEditMenu->addAction("导出ICD文件", m_pCfgMainWnd, SLOT(SaveICDFromTopoPara()));
     //m_pEditMenu->addAction("编辑ICD数据类型模板", m_pCfgMainWnd, SLOT(EditIcdLNSlot()));
     //m_pEditMenu->addSeparator();
     //m_pEditMenu->addAction("编辑通用数据类型词典", m_pCfgMainWnd, SLOT(EditTplLNSlot()));

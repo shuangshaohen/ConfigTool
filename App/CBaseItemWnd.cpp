@@ -93,7 +93,7 @@ void CBaseItemWnd::showInfo(void *pData)
     {
         createItem(row,config->items[row]);
     }
-    setAlignment(m_table, Qt::AlignHCenter|Qt::AlignVCenter);
+    setTableAlignment();
     connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
     updateTableBackground();
 }
@@ -184,7 +184,7 @@ void CBaseItemWnd::AddOper()
     m_table->insertRow(row);
     createItem(row,newItem);
 
-    setAlignment(m_table, Qt::AlignHCenter|Qt::AlignVCenter);
+    setTableAlignment();
     connect(m_table,SIGNAL(itemChanged(QTableWidgetItem *)),this,SLOT(itemChangedSlot(QTableWidgetItem *)));
     updateTableBackground();
 }
@@ -443,6 +443,18 @@ bool CBaseItemWnd::event(QEvent *event)
     }
 
     return QWidget::event(event);
+}
+
+void CBaseItemWnd::setTableAlignment()
+{
+    for (int row = 0; row < m_table->rowCount(); row++) {
+        for (int column = 0; column < m_table->columnCount();column++) {
+            if(column < Enum_PubTable_Attr_Col)
+                m_table->item(row,column)->setTextAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+            else
+                m_table->item(row,column)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        }
+    }
 }
 
 void CBaseItemWnd::writeConfigVal(QTableWidgetItem *item)

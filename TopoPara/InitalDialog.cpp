@@ -7,6 +7,7 @@ InitalDialog::InitalDialog(QWidget *parent) :
     ui(new Ui::InitalDialog)
 {
     ui->setupUi(this);
+    setWindowTitle("初始化Topo参数配置");
     QButtonGroup * group = new QButtonGroup(this);
     group->addButton(ui->rBDevice);
     group->addButton(ui->rBRegion);

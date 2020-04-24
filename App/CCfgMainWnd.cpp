@@ -308,6 +308,16 @@ void CCfgMainWnd::CloseTopoPara()
     m_pCfgToolBox->setIEDPage();
 }
 
+void CCfgMainWnd::SaveConfigFromTopoPara()
+{
+    TopoPara::GetInstance()->SaveConfig();
+}
+
+void CCfgMainWnd::SaveICDFromTopoPara()
+{
+    TopoPara::GetInstance()->SaveICD();
+}
+
 void CCfgMainWnd::NewCfgProjectFileSlot()
 {
     //新建Cfg文件名称

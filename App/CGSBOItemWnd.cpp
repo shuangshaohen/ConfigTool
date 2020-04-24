@@ -98,7 +98,7 @@ bool CGSBOItemWnd::checkItemVal(QTableWidgetItem *item)
         ok = m_data->checkHWChan(p->sHWChan);
         break;
     case Enum_GSBOTable_FWChan_Col:
-        ok = m_data->checkAlmLevel(p->sFWChan);
+        ok = m_data->checkFWChan(p->sFWChan);
         break;
     default:
         break;

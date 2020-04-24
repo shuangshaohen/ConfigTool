@@ -79,6 +79,8 @@ public slots:
     void OpenTopoPara();
     void SaveTopoPara();
     void CloseTopoPara();
+    void SaveConfigFromTopoPara();
+    void SaveICDFromTopoPara();
 
     //新建文件
     void NewCfgProjectFileSlot();
