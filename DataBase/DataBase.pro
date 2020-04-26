@@ -2,7 +2,7 @@ QT -= gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-QT += xml
+QT += xml sql
 
 TEMPLATE = lib
 DEFINES += DATABASE_LIBRARY
@@ -31,9 +31,11 @@ DESTDIR = ../bin
 
 SOURCES += \
     CDataBase.cpp \
+    CDataSQL.cpp \
     CMsgInfo.cpp
 
 HEADERS += \
+    CDataSQL.h \
     CMsgInfo.h \
     DataBase_global.h \
     CDataBase.h \

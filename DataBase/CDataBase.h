@@ -19,6 +19,8 @@ public:
     //保存配置
     virtual QString SaveConfig(QString fileName);
 
+    QString         SaveSQL(QString fileName);
+
     void            ClearConfig();
 
     GseConfig *     GetConfig();

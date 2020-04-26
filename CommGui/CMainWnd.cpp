@@ -184,6 +184,26 @@ bool CMainWnd::SaveXmlFile(QString strFilePathName, QString &strErrorInfo)
     return bSave;
 }
 
+bool CMainWnd::SaveSQLFile(QString strFilePathName, QString &strErrorInfo)
+{
+    if( NULL==m_pProjectXml )
+        return false;
+
+    CThreadForSQL *pThreadForSQL = new CThreadForSQL( this, m_pProjectXml, strFilePathName );
+
+    pThreadForSQL->start();
+
+    pThreadForSQL->WaitThread();
+
+    bool bSave = pThreadForSQL->IsOK();
+
+    strErrorInfo = pThreadForSQL->GetSQLErrorInfo();
+
+    delete pThreadForSQL;
+
+    return bSave;
+}
+
 bool CMainWnd::NewProjectFileSlot()
 {
     bool bNew;
@@ -356,6 +376,48 @@ void CMainWnd::CloseProjectFileSlot()
     m_strProjectFilePathName = "";
 
     m_pFileNameLable->setText("Cfg文件未打开");
+}
+
+void CMainWnd::SaveSQLSlot()
+{
+    QString strInfo;
+
+    QString strProjectFilePathName;
+
+    if( NULL==m_pProjectXml )
+        return;
+
+    SubmitSlot();
+    strProjectFilePathName = QFileDialog::getSaveFileName( this, "保存数据库...", m_strLastOpenPorjectFilePath, "SQLITE文件 (*.db)" );
+
+    if( strProjectFilePathName.length() <= 0 )
+    {
+        return;
+    }
+
+    if( !strProjectFilePathName.endsWith(".db", Qt::CaseInsensitive) )
+    {
+        strProjectFilePathName.append(".db");
+    }
+
+    strInfo = "数据库文件保存成功。文件位置：";
+
+    QString strErrorInfo;
+
+    if( SaveSQLFile( strProjectFilePathName, strErrorInfo ) )
+    {
+        strInfo = strInfo + strProjectFilePathName;
+
+        QMessageBox::information(this,"数据库保存成功",strInfo );
+    }
+    else
+    {
+        QMessageBox::critical(this,"数据库保存失败", strErrorInfo );
+    }
+
+    QFileInfo fileInfo(strProjectFilePathName);
+
+    m_strLastOpenPorjectFilePath = fileInfo.absoluteFilePath();
 }
 
 void CMainWnd::ShowConsoleWndSlot()

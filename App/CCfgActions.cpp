@@ -27,6 +27,7 @@ void CCfgActions::CreateFileMenu()
     m_pFileMenu->addAction(QIcon(":/png/Icon/FileSave.png"),"保存配置文件", m_pCfgMainWnd, SLOT(SaveProjectFileSlot()), QKeySequence(tr("Ctrl+Shift+S")));
 
     m_pFileMenu->addAction("配置另存为...", m_pCfgMainWnd, SLOT(SaveAsProjectFileSlot()) );
+    m_pFileMenu->addAction("配置入库...", m_pCfgMainWnd, SLOT(SaveSQLSlot()) );
     m_pFileMenu->addSeparator();
     m_pFileMenu->addAction("关闭配置文件", m_pCfgMainWnd, SLOT(CloseProjectFileSlot()));
     m_pFileMenu->addSeparator();

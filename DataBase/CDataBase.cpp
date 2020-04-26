@@ -2,6 +2,8 @@
 #include <QFile>
 #include <QDebug>
 #include <QDateTime>
+#include <QFileDialog>
+#include "CDataSQL.h"
 
 CDataBase::CDataBase()
 {
@@ -207,6 +209,29 @@ QString CDataBase::SaveConfig(QString fileName)
     m_MsgInfoList.append(msgInfo);
 
     m_bModified = false;
+
+    return "";
+}
+
+QString CDataBase::SaveSQL(QString fileName)
+{
+//    QString strProjectFilePathName;
+
+//    strProjectFilePathName = QFileDialog::getSaveFileName( nullptr, "Save SQL...", "", "QSLITE (*.db)" );
+
+//    if( strProjectFilePathName.length() <= 0 )
+//    {
+//        return;
+//    }
+
+//    if( !strProjectFilePathName.endsWith(".db", Qt::CaseInsensitive) )
+//    {
+//        strProjectFilePathName.append(".db");
+//    }
+
+    CDataSQL * sql = new CDataSQL();
+    sql->save(fileName,this);
+    delete sql;
 
     return "";
 }

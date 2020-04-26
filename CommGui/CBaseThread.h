@@ -98,4 +98,23 @@ public:
 
 };
 
+class COMMGUI_EXPORT CThreadForSQL : public CThread
+{
+private:
+    bool		m_bOK;
+    CDataBase * m_pXML;
+    QString		m_strSQLErrorInfo;
+    QString		m_strXmlFilePathName;
+private:
+    CThreadForSQL( const CThreadForSQL &);
+    CThreadForSQL & operator= ( const CThreadForSQL &);
+protected:
+    void run();
+public:
+    QString GetSQLErrorInfo(){ return m_strSQLErrorInfo; };
+    bool IsOK(){ return m_bOK;};
+    CThreadForSQL( CMainWnd	*ppMainWnd, CDataBase *pXML, QString strXmlFilePathName );
+
+};
+
 #endif // CTHREAD_H

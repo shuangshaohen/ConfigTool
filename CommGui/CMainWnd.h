@@ -53,6 +53,7 @@ protected:
     void closeEvent(QCloseEvent *event);
     void customEvent ( QEvent * event ) ;
     bool SaveXmlFile( QString strFilePathName, QString &strErrorInfo ) ;
+    bool SaveSQLFile( QString strFilePathName, QString &strErrorInfo ) ;
 protected slots:
     //文件菜单槽
     bool NewProjectFileSlot();
@@ -60,6 +61,7 @@ protected slots:
     void SaveProjectFileSlot();
     void SaveAsProjectFileSlot();
     virtual void CloseProjectFileSlot();
+    void SaveSQLSlot();
     //编辑菜单槽
 
     virtual void SubmitSlot(){};

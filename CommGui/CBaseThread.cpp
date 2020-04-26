@@ -124,3 +124,41 @@ CThreadForSave::CThreadForSave( CMainWnd	*pMainWnd, CDataBase *pXML, QString str
     m_pXML = pXML;
     m_strXmlFilePathName = strFilePathName;
 }
+
+void CThreadForSQL::run()
+{
+    QString strInfo = QString("正在保存数据库到%1").arg(m_strXmlFilePathName);
+
+    PutStringToSplashScreen ( strInfo, CStringEvent::Enum_Start_Event_Info);
+
+    QString strSaveInfo = m_pXML->SaveSQL(m_strXmlFilePathName);
+
+    if( strSaveInfo.isEmpty()||strSaveInfo.isNull() )
+    {
+        m_bOK = true;
+
+        QString strInfo = QString("数据库保存成功");
+
+        PutStringToSplashScreen ( strInfo, CStringEvent::Enum_End_Event_Info);
+    }
+    else
+    {
+        m_bOK = false;
+
+        m_strSQLErrorInfo = strSaveInfo;
+
+        QString strInfo = QString("数据库保存失败");
+
+        PutStringToSplashScreen ( strInfo, CStringEvent::Enum_Error_Event_Info);
+    }
+    //输出信息到输出框
+//    OutputMsgInfoList(m_pXML->GetMsgInfoList());
+//    m_pXML->ClearMsgInfoList();
+}
+
+
+CThreadForSQL::CThreadForSQL( CMainWnd	*pMainWnd, CDataBase *pXML, QString strFilePathName ):CThread(pMainWnd)
+{
+    m_pXML = pXML;
+    m_strXmlFilePathName = strFilePathName;
+}
